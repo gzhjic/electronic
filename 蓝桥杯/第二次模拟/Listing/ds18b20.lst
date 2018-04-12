@@ -1,0 +1,114 @@
+C51 COMPILER V9.54   DS18B20                                                               03/19/2018 16:55:20 PAGE 1   
+
+
+C51 COMPILER V9.54, COMPILATION OF MODULE DS18B20
+OBJECT MODULE PLACED IN ..\Output\ds18b20.obj
+COMPILER INVOKED BY: E:\Keil\Keil_v5\C51\BIN\C51.EXE ..\Drivers\ds18b20.c OPTIMIZE(8,SPEED) BROWSE INCDIR(..\Drivers;..\
+                    -App) DEBUG OBJECTEXTEND PRINT(..\Listing\ds18b20.lst) OBJECT(..\Output\ds18b20.obj)
+
+line level    source
+
+   1          
+   2          #include "stc15f2k60s2.h"
+   3          #include "absacc.h"
+   4          #include "intrins.h"
+   5          #include "ds18b20.h"
+   6          
+   7          void Delay480us()               //@12.000MHz
+   8          {
+   9   1              unsigned char i, j;
+  10   1      
+  11   1              i = 6;
+  12   1              j = 151;
+  13   1              do
+  14   1              {
+  15   2                      while (--j);
+  16   2              } while (--i);
+  17   1      }
+  18          
+  19          void Delay65us()                //@12.000MHz
+  20          {
+  21   1              unsigned char i, j;
+  22   1      
+  23   1              i = 1;
+  24   1              j = 191;
+  25   1              do
+  26   1              {
+  27   2                      while (--j);
+  28   2              } while (--i);
+  29   1      }
+  30          
+  31          
+  32          void init_ds18b20(void)
+  33          {
+  34   1               DQ=0;
+  35   1               Delay480us();
+  36   1               DQ=1;
+  37   1               Delay480us();
+  38   1      }
+  39          
+  40          void write_ds18b20(uchar dat)
+  41          {
+  42   1              uchar k;
+  43   1              for(k=0;k<8;k++)
+  44   1              {
+  45   2                      DQ=0;
+  46   2                      DQ=dat&0x01;
+  47   2                      Delay65us();
+  48   2                      DQ=1;
+  49   2                      dat>>=1;         
+  50   2              }
+  51   1              Delay65us();
+  52   1      }
+  53          
+  54          uchar read_ds18b20(void)
+C51 COMPILER V9.54   DS18B20                                                               03/19/2018 16:55:20 PAGE 2   
+
+  55          {
+  56   1              uchar k,temp;
+  57   1              for(k=0;k<8;k++)
+  58   1              {       
+  59   2                      temp>>=1;
+  60   2                      DQ=0; 
+  61   2                      DQ=1;
+  62   2                      if(DQ==1)
+  63   2                      temp|=0x80;
+  64   2                      else
+  65   2                      temp|=0x00;
+  66   2                      Delay65us();
+  67   2              }
+  68   1              return temp;
+  69   1      }
+  70          
+  71          uchar get_temp(void)
+  72          {
+  73   1              uchar a,b,c;
+  74   1              init_ds18b20();
+  75   1              write_ds18b20(0xCC);
+  76   1              write_ds18b20(0x44);
+  77   1      
+  78   1              Delay480us();
+  79   1              
+  80   1              init_ds18b20();
+  81   1              write_ds18b20(0xCC);
+  82   1              write_ds18b20(0xbe);
+  83   1      
+  84   1              a=read_ds18b20();
+  85   1              b=read_ds18b20();
+  86   1              c=(a>>4)|(b<<4);
+  87   1              return c;               
+  88   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    131    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
