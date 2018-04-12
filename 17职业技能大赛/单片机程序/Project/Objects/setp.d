@@ -1,0 +1,16 @@
+.\objects\setp.o: ..\User\setp\setp.c
+.\objects\setp.o: ..\User\setp\setp.h
+.\objects\setp.o: ..\Libraries\CMSIS\stm32f10x.h
+.\objects\setp.o: ..\Libraries\CMSIS\core_cm3.h
+.\objects\setp.o: E:\Keil\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+.\objects\setp.o: ..\Libraries\CMSIS\system_stm32f10x.h
+.\objects\setp.o: ..\User\stm32f10x_conf.h
+.\objects\setp.o: ..\Libraries\FWlib\inc\stm32f10x_dma.h
+.\objects\setp.o: ..\Libraries\CMSIS\stm32f10x.h
+.\objects\setp.o: ..\Libraries\FWlib\inc\stm32f10x_exti.h
+.\objects\setp.o: ..\Libraries\FWlib\inc\stm32f10x_gpio.h
+.\objects\setp.o: ..\Libraries\FWlib\inc\stm32f10x_rcc.h
+.\objects\setp.o: ..\Libraries\FWlib\inc\stm32f10x_tim.h
+.\objects\setp.o: ..\Libraries\FWlib\inc\stm32f10x_usart.h
+.\objects\setp.o: ..\Libraries\FWlib\inc\misc.h
+.\objects\setp.o: ..\User\GeneralTim\bsp_GeneralTim.h

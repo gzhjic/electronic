@@ -1,0 +1,58 @@
+C51 COMPILER V9.54   DISPLAY                                                               03/30/2018 17:20:28 PAGE 1   
+
+
+C51 COMPILER V9.54, COMPILATION OF MODULE DISPLAY
+OBJECT MODULE PLACED IN .\Objects\display.obj
+COMPILER INVOKED BY: E:\Keil\Keil_v5\C51\BIN\C51.EXE ..\Drivers\display.c OPTIMIZE(8,SPEED) BROWSE INCDIR(..\Drivers) DE
+                    -BUG OBJECTEXTEND PRINT(.\Listings\display.lst) OBJECT(.\Objects\display.obj)
+
+line level    source
+
+   1          #include "display.h"
+   2          
+   3          
+   4          const uchar smg_code[]={0xc0,0xf9,0xa4,0xb0,0x99,0x92,0x82,0xf8,0x80,0x90,0xff,0xbf,0xc6};
+   5          
+   6          
+   7          void display_time(uchar h,uchar m,uchar s)
+   8          {
+   9   1              static uchar i;
+  10   1          uchar buf[8];
+  11   1          
+  12   1          buf[0] = smg_code[h/10];
+  13   1          buf[1] = smg_code[h%10];
+  14   1          buf[2] = smg_code[SMG_G];
+  15   1          buf[3] = smg_code[m/10];
+  16   1          buf[4] = smg_code[m%10];
+  17   1          buf[5] = smg_code[SMG_G];
+  18   1          buf[6] = smg_code[s/10];
+  19   1          buf[7] = smg_code[s%10];
+  20   1          
+  21   1          XBYTE[0XE000] = 0xff;
+  22   1          XBYTE[0XC000] = 1<<i;
+  23   1          XBYTE[0XE000] = buf[i];
+  24   1          
+  25   1          if(++i>=8)
+  26   1              i = 0;
+  27   1      }
+  28          
+  29          
+  30          void display_test(uchar w)
+  31          {
+  32   1          XBYTE[0XE000] = 0;
+  33   1          XBYTE[0XC000] = w;
+  34   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    135    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =     14       8
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

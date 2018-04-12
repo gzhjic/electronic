@@ -1,0 +1,20 @@
+--cpu Cortex-M3
+".\objects\startup_stm32f10x_md.o"
+".\objects\core_cm3.o"
+".\objects\system_stm32f10x.o"
+".\objects\misc.o"
+".\objects\stm32f10x_exti.o"
+".\objects\stm32f10x_gpio.o"
+".\objects\stm32f10x_rcc.o"
+".\objects\stm32f10x_tim.o"
+".\objects\stm32f10x_usart.o"
+".\objects\main.o"
+".\objects\stm32f10x_it.o"
+".\objects\setp.o"
+".\objects\bsp_generaltim.o"
+".\objects\bsp_usart.o"
+".\objects\bsp_systick.o"
+--library_type=microlib --strict --scatter ".\Objects\1.sct"
+--summary_stderr --info summarysizes --map --xref --callgraph --symbols
+--info sizes --info totals --info unused --info veneers
+--list ".\Listings\1.map" -o .\Objects\1.axf

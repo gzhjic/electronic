@@ -1,0 +1,16 @@
+.\objects\bsp_usart.o: ..\User\usart\bsp_usart.c
+.\objects\bsp_usart.o: ..\User\usart\bsp_usart.h
+.\objects\bsp_usart.o: ..\Libraries\CMSIS\stm32f10x.h
+.\objects\bsp_usart.o: ..\Libraries\CMSIS\core_cm3.h
+.\objects\bsp_usart.o: E:\Keil\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+.\objects\bsp_usart.o: ..\Libraries\CMSIS\system_stm32f10x.h
+.\objects\bsp_usart.o: ..\User\stm32f10x_conf.h
+.\objects\bsp_usart.o: ..\Libraries\FWlib\inc\stm32f10x_dma.h
+.\objects\bsp_usart.o: ..\Libraries\CMSIS\stm32f10x.h
+.\objects\bsp_usart.o: ..\Libraries\FWlib\inc\stm32f10x_exti.h
+.\objects\bsp_usart.o: ..\Libraries\FWlib\inc\stm32f10x_gpio.h
+.\objects\bsp_usart.o: ..\Libraries\FWlib\inc\stm32f10x_rcc.h
+.\objects\bsp_usart.o: ..\Libraries\FWlib\inc\stm32f10x_tim.h
+.\objects\bsp_usart.o: ..\Libraries\FWlib\inc\stm32f10x_usart.h
+.\objects\bsp_usart.o: ..\Libraries\FWlib\inc\misc.h
+.\objects\bsp_usart.o: E:\Keil\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h

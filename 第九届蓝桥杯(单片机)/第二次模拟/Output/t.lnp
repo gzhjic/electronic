@@ -1,0 +1,8 @@
+"..\Output\STARTUP.obj",
+"..\Output\main.obj",
+"..\Output\ds18b20.obj",
+"..\Output\ds1302.obj",
+"..\Output\key.obj",
+"..\Output\smg.obj" 
+TO "..\Output\t" 
+PRINT("..\Listing\t.m51") RAMSIZE(256) 

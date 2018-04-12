@@ -1,0 +1,161 @@
+C51 COMPILER V9.54   SMG                                                                   03/19/2018 16:55:20 PAGE 1   
+
+
+C51 COMPILER V9.54, COMPILATION OF MODULE SMG
+OBJECT MODULE PLACED IN ..\Output\smg.obj
+COMPILER INVOKED BY: E:\Keil\Keil_v5\C51\BIN\C51.EXE ..\Drivers\smg.c OPTIMIZE(8,SPEED) BROWSE INCDIR(..\Drivers;..\App)
+                    - DEBUG OBJECTEXTEND PRINT(..\Listing\smg.lst) OBJECT(..\Output\smg.obj)
+
+line level    source
+
+   1          #include "smg.h"
+   2          
+   3          uchar smg_code[]={0xc0,0xf9,0xa4,0xb0,0x99,0x92,0x82,0xf8,0x80,0x90,0xff,0xbf,0xc6};
+   4          
+   5          static void smg_display
+   6                          (uchar sum1, uchar sum2,
+   7                           uchar sum3, uchar sum4,
+   8                           uchar sum5, uchar sum6,
+   9                           uchar sum7, uchar sum8)
+  10          
+  11          {
+  12   1          static uchar i;
+  13   1          uchar buf[8];
+  14   1          
+  15   1          buf[0] = smg_code[sum1];
+  16   1          buf[1] = smg_code[sum2];
+  17   1          buf[2] = smg_code[sum3];
+  18   1          buf[3] = smg_code[sum4];
+  19   1          buf[4] = smg_code[sum5];
+  20   1          buf[5] = smg_code[sum6];
+  21   1          buf[6] = smg_code[sum7];
+  22   1          buf[7] = smg_code[sum8];
+  23   1          
+  24   1          XBYTE[0XE000] = 0xff;
+  25   1          XBYTE[0XC000] = 1<<i;
+  26   1          XBYTE[0XE000] = buf[i];
+  27   1          
+  28   1          if(++i>=8)
+  29   1              i = 0;
+  30   1      }
+  31          
+  32          
+  33          void dis_time(uchar hour, uchar min, uchar sec)
+  34          {
+  35   1          smg_display(hour/10,
+  36   1                      hour%10,
+  37   1                      SMG_G,
+  38   1                      min/10,
+  39   1                      min%10,
+  40   1                      SMG_G,
+  41   1                      sec/10,
+  42   1                      sec%10);
+  43   1      }
+  44          
+  45          void dis_worring(uchar mod, uchar min, uchar sec)
+  46          {
+  47   1          smg_display(SMG_G,
+  48   1                      mod,
+  49   1                      SMG_G,
+  50   1                      min/10,
+  51   1                      min%10,
+  52   1                      SMG_G,
+  53   1                      sec/10,
+  54   1                      sec%10);
+C51 COMPILER V9.54   SMG                                                                   03/19/2018 16:55:20 PAGE 2   
+
+  55   1      }
+  56          
+  57          
+  58          void dis_temp(uchar min, uchar max,uchar temp)
+  59          {
+  60   1          smg_display(min/10,
+  61   1                      min%10,
+  62   1                      SMG_G,
+  63   1                      max/10,
+  64   1                      max%10,
+  65   1                      SMG_G,
+  66   1                      temp/10,
+  67   1                      temp%10);
+  68   1      }
+  69          
+  70          
+  71          void dis_set(uchar min_h, uchar min_l,
+  72                        uchar max_h, uchar max_l,
+  73                        uchar temp, uchar flash)
+  74          {
+  75   1          switch(flash)
+  76   1          {
+  77   2              case 0:
+  78   2                  smg_display(min_h,
+  79   2                              min_l,
+  80   2                              SMG_G,
+  81   2                              max_h,
+  82   2                              max_l,
+  83   2                              SMG_G,
+  84   2                              temp/10,
+  85   2                              temp%10);
+  86   2                  break;
+  87   2              
+  88   2              case 1:
+  89   2                  smg_display(SMG_OFF,
+  90   2                              min_l,
+  91   2                              SMG_G,
+  92   2                              max_h,
+  93   2                              max_l,
+  94   2                              SMG_G,
+  95   2                              temp/10,
+  96   2                              temp%10);
+  97   2                  break;
+  98   2              
+  99   2              case 2:
+ 100   2                  smg_display(min_h,
+ 101   2                              SMG_OFF,
+ 102   2                              SMG_G,
+ 103   2                              max_h,
+ 104   2                              max_l,
+ 105   2                              SMG_G,
+ 106   2                              temp/10,
+ 107   2                              temp%10);
+ 108   2                  break;
+ 109   2              
+ 110   2              case 3:
+ 111   2                  smg_display(min_h,
+ 112   2                              min_l,
+ 113   2                              SMG_G,
+ 114   2                              SMG_OFF,
+ 115   2                              max_l,
+ 116   2                              SMG_G,
+C51 COMPILER V9.54   SMG                                                                   03/19/2018 16:55:20 PAGE 3   
+
+ 117   2                              temp/10,
+ 118   2                              temp%10);
+ 119   2                  break;
+ 120   2              
+ 121   2              case 4:
+ 122   2                  smg_display(min_h,
+ 123   2                              min_l,
+ 124   2                              SMG_G,
+ 125   2                              max_h,
+ 126   2                              SMG_OFF,
+ 127   2                              SMG_G,
+ 128   2                              temp/10,
+ 129   2                              temp%10);
+ 130   2                  break;
+ 131   2          }
+ 132   1          
+ 133   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    431    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =     14      22
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
