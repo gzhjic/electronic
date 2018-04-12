@@ -1,0 +1,12 @@
+#ifndef _uart_h_
+#define _uart_h_
+
+void UART1_Init(void);
+void UART1_Send(uchar i);
+uchar UART1_Receive(void);
+void UART1_Send_Char(uchar *p);
+void UART0_Init(void);
+void UART0_Send(uchar i);
+void UART0_Send_Char(uchar *p);
+
+#endif

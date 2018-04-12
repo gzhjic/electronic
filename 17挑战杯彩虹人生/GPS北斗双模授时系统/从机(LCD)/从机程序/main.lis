@@ -1,0 +1,1780 @@
+                        .module main.c
+                        .area text(rom, con, rel)
+ 0000                   .dbfile main.c
+                        .area data(ram, con, rel)
+ 0000                   .dbfile main.c
+ 0000           _TXbuf::
+ 0000                   .blkb 2
+                        .area idata
+ 0000 4303              .byte 'C,3
+                        .area data(ram, con, rel)
+ 0002                   .dbfile main.c
+ 0002                   .blkb 2
+                        .area idata
+ 0002 0101              .byte 1,1
+                        .area data(ram, con, rel)
+ 0004                   .dbfile main.c
+ 0004                   .blkb 2
+                        .area idata
+ 0004 0000              .byte 0,0
+                        .area data(ram, con, rel)
+ 0006                   .dbfile main.c
+ 0006                   .blkb 2
+                        .area idata
+ 0006 0000              .byte 0,0
+                        .area data(ram, con, rel)
+ 0008                   .dbfile main.c
+ 0008                   .blkb 2
+                        .area idata
+ 0008 0000              .byte 0,0
+                        .area data(ram, con, rel)
+ 000A                   .dbfile main.c
+ 000A                   .blkb 2
+                        .area idata
+ 000A 0000              .byte 0,0
+                        .area data(ram, con, rel)
+ 000C                   .dbfile main.c
+ 000C                   .blkb 2
+                        .area idata
+ 000C 0000              .byte 0,0
+                        .area data(ram, con, rel)
+ 000E                   .dbfile main.c
+ 000E                   .blkb 2
+                        .area idata
+ 000E 0000              .byte 0,0
+                        .area data(ram, con, rel)
+ 0010                   .dbfile main.c
+ 0010                   .blkb 2
+                        .area idata
+ 0010 0000              .byte 0,0
+                        .area data(ram, con, rel)
+ 0012                   .dbfile main.c
+ 0012                   .blkb 2
+                        .area idata
+ 0012 0000              .byte 0,0
+                        .area data(ram, con, rel)
+ 0014                   .dbfile main.c
+ 0014                   .blkb 2
+                        .area idata
+ 0014 0000              .byte 0,0
+                        .area data(ram, con, rel)
+ 0016                   .dbfile main.c
+ 0016                   .blkb 2
+                        .area idata
+ 0016 0000              .byte 0,0
+                        .area data(ram, con, rel)
+ 0018                   .dbfile main.c
+ 0018                   .blkb 2
+                        .area idata
+ 0018 0000              .byte 0,0
+                        .area data(ram, con, rel)
+ 001A                   .dbfile main.c
+ 001A                   .blkb 2
+                        .area idata
+ 001A 0000              .byte 0,0
+                        .area data(ram, con, rel)
+ 001C                   .dbfile main.c
+ 001C                   .blkb 2
+                        .area idata
+ 001C 0000              .byte 0,0
+                        .area data(ram, con, rel)
+ 001E                   .dbfile main.c
+ 001E                   .blkb 2
+                        .area idata
+ 001E 0034              .byte 0,52
+                        .area data(ram, con, rel)
+ 0020                   .dbfile main.c
+ 0020                   .dbfile F:\AVRtest\双模\接收\main.c
+ 0020                   .dbsym e TXbuf _TXbuf A[32:32]c
+                        .area text(rom, con, rel)
+ 0000                   .dbfile F:\AVRtest\双模\接收\main.c
+ 0000                   .dbfunc e main _main fV
+ 0000           ;              z -> R20
+                        .even
+ 0000           _main::
+ 0000 2297              sbiw R28,2
+ 0002                   .dbline -1
+ 0002                   .dbline 40
+ 0002           ; #include"iom16v.h"
+ 0002           ; #include "shounrf24l01.h"
+ 0002           ; #include "12864.h"
+ 0002           ; #include "ds1302.h"
+ 0002           ; 
+ 0002           ; #define uchar unsigned char 
+ 0002           ; #define uint unsigned int
+ 0002           ; 
+ 0002           ; uchar RXbuf[32];
+ 0002           ; //此机地址为0x01   TXbuf[2]=0x01
+ 0002           ; uchar TXbuf[32]={0x43,0x03,0x01,0x01,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0x34};
+ 0002           ; 
+ 0002           ; uchar Hour,Hour_High,Hour_Low;
+ 0002           ; uchar Min_High,Min_Low,Min;
+ 0002           ; uchar Sec_High,Sec_Low,Sec;
+ 0002           ; uchar Day,Day_High,Day_Low;
+ 0002           ; uchar Month,Month_High,Month_Low;
+ 0002           ; uchar Year_High,Year_Low;
+ 0002           ; uchar MaxDay;
+ 0002           ; uint  Year;
+ 0002           ; uchar TimeCorrect;
+ 0002           ; uint Timetable;
+ 0002           ; uchar Timetable_Flag;
+ 0002           ; /*函数声明*/
+ 0002           ; void P_init(void);
+ 0002           ; uchar IsLeapYear(unsigned int uiYear);
+ 0002           ; unsigned char GetMaxDay(unsigned char Month_Value,unsigned int Year_Value);
+ 0002           ; void UTCDate2LocalDate(void);
+ 0002           ; void GetTime(void);
+ 0002           ; void LCD_Display(void);
+ 0002           ; void DataToASCII(void);
+ 0002           ; void AllWriteIntoDS1302(void);
+ 0002           ; void AllReadDS1302(void);
+ 0002           ; void EEPROM_Write(uint addr,uint adata);
+ 0002           ; uchar EEPROM_Read(uint addr);
+ 0002           ; 
+ 0002           ; 
+ 0002           ; /********************************************/
+ 0002           ; void main(void) 
+ 0002           ; {  
+ 0002                   .dbline 43
+ 0002           ; uchar z;
+ 0002           ; /*无线初始化*/
+ 0002           ; P_init();
+ 0002 D6D1              xcall _P_init
+ 0004                   .dbline 44
+ 0004           ; init_NRF24L01();
+ 0004 0E940000          xcall _init_NRF24L01
+ 0008                   .dbline 45
+ 0008           ; SetRX_Mode();
+ 0008 0E940000          xcall _SetRX_Mode
+ 000C                   .dbline 47
+ 000C           ; /*液晶初始化*/
+ 000C           ; lcd_port_init();
+ 000C 0E940000          xcall _lcd_port_init
+ 0010                   .dbline 48
+ 0010           ; lcd_init();
+ 0010 0E940000          xcall _lcd_init
+ 0014                   .dbline 49
+ 0014           ; lcd_clr();   
+ 0014 0E940000          xcall _lcd_clr
+ 0018                   .dbline 51
+ 0018           ; /*液晶显示界面*/
+ 0018           ; lcd_write_char(0,0,"时间：");    
+ 0018 80E0              ldi R24,<L2
+ 001A 90E0              ldi R25,>L2
+ 001C 9983              std y+1,R25
+ 001E 8883              std y+0,R24
+ 0020 2227              clr R18
+ 0022 0027              clr R16
+ 0024 0E940000          xcall _lcd_write_char
+ 0028                   .dbline 52
+ 0028           ; lcd_write_char(0,2,"20  年  月  日");
+ 0028 80E0              ldi R24,<L3
+ 002A 90E0              ldi R25,>L3
+ 002C 9983              std y+1,R25
+ 002E 8883              std y+0,R24
+ 0030 22E0              ldi R18,2
+ 0032 0027              clr R16
+ 0034 0E940000          xcall _lcd_write_char
+ 0038                   .dbline 53
+ 0038           ; lcd_write_char(0,3,"    时  分  秒");
+ 0038 80E0              ldi R24,<L4
+ 003A 90E0              ldi R25,>L4
+ 003C 9983              std y+1,R25
+ 003E 8883              std y+0,R24
+ 0040 23E0              ldi R18,3
+ 0042 0027              clr R16
+ 0044 0E940000          xcall _lcd_write_char
+ 0048 B0C1              xjmp L6
+ 004A           L5:
+ 004A                   .dbline 57
+ 004A           ; /*DS1302端口初始化*/
+ 004A           ; //Init_ds1302();
+ 004A           ; while(1)  
+ 004A           ; {
+ 004A                   .dbline 58
+ 004A           ;       nRF24L01_RxPacket(RXbuf);                       //从无线中获取所有信息
+ 004A 00E0              ldi R16,<_RXbuf
+ 004C 10E0              ldi R17,>_RXbuf
+ 004E 0E940000          xcall _nRF24L01_RxPacket
+ 0052                   .dbline 59
+ 0052           ;       if((RXbuf[0]==0x43)&&(RXbuf[31]==0x34)) //判断起始位和结束位
+ 0052 80911800          lds R24,_RXbuf
+ 0056 8334              cpi R24,67
+ 0058 09F0              breq X48
+ 005A 5AC0              xjmp L8
+ 005C           X48:
+ 005C           X0:
+ 005C 80913700          lds R24,_RXbuf+31
+ 0060 8433              cpi R24,52
+ 0062 09F0              breq X49
+ 0064 55C0              xjmp L8
+ 0066           X49:
+ 0066           X1:
+ 0066                   .dbline 60
+ 0066           ;       {                       
+ 0066                   .dbline 61
+ 0066           ;               switch(RXbuf[1])                                        //选择工作模式
+ 0066 40911900          lds R20,_RXbuf+1
+ 006A 5527              clr R21
+ 006C 4130              cpi R20,1
+ 006E E0E0              ldi R30,0
+ 0070 5E07              cpc R21,R30
+ 0072 49F0              breq L15
+ 0074           X2:
+ 0074 4230              cpi R20,2
+ 0076 E0E0              ldi R30,0
+ 0078 5E07              cpc R21,R30
+ 007A 09F1              breq L21
+ 007C           X3:
+ 007C 4430              cpi R20,4
+ 007E E0E0              ldi R30,0
+ 0080 5E07              cpc R21,R30
+ 0082 A1F1              breq L28
+ 0084           X4:
+ 0084 3CC0              xjmp L11
+ 0086           L15:
+ 0086                   .dbline 65
+ 0086           ;               {       
+ 0086           ;               /**************工作模式1 广播************/
+ 0086           ;                       case 1:                                                 
+ 0086           ;                       if(RXbuf[30]==1)                                //检测GPS信号
+ 0086 80913600          lds R24,_RXbuf+30
+ 008A 8130              cpi R24,1
+ 008C 79F4              brne L16
+ 008E           X5:
+ 008E                   .dbline 66
+ 008E           ;                       {               
+ 008E                   .dbline 67
+ 008E           ;                               GetTime();                                                                                      //从无线中提取时间信息
+ 008E 97D1              xcall _GetTime
+ 0090                   .dbline 68
+ 0090           ;                               TimeCorrect=Sec-0x30;                                                           
+ 0090 80910F00          lds R24,_Sec
+ 0094 8053              subi R24,48
+ 0096 80930300          sts _TimeCorrect,R24
+ 009A                   .dbline 71
+ 009A           ;                               //if(TimeCorrect!=Read_ds1302(0x81))                        //如果DS1302时间有误差
+ 009A           ;                                       //AllWriteIntoDS1302();                                                 //修正时间
+ 009A           ;                               lcd_write_char(0,1,"      ");
+ 009A 80E0              ldi R24,<L19
+ 009C 90E0              ldi R25,>L19
+ 009E 9983              std y+1,R25
+ 00A0 8883              std y+0,R24
+ 00A2 21E0              ldi R18,1
+ 00A4 0027              clr R16
+ 00A6 0E940000          xcall _lcd_write_char
+ 00AA                   .dbline 72
+ 00AA           ;                       }
+ 00AA 3AC0              xjmp L9
+ 00AC           L16:
+ 00AC                   .dbline 74
+ 00AC           ;                       else
+ 00AC           ;                       {
+ 00AC                   .dbline 75
+ 00AC           ;                               lcd_write_char(0,1,"无信号");
+ 00AC 80E0              ldi R24,<L20
+ 00AE 90E0              ldi R25,>L20
+ 00B0 9983              std y+1,R25
+ 00B2 8883              std y+0,R24
+ 00B4 21E0              ldi R18,1
+ 00B6 0027              clr R16
+ 00B8 0E940000          xcall _lcd_write_char
+ 00BC                   .dbline 76
+ 00BC           ;                       }
+ 00BC                   .dbline 77
+ 00BC           ;                       break;
+ 00BC 31C0              xjmp L9
+ 00BE           L21:
+ 00BE                   .dbline 80
+ 00BE           ;               /************工作模式2 时间表***********/
+ 00BE           ;                       case 2:         
+ 00BE           ;                       for(z=0;z<28;z++)                                       
+ 00BE 4427              clr R20
+ 00C0 12C0              xjmp L25
+ 00C2           L22:
+ 00C2                   .dbline 81
+ 00C2           ;                       {
+ 00C2                   .dbline 82
+ 00C2           ;                               EEPROM_Write(z+28*RXbuf[2],RXbuf[z+3]);
+ 00C2 80E0              ldi R24,<_RXbuf+3
+ 00C4 90E0              ldi R25,>_RXbuf+3
+ 00C6 E42F              mov R30,R20
+ 00C8 FF27              clr R31
+ 00CA E80F              add R30,R24
+ 00CC F91F              adc R31,R25
+ 00CE 2081              ldd R18,z+0
+ 00D0 3327              clr R19
+ 00D2 10911A00          lds R17,_RXbuf+2
+ 00D6 0CE1              ldi R16,28
+ 00D8 0103              mulsu R16,R17
+ 00DA 042F              mov R16,R20
+ 00DC 1127              clr R17
+ 00DE 000D              add R16,R0
+ 00E0 111D              adc R17,R1
+ 00E2 A4D3              xcall _EEPROM_Write
+ 00E4                   .dbline 83
+ 00E4           ;                       }
+ 00E4           L23:
+ 00E4                   .dbline 80
+ 00E4 4395              inc R20
+ 00E6           L25:
+ 00E6                   .dbline 80
+ 00E6 4C31              cpi R20,28
+ 00E8 60F3              brlo L22
+ 00EA           X6:
+ 00EA                   .dbline 84
+ 00EA           ;                       break;
+ 00EA 1AC0              xjmp L9
+ 00EC           L28:
+ 00EC                   .dbline 87
+ 00EC           ;               /************工作模式4 请求应答*********/
+ 00EC           ;                       case 4:
+ 00EC           ;                       if(RXbuf[15])
+ 00EC 20902700          lds R2,_RXbuf+15
+ 00F0 2220              tst R2
+ 00F2 B1F0              breq L9
+ 00F4           X7:
+ 00F4                   .dbline 88
+ 00F4           ;                               nRF24L01_TxPacket(TXbuf);
+ 00F4 00E0              ldi R16,<_TXbuf
+ 00F6 10E0              ldi R17,>_TXbuf
+ 00F8 0E940000          xcall _nRF24L01_TxPacket
+ 00FC                   .dbline 89
+ 00FC           ;                       break;
+ 00FC 11C0              xjmp L9
+ 00FE           L11:
+ 00FE                   .dbline 92
+ 00FE           ;               /************错误*********************/
+ 00FE           ;                       default:
+ 00FE           ;                       lcd_write_char(0,1,"故障");
+ 00FE 80E0              ldi R24,<L32
+ 0100 90E0              ldi R25,>L32
+ 0102 9983              std y+1,R25
+ 0104 8883              std y+0,R24
+ 0106 21E0              ldi R18,1
+ 0108 0027              clr R16
+ 010A 0E940000          xcall _lcd_write_char
+ 010E                   .dbline 93
+ 010E           ;                       break;
+ 010E                   .dbline 95
+ 010E           ;               }
+ 010E           ;       } 
+ 010E 08C0              xjmp L9
+ 0110           L8:
+ 0110                   .dbline 97
+ 0110           ;       else
+ 0110           ;       {
+ 0110                   .dbline 98
+ 0110           ;               lcd_write_char(0,1,"故障");
+ 0110 80E0              ldi R24,<L32
+ 0112 90E0              ldi R25,>L32
+ 0114 9983              std y+1,R25
+ 0116 8883              std y+0,R24
+ 0118 21E0              ldi R18,1
+ 011A 0027              clr R16
+ 011C 0E940000          xcall _lcd_write_char
+ 0120                   .dbline 99
+ 0120           ;       }
+ 0120           L9:
+ 0120                   .dbline 101
+ 0120           ;       //AllReadDS1302();                                                                      //时间从DS1302中读出
+ 0120           ;       DataToASCII();                                                                          //时间转成ASCII码
+ 0120 C6D2              xcall _DataToASCII
+ 0122                   .dbline 102
+ 0122           ;       LCD_Display();                                                                          //显示到LCD上
+ 0122 3CD3              xcall _LCD_Display
+ 0124                   .dbline 105
+ 0124           ;       
+ 0124           ;       /*************到点报时*********************/
+ 0124           ;       Timetable=Hour*10000+Min*100+Sec;
+ 0124 10911200          lds R17,_Min
+ 0128 04E6              ldi R16,100
+ 012A 0103              mulsu R16,R17
+ 012C 1001              movw R2,R0
+ 012E 20911700          lds R18,_Hour
+ 0132 3327              clr R19
+ 0134 00E1              ldi R16,10000
+ 0136 17E2              ldi R17,39
+ 0138 0E940000          xcall empy16s
+ 013C 2801              movw R4,R16
+ 013E 420C              add R4,R2
+ 0140 531C              adc R5,R3
+ 0142 20900F00          lds R2,_Sec
+ 0146 3324              clr R3
+ 0148 420C              add R4,R2
+ 014A 531C              adc R5,R3
+ 014C 50920200          sts _Timetable+1,R5
+ 0150 40920100          sts _Timetable,R4
+ 0154                   .dbline 106
+ 0154           ;       switch(Timetable)
+ 0154 1201              movw R2,R4
+ 0156 C201              movw R24,R4
+ 0158 8031              cpi R24,16
+ 015A E5E1              ldi R30,21
+ 015C 9E07              cpc R25,R30
+ 015E 09F4              brne X50
+ 0160 20C1              xjmp L35
+ 0162           X50:
+ 0162           X8:
+ 0162 80E1              ldi R24,5392
+ 0164 95E1              ldi R25,21
+ 0166 8415              cp R24,R4
+ 0168 9505              cpc R25,R5
+ 016A 0CF4              brge X51
+ 016C 8CC0              xjmp L37
+ 016E           X51:
+ 016E           X9:
+ 016E           L36:
+ 016E 20900100          lds R2,_Timetable
+ 0172 30900200          lds R3,_Timetable+1
+ 0176 C101              movw R24,R2
+ 0178 8434              cpi R24,68
+ 017A EFEB              ldi R30,191
+ 017C 9E07              cpc R25,R30
+ 017E 09F4              brne X52
+ 0180 10C1              xjmp L35
+ 0182           X52:
+ 0182           X10:
+ 0182 84E4              ldi R24,-16572
+ 0184 9FEB              ldi R25,-65
+ 0186 8215              cp R24,R2
+ 0188 9305              cpc R25,R3
+ 018A 0CF4              brge X53
+ 018C 3EC0              xjmp L39
+ 018E           X53:
+ 018E           X11:
+ 018E           L38:
+ 018E 40910100          lds R20,_Timetable
+ 0192 50910200          lds R21,_Timetable+1
+ 0196 4C31              cpi R20,28
+ 0198 ECE9              ldi R30,156
+ 019A 5E07              cpc R21,R30
+ 019C 09F4              brne X54
+ 019E 01C1              xjmp L35
+ 01A0           X54:
+ 01A0           X12:
+ 01A0 8CE1              ldi R24,-25572
+ 01A2 9CE9              ldi R25,-100
+ 01A4 8417              cp R24,R20
+ 01A6 9507              cpc R25,R21
+ 01A8 C4F0              brlt L41
+ 01AA           X13:
+ 01AA           L40:
+ 01AA 40910100          lds R20,_Timetable
+ 01AE 50910200          lds R21,_Timetable+1
+ 01B2 4838              cpi R20,136
+ 01B4 EAE8              ldi R30,138
+ 01B6 5E07              cpc R21,R30
+ 01B8 09F4              brne X55
+ 01BA F3C0              xjmp L35
+ 01BC           X55:
+ 01BC           X14:
+ 01BC 4838              cpi R20,136
+ 01BE EAE8              ldi R30,138
+ 01C0 5E07              cpc R21,R30
+ 01C2 0CF4              brge X56
+ 01C4 F2C0              xjmp L34
+ 01C6           X56:
+ 01C6           X15:
+ 01C6           L42:
+ 01C6 80910100          lds R24,_Timetable
+ 01CA 90910200          lds R25,_Timetable+1
+ 01CE 8031              cpi R24,16
+ 01D0 E8E9              ldi R30,152
+ 01D2 9E07              cpc R25,R30
+ 01D4 09F4              brne X57
+ 01D6 E5C0              xjmp L35
+ 01D8           X57:
+ 01D8           X16:
+ 01D8 E8C0              xjmp L34
+ 01DA           L41:
+ 01DA 40910100          lds R20,_Timetable
+ 01DE 50910200          lds R21,_Timetable+1
+ 01E2 4839              cpi R20,152
+ 01E4 EBEA              ldi R30,171
+ 01E6 5E07              cpc R21,R30
+ 01E8 09F4              brne X58
+ 01EA DBC0              xjmp L35
+ 01EC           X58:
+ 01EC           X17:
+ 01EC 4839              cpi R20,152
+ 01EE EBEA              ldi R30,171
+ 01F0 5E07              cpc R21,R30
+ 01F2 0CF4              brge X59
+ 01F4 DAC0              xjmp L34
+ 01F6           X59:
+ 01F6           X18:
+ 01F6           L43:
+ 01F6 80910100          lds R24,_Timetable
+ 01FA 90910200          lds R25,_Timetable+1
+ 01FE 803B              cpi R24,176
+ 0200 EDEA              ldi R30,173
+ 0202 9E07              cpc R25,R30
+ 0204 09F4              brne X60
+ 0206 CDC0              xjmp L35
+ 0208           X60:
+ 0208           X19:
+ 0208 D0C0              xjmp L34
+ 020A           L39:
+ 020A 40910100          lds R20,_Timetable
+ 020E 50910200          lds R21,_Timetable+1
+ 0212 443F              cpi R20,244
+ 0214 EFEE              ldi R30,239
+ 0216 5E07              cpc R21,R30
+ 0218 09F4              brne X61
+ 021A C3C0              xjmp L35
+ 021C           X61:
+ 021C           X20:
+ 021C 84EF              ldi R24,-4108
+ 021E 9FEE              ldi R25,-17
+ 0220 8417              cp R24,R20
+ 0222 9507              cpc R25,R21
+ 0224 C4F0              brlt L45
+ 0226           X21:
+ 0226           L44:
+ 0226 40910100          lds R20,_Timetable
+ 022A 50910200          lds R21,_Timetable+1
+ 022E 4C3C              cpi R20,204
+ 0230 ECEC              ldi R30,204
+ 0232 5E07              cpc R21,R30
+ 0234 09F4              brne X62
+ 0236 B5C0              xjmp L35
+ 0238           X62:
+ 0238           X22:
+ 0238 4C3C              cpi R20,204
+ 023A ECEC              ldi R30,204
+ 023C 5E07              cpc R21,R30
+ 023E 0CF4              brge X63
+ 0240 B4C0              xjmp L34
+ 0242           X63:
+ 0242           X23:
+ 0242           L46:
+ 0242 80910100          lds R24,_Timetable
+ 0246 90910200          lds R25,_Timetable+1
+ 024A 803C              cpi R24,192
+ 024C EEEC              ldi R30,206
+ 024E 9E07              cpc R25,R30
+ 0250 09F4              brne X64
+ 0252 A7C0              xjmp L35
+ 0254           X64:
+ 0254           X24:
+ 0254 AAC0              xjmp L34
+ 0256           L45:
+ 0256 40910100          lds R20,_Timetable
+ 025A 50910200          lds R21,_Timetable+1
+ 025E 4C3D              cpi R20,220
+ 0260 E3EF              ldi R30,243
+ 0262 5E07              cpc R21,R30
+ 0264 09F4              brne X65
+ 0266 9DC0              xjmp L35
+ 0268           X65:
+ 0268           X25:
+ 0268 4C3D              cpi R20,220
+ 026A E3EF              ldi R30,243
+ 026C 5E07              cpc R21,R30
+ 026E 0CF4              brge X66
+ 0270 9CC0              xjmp L34
+ 0272           X66:
+ 0272           X26:
+ 0272           L47:
+ 0272 80910100          lds R24,_Timetable
+ 0276 90910200          lds R25,_Timetable+1
+ 027A 8037              cpi R24,112
+ 027C EBE0              ldi R30,11
+ 027E 9E07              cpc R25,R30
+ 0280 09F4              brne X67
+ 0282 8FC0              xjmp L35
+ 0284           X67:
+ 0284           X27:
+ 0284 92C0              xjmp L34
+ 0286           L37:
+ 0286 40910100          lds R20,_Timetable
+ 028A 50910200          lds R21,_Timetable+1
+ 028E 4C3C              cpi R20,204
+ 0290 EFE4              ldi R30,79
+ 0292 5E07              cpc R21,R30
+ 0294 09F4              brne X68
+ 0296 85C0              xjmp L35
+ 0298           X68:
+ 0298           X28:
+ 0298 8CEC              ldi R24,20428
+ 029A 9FE4              ldi R25,79
+ 029C 8417              cp R24,R20
+ 029E 9507              cpc R25,R21
+ 02A0 0CF4              brge X69
+ 02A2 3EC0              xjmp L49
+ 02A4           X69:
+ 02A4           X29:
+ 02A4           L48:
+ 02A4 40910100          lds R20,_Timetable
+ 02A8 50910200          lds R21,_Timetable+1
+ 02AC 4839              cpi R20,152
+ 02AE EEE2              ldi R30,46
+ 02B0 5E07              cpc R21,R30
+ 02B2 09F4              brne X70
+ 02B4 76C0              xjmp L35
+ 02B6           X70:
+ 02B6           X30:
+ 02B6 88E9              ldi R24,11928
+ 02B8 9EE2              ldi R25,46
+ 02BA 8417              cp R24,R20
+ 02BC 9507              cpc R25,R21
+ 02BE C4F0              brlt L51
+ 02C0           X31:
+ 02C0           L50:
+ 02C0 40910100          lds R20,_Timetable
+ 02C4 50910200          lds R21,_Timetable+1
+ 02C8 4430              cpi R20,4
+ 02CA E7E1              ldi R30,23
+ 02CC 5E07              cpc R21,R30
+ 02CE 09F4              brne X71
+ 02D0 68C0              xjmp L35
+ 02D2           X71:
+ 02D2           X32:
+ 02D2 4430              cpi R20,4
+ 02D4 E7E1              ldi R30,23
+ 02D6 5E07              cpc R21,R30
+ 02D8 0CF4              brge X72
+ 02DA 67C0              xjmp L34
+ 02DC           X72:
+ 02DC           X33:
+ 02DC           L52:
+ 02DC 80910100          lds R24,_Timetable
+ 02E0 90910200          lds R25,_Timetable+1
+ 02E4 843A              cpi R24,164
+ 02E6 ECE2              ldi R30,44
+ 02E8 9E07              cpc R25,R30
+ 02EA 09F4              brne X73
+ 02EC 5AC0              xjmp L35
+ 02EE           X73:
+ 02EE           X34:
+ 02EE 5DC0              xjmp L34
+ 02F0           L51:
+ 02F0 40910100          lds R20,_Timetable
+ 02F4 50910200          lds R21,_Timetable+1
+ 02F8 4833              cpi R20,56
+ 02FA E8E3              ldi R30,56
+ 02FC 5E07              cpc R21,R30
+ 02FE 09F4              brne X74
+ 0300 50C0              xjmp L35
+ 0302           X74:
+ 0302           X35:
+ 0302 4833              cpi R20,56
+ 0304 E8E3              ldi R30,56
+ 0306 5E07              cpc R21,R30
+ 0308 0CF4              brge X75
+ 030A 4FC0              xjmp L34
+ 030C           X75:
+ 030C           X36:
+ 030C           L53:
+ 030C 80910100          lds R24,_Timetable
+ 0310 90910200          lds R25,_Timetable+1
+ 0314 8035              cpi R24,80
+ 0316 E0E4              ldi R30,64
+ 0318 9E07              cpc R25,R30
+ 031A 09F4              brne X76
+ 031C 42C0              xjmp L35
+ 031E           X76:
+ 031E           X37:
+ 031E 45C0              xjmp L34
+ 0320           L49:
+ 0320 40910100          lds R20,_Timetable
+ 0324 50910200          lds R21,_Timetable+1
+ 0328 4837              cpi R20,120
+ 032A E3E6              ldi R30,99
+ 032C 5E07              cpc R21,R30
+ 032E C9F1              breq L35
+ 0330           X38:
+ 0330 88E7              ldi R24,25464
+ 0332 93E6              ldi R25,99
+ 0334 8417              cp R24,R20
+ 0336 9507              cpc R25,R21
+ 0338 ACF0              brlt L55
+ 033A           X39:
+ 033A           L54:
+ 033A 40910100          lds R20,_Timetable
+ 033E 50910200          lds R21,_Timetable+1
+ 0342 443B              cpi R20,180
+ 0344 E3E5              ldi R30,83
+ 0346 5E07              cpc R21,R30
+ 0348 61F1              breq L35
+ 034A           X40:
+ 034A 443B              cpi R20,180
+ 034C E3E5              ldi R30,83
+ 034E 5E07              cpc R21,R30
+ 0350 64F1              brlt L34
+ 0352           X41:
+ 0352           L56:
+ 0352 80910100          lds R24,_Timetable
+ 0356 90910200          lds R25,_Timetable+1
+ 035A 8438              cpi R24,132
+ 035C E1E6              ldi R30,97
+ 035E 9E07              cpc R25,R30
+ 0360 01F1              breq L35
+ 0362           X42:
+ 0362 23C0              xjmp L34
+ 0364           L55:
+ 0364 40910100          lds R20,_Timetable
+ 0368 50910200          lds R21,_Timetable+1
+ 036C 4C30              cpi R20,12
+ 036E E5E7              ldi R30,117
+ 0370 5E07              cpc R21,R30
+ 0372 B9F0              breq L35
+ 0374           X43:
+ 0374 8CE0              ldi R24,29964
+ 0376 95E7              ldi R25,117
+ 0378 8417              cp R24,R20
+ 037A 9507              cpc R25,R21
+ 037C 4CF0              brlt L58
+ 037E           X44:
+ 037E           L57:
+ 037E 80910100          lds R24,_Timetable
+ 0382 90910200          lds R25,_Timetable+1
+ 0386 883E              cpi R24,232
+ 0388 E4E7              ldi R30,116
+ 038A 9E07              cpc R25,R30
+ 038C 51F0              breq L35
+ 038E           X45:
+ 038E 0DC0              xjmp L34
+ 0390           L58:
+ 0390 80910100          lds R24,_Timetable
+ 0394 90910200          lds R25,_Timetable+1
+ 0398 8C3D              cpi R24,220
+ 039A E6E7              ldi R30,118
+ 039C 9E07              cpc R25,R30
+ 039E 09F0              breq L35
+ 03A0           X46:
+ 03A0 04C0              xjmp L34
+ 03A2           L35:
+ 03A2                   .dbline 111
+ 03A2           ;       {
+ 03A2           ;               case 82000 : case 90500: case 91000: case 95500: case 101000:case 105500:case 110000:case 114500:
+ 03A2           ;               case 134000:case 142500:case 143000:case 151500:case 152500:case 161000:case 161500:case 170000:
+ 03A2           ;               case 175000:case 183500:case 184000:case 192500:case 193500:case 202000:case 202500:case 211000:
+ 03A2           ;               PORTA^=(1<<0);break;
+ 03A2 81E0              ldi R24,1
+ 03A4 2BB2              in R2,0x1b
+ 03A6 2826              eor R2,R24
+ 03A8 2BBA              out 0x1b,R2
+ 03AA                   .dbline 111
+ 03AA                   .dbline 113
+ 03AA           ;               default:
+ 03AA           ;               break;
+ 03AA           L34:
+ 03AA                   .dbline 115
+ 03AA           ;       }
+ 03AA           ; }
+ 03AA           L6:
+ 03AA                   .dbline 56
+ 03AA 4FCE              xjmp L5
+ 03AC           X47:
+ 03AC                   .dbline -2
+ 03AC           L1:
+ 03AC                   .dbline 0 ; func end
+ 03AC 2296              adiw R28,2
+ 03AE 0895              ret
+ 03B0                   .dbsym r z 20 c
+ 03B0                   .dbend
+ 03B0                   .dbfunc e P_init _P_init fV
+                        .even
+ 03B0           _P_init::
+ 03B0                   .dbline -1
+ 03B0                   .dbline 119
+ 03B0           ; }
+ 03B0           ; 
+ 03B0           ; void P_init(void)
+ 03B0           ; {
+ 03B0                   .dbline 120
+ 03B0           ;       DDRA=0XFF;
+ 03B0 8FEF              ldi R24,255
+ 03B2 8ABB              out 0x1a,R24
+ 03B4                   .dbline 121
+ 03B4           ;       PORTA=0XFF;
+ 03B4 8BBB              out 0x1b,R24
+ 03B6                   .dbline 122
+ 03B6           ;       DDRB=(1<<PB3)|(1<<PB4)|(1<<PB5)|(1<<PB7);
+ 03B6 88EB              ldi R24,184
+ 03B8 87BB              out 0x17,R24
+ 03BA                   .dbline 123
+ 03BA           ;       DDRA|=1<<0;
+ 03BA D09A              sbi 0x1a,0
+ 03BC                   .dbline -2
+ 03BC           L59:
+ 03BC                   .dbline 0 ; func end
+ 03BC 0895              ret
+ 03BE                   .dbend
+ 03BE                   .dbfunc e GetTime _GetTime fV
+                        .even
+ 03BE           _GetTime::
+ 03BE                   .dbline -1
+ 03BE                   .dbline 129
+ 03BE           ; }
+ 03BE           ; /************************************************
+ 03BE           ; 从无线中取出时间并转换成北京时间
+ 03BE           ; *************************************************/
+ 03BE           ; void GetTime(void)
+ 03BE           ; {
+ 03BE                   .dbline 130
+ 03BE           ;       Year_High = RXbuf[12];
+ 03BE 20902400          lds R2,_RXbuf+12
+ 03C2 20920800          sts _Year_High,R2
+ 03C6                   .dbline 131
+ 03C6           ;       Year_Low = RXbuf[13];
+ 03C6 20902500          lds R2,_RXbuf+13
+ 03CA 20920700          sts _Year_Low,R2
+ 03CE                   .dbline 133
+ 03CE           ; 
+ 03CE           ;       Month_High = RXbuf[10];
+ 03CE 20902200          lds R2,_RXbuf+10
+ 03D2 20920A00          sts _Month_High,R2
+ 03D6                   .dbline 134
+ 03D6           ;       Month_Low = RXbuf[11];
+ 03D6 20902300          lds R2,_RXbuf+11
+ 03DA 20920900          sts _Month_Low,R2
+ 03DE                   .dbline 136
+ 03DE           ; 
+ 03DE           ;       Day_High = RXbuf[8];
+ 03DE 20902000          lds R2,_RXbuf+8
+ 03E2 20920D00          sts _Day_High,R2
+ 03E6                   .dbline 137
+ 03E6           ;       Day_Low = RXbuf[9];
+ 03E6 20902100          lds R2,_RXbuf+9
+ 03EA 20920C00          sts _Day_Low,R2
+ 03EE                   .dbline 139
+ 03EE           ;       
+ 03EE           ;       Hour_High = RXbuf[2];
+ 03EE 20901A00          lds R2,_RXbuf+2
+ 03F2 20921600          sts _Hour_High,R2
+ 03F6                   .dbline 140
+ 03F6           ;       Hour_Low = RXbuf[3];
+ 03F6 20901B00          lds R2,_RXbuf+3
+ 03FA 20921500          sts _Hour_Low,R2
+ 03FE                   .dbline 142
+ 03FE           ;       
+ 03FE           ;       Min_High = RXbuf[4];
+ 03FE 20901C00          lds R2,_RXbuf+4
+ 0402 20921400          sts _Min_High,R2
+ 0406                   .dbline 143
+ 0406           ;       Min_Low = RXbuf[5];
+ 0406 20901D00          lds R2,_RXbuf+5
+ 040A 20921300          sts _Min_Low,R2
+ 040E                   .dbline 145
+ 040E           ;       
+ 040E           ;       Sec_High = RXbuf[6];
+ 040E 20901E00          lds R2,_RXbuf+6
+ 0412 20921100          sts _Sec_High,R2
+ 0416                   .dbline 146
+ 0416           ;       Sec_Low = RXbuf[7];
+ 0416 20901F00          lds R2,_RXbuf+7
+ 041A 20921000          sts _Sec_Low,R2
+ 041E                   .dbline 148
+ 041E           ;       
+ 041E           ;       Month = (Month_High-0x30)*10+(Month_Low-0x30);
+ 041E 10910A00          lds R17,_Month_High
+ 0422 0AE0              ldi R16,10
+ 0424 0103              mulsu R16,R17
+ 0426 802D              mov R24,R0
+ 0428 805E              subi R24,224
+ 042A 90910900          lds R25,_Month_Low
+ 042E 9053              subi R25,48
+ 0430 890F              add R24,R25
+ 0432 80930B00          sts _Month,R24
+ 0436                   .dbline 149
+ 0436           ;       Year = 2000+(Year_High-0x30)*10+(Year_Low-0x30);
+ 0436 10910800          lds R17,_Year_High
+ 043A 0103              mulsu R16,R17
+ 043C C001              movw R24,R0
+ 043E 805E              subi R24,224
+ 0440 9140              sbci R25,1
+ 0442 8053              subi R24,48  ; offset = 2000
+ 0444 984F              sbci R25,248
+ 0446 E0910700          lds R30,_Year_Low
+ 044A FF27              clr R31
+ 044C F097              sbiw R30,48
+ 044E 1C01              movw R2,R24
+ 0450 2E0E              add R2,R30
+ 0452 3F1E              adc R3,R31
+ 0454 30920500          sts _Year+1,R3
+ 0458 20920400          sts _Year,R2
+ 045C                   .dbline 150
+ 045C           ;       Day = (Day_High-0x30)*10+(Day_Low-0x30);
+ 045C 10910D00          lds R17,_Day_High
+ 0460 0103              mulsu R16,R17
+ 0462 802D              mov R24,R0
+ 0464 805E              subi R24,224
+ 0466 90910C00          lds R25,_Day_Low
+ 046A 9053              subi R25,48
+ 046C 890F              add R24,R25
+ 046E 80930E00          sts _Day,R24
+ 0472                   .dbline 151
+ 0472           ;       Min = (Min_High-0x30)*10+(Min_Low-0x30);
+ 0472 10911400          lds R17,_Min_High
+ 0476 0103              mulsu R16,R17
+ 0478 802D              mov R24,R0
+ 047A 805E              subi R24,224
+ 047C 90911300          lds R25,_Min_Low
+ 0480 9053              subi R25,48
+ 0482 890F              add R24,R25
+ 0484 80931200          sts _Min,R24
+ 0488                   .dbline 152
+ 0488           ;       Sec = (Sec_High-0x30)*10+(Sec_Low-0x30);
+ 0488 10911100          lds R17,_Sec_High
+ 048C 0103              mulsu R16,R17
+ 048E 802D              mov R24,R0
+ 0490 805E              subi R24,224
+ 0492 90911000          lds R25,_Sec_Low
+ 0496 9053              subi R25,48
+ 0498 890F              add R24,R25
+ 049A 80930F00          sts _Sec,R24
+ 049E                   .dbline 153
+ 049E           ;       Hour = (Hour_High-0x30)*10+(Hour_Low-0x30)+8;                   //UTC时间转换到北京时间         UTC+8
+ 049E 10911600          lds R17,_Hour_High
+ 04A2 0103              mulsu R16,R17
+ 04A4 802D              mov R24,R0
+ 04A6 805E              subi R24,224
+ 04A8 90911500          lds R25,_Hour_Low
+ 04AC 9053              subi R25,48
+ 04AE 890F              add R24,R25
+ 04B0 885F              subi R24,248    ; addi 8
+ 04B2 80931700          sts _Hour,R24
+ 04B6                   .dbline 154
+ 04B6           ;       if( Hour >= 24)                         //溢出
+ 04B6 8831              cpi R24,24
+ 04B8 38F0              brlo L73
+ 04BA           X77:
+ 04BA                   .dbline 155
+ 04BA           ;       {
+ 04BA                   .dbline 156
+ 04BA           ;               Hour %= 24;                             //获取当前Hour
+ 04BA 18E1              ldi R17,24
+ 04BC 082F              mov R16,R24
+ 04BE 0E940000          xcall mod8u
+ 04C2 00931700          sts _Hour,R16
+ 04C6                   .dbline 157
+ 04C6           ;               UTCDate2LocalDate();                    //日期进位
+ 04C6 01D0              xcall _UTCDate2LocalDate
+ 04C8                   .dbline 158
+ 04C8           ;       }
+ 04C8           L73:
+ 04C8                   .dbline -2
+ 04C8           L60:
+ 04C8                   .dbline 0 ; func end
+ 04C8 0895              ret
+ 04CA                   .dbend
+ 04CA                   .dbfunc e UTCDate2LocalDate _UTCDate2LocalDate fV
+                        .even
+ 04CA           _UTCDate2LocalDate::
+ 04CA                   .dbline -1
+ 04CA                   .dbline 166
+ 04CA           ;       
+ 04CA           ; }
+ 04CA           ; 
+ 04CA           ; //****************************************************
+ 04CA           ; //UTC日期与当地日期转换
+ 04CA           ; //****************************************************
+ 04CA           ; void UTCDate2LocalDate(void)
+ 04CA           ; {
+ 04CA                   .dbline 167
+ 04CA           ;       Day = Day + 1;          //日  加一
+ 04CA 80910E00          lds R24,_Day
+ 04CE 8F5F              subi R24,255    ; addi 1
+ 04D0 80930E00          sts _Day,R24
+ 04D4                   .dbline 168
+ 04D4           ;       MaxDay = GetMaxDay(Month,Year);                         //获取当月 天数 最大值
+ 04D4 20910400          lds R18,_Year
+ 04D8 30910500          lds R19,_Year+1
+ 04DC 00910B00          lds R16,_Month
+ 04E0 21D0              xcall _GetMaxDay
+ 04E2 00930600          sts _MaxDay,R16
+ 04E6                   .dbline 169
+ 04E6           ;       if(Day > MaxDay)                //溢出
+ 04E6 202E              mov R2,R16
+ 04E8 3324              clr R3
+ 04EA 40900E00          lds R4,_Day
+ 04EE 5524              clr R5
+ 04F0 2414              cp R2,R4
+ 04F2 3504              cpc R3,R5
+ 04F4 B4F4              brge L76
+ 04F6           X78:
+ 04F6                   .dbline 170
+ 04F6           ;       {
+ 04F6                   .dbline 171
+ 04F6           ;               Day = 1;
+ 04F6 81E0              ldi R24,1
+ 04F8 80930E00          sts _Day,R24
+ 04FC                   .dbline 172
+ 04FC           ;               Month += 1;
+ 04FC 80910B00          lds R24,_Month
+ 0500 8F5F              subi R24,255    ; addi 1
+ 0502 80930B00          sts _Month,R24
+ 0506                   .dbline 173
+ 0506           ;               if(Month > 12)
+ 0506 8CE0              ldi R24,12
+ 0508 20900B00          lds R2,_Month
+ 050C 8215              cp R24,R2
+ 050E 48F4              brsh L78
+ 0510           X79:
+ 0510                   .dbline 174
+ 0510           ;               {
+ 0510                   .dbline 175
+ 0510           ;                       Year+=1;
+ 0510 80910400          lds R24,_Year
+ 0514 90910500          lds R25,_Year+1
+ 0518 0196              adiw R24,1
+ 051A 90930500          sts _Year+1,R25
+ 051E 80930400          sts _Year,R24
+ 0522                   .dbline 176
+ 0522           ;               }
+ 0522           L78:
+ 0522                   .dbline 177
+ 0522           ;       }
+ 0522           L76:
+ 0522                   .dbline -2
+ 0522           L75:
+ 0522                   .dbline 0 ; func end
+ 0522 0895              ret
+ 0524                   .dbend
+ 0524                   .dbfunc e GetMaxDay _GetMaxDay fc
+ 0524           ;          iDays -> R20
+ 0524           ;     Year_Value -> R10,R11
+ 0524           ;    Month_Value -> R12
+                        .even
+ 0524           _GetMaxDay::
+ 0524 0E940000          xcall push_xgsetF03C
+ 0528 5901              movw R10,R18
+ 052A C02E              mov R12,R16
+ 052C                   .dbline -1
+ 052C                   .dbline 184
+ 052C           ; }
+ 052C           ; 
+ 052C           ; //****************************************************
+ 052C           ; //获取当月日期最大值
+ 052C           ; //****************************************************
+ 052C           ; unsigned char GetMaxDay(unsigned char Month_Value,unsigned int Year_Value)
+ 052C           ; {
+ 052C                   .dbline 186
+ 052C           ;       unsigned char iDays;
+ 052C           ;       switch(Month_Value)
+ 052C 6C2D              mov R22,R12
+ 052E 7727              clr R23
+ 0530 6130              cpi R22,1
+ 0532 E0E0              ldi R30,0
+ 0534 7E07              cpc R23,R30
+ 0536 69F1              breq L84
+ 0538           X80:
+ 0538 6230              cpi R22,2
+ 053A E0E0              ldi R30,0
+ 053C 7E07              cpc R23,R30
+ 053E 59F1              breq L85
+ 0540           X81:
+ 0540 6330              cpi R22,3
+ 0542 E0E0              ldi R30,0
+ 0544 7E07              cpc R23,R30
+ 0546 29F1              breq L84
+ 0548           X82:
+ 0548 6430              cpi R22,4
+ 054A E0E0              ldi R30,0
+ 054C 7E07              cpc R23,R30
+ 054E 71F1              breq L88
+ 0550           X83:
+ 0550 6530              cpi R22,5
+ 0552 E0E0              ldi R30,0
+ 0554 7E07              cpc R23,R30
+ 0556 E9F0              breq L84
+ 0558           X84:
+ 0558 6630              cpi R22,6
+ 055A E0E0              ldi R30,0
+ 055C 7E07              cpc R23,R30
+ 055E 31F1              breq L88
+ 0560           X85:
+ 0560 6730              cpi R22,7
+ 0562 E0E0              ldi R30,0
+ 0564 7E07              cpc R23,R30
+ 0566 A9F0              breq L84
+ 0568           X86:
+ 0568 6830              cpi R22,8
+ 056A E0E0              ldi R30,0
+ 056C 7E07              cpc R23,R30
+ 056E 89F0              breq L84
+ 0570           X87:
+ 0570 6930              cpi R22,9
+ 0572 E0E0              ldi R30,0
+ 0574 7E07              cpc R23,R30
+ 0576 D1F0              breq L88
+ 0578           X88:
+ 0578 6A30              cpi R22,10
+ 057A E0E0              ldi R30,0
+ 057C 7E07              cpc R23,R30
+ 057E 49F0              breq L84
+ 0580           X89:
+ 0580 6B30              cpi R22,11
+ 0582 E0E0              ldi R30,0
+ 0584 7E07              cpc R23,R30
+ 0586 91F0              breq L88
+ 0588           X90:
+ 0588 6C30              cpi R22,12
+ 058A E0E0              ldi R30,0
+ 058C 7E07              cpc R23,R30
+ 058E 09F0              breq L84
+ 0590           X91:
+ 0590 0EC0              xjmp L82
+ 0592           L84:
+ 0592                   .dbline 189
+ 0592           ;       {
+ 0592           ;               case 1:case 3:case 5:case 7:case 8:case 10:case 12:
+ 0592           ;                       iDays = 31;break;
+ 0592 4FE1              ldi R20,31
+ 0594                   .dbline 189
+ 0594 0CC0              xjmp L82
+ 0596           L85:
+ 0596                   .dbline 192
+ 0596           ;               case 2:
+ 0596           ;               //2月份比较特殊，需要根据是不是闰年来判断当月是28天还29天
+ 0596           ;                       iDays = IsLeapYear(Year_Value)?29:28;break;
+ 0596 8501              movw R16,R10
+ 0598 0DD0              xcall _IsLeapYear
+ 059A 0023              tst R16
+ 059C 19F0              breq L86
+ 059E           X92:
+ 059E 6DE1              ldi R22,29
+ 05A0 70E0              ldi R23,0
+ 05A2 02C0              xjmp L87
+ 05A4           L86:
+ 05A4 6CE1              ldi R22,28
+ 05A6 70E0              ldi R23,0
+ 05A8           L87:
+ 05A8 462F              mov R20,R22
+ 05AA                   .dbline 192
+ 05AA 01C0              xjmp L82
+ 05AC           L88:
+ 05AC                   .dbline 194
+ 05AC           ;               case 4:case 6:case 9:case 11:
+ 05AC           ;                       iDays = 30;break;
+ 05AC 4EE1              ldi R20,30
+ 05AE                   .dbline 194
+ 05AE                   .dbline 195
+ 05AE           ;               default : break;
+ 05AE           L82:
+ 05AE                   .dbline 197
+ 05AE           ;       }
+ 05AE           ;       return(iDays);                                          
+ 05AE 042F              mov R16,R20
+ 05B0                   .dbline -2
+ 05B0           L80:
+ 05B0                   .dbline 0 ; func end
+ 05B0 0C940000          xjmp pop_xgsetF03C
+ 05B4                   .dbsym r iDays 20 c
+ 05B4                   .dbsym r Year_Value 10 i
+ 05B4                   .dbsym r Month_Value 12 c
+ 05B4                   .dbend
+ 05B4                   .dbfunc e IsLeapYear _IsLeapYear fc
+ 05B4           ;         uiYear -> R20,R21
+                        .even
+ 05B4           _IsLeapYear::
+ 05B4 4A93              st -y,R20
+ 05B6 5A93              st -y,R21
+ 05B8 A801              movw R20,R16
+ 05BA                   .dbline -1
+ 05BA                   .dbline 204
+ 05BA           ; }
+ 05BA           ; 
+ 05BA           ; //****************************************************
+ 05BA           ; //闰年检测
+ 05BA           ; //****************************************************
+ 05BA           ; uchar IsLeapYear(unsigned int uiYear)
+ 05BA           ; {
+ 05BA                   .dbline 205
+ 05BA           ;       return (((uiYear%4)==0)&&((uiYear%100)!=0))||((uiYear%400)==0);
+ 05BA CA01              movw R24,R20
+ 05BC 8370              andi R24,3
+ 05BE 9070              andi R25,0
+ 05C0 8030              cpi R24,0
+ 05C2 8907              cpc R24,R25
+ 05C4 41F4              brne L93
+ 05C6           X93:
+ 05C6 24E6              ldi R18,100
+ 05C8 30E0              ldi R19,0
+ 05CA 8A01              movw R16,R20
+ 05CC 0E940000          xcall mod16u
+ 05D0 0030              cpi R16,0
+ 05D2 0107              cpc R16,R17
+ 05D4 41F4              brne L92
+ 05D6           X94:
+ 05D6           L93:
+ 05D6 20E9              ldi R18,400
+ 05D8 31E0              ldi R19,1
+ 05DA 8A01              movw R16,R20
+ 05DC 0E940000          xcall mod16u
+ 05E0 0030              cpi R16,0
+ 05E2 0107              cpc R16,R17
+ 05E4 19F4              brne L90
+ 05E6           X95:
+ 05E6           L92:
+ 05E6 41E0              ldi R20,1
+ 05E8 50E0              ldi R21,0
+ 05EA 02C0              xjmp L91
+ 05EC           L90:
+ 05EC 4427              clr R20
+ 05EE 5527              clr R21
+ 05F0           L91:
+ 05F0 042F              mov R16,R20
+ 05F2                   .dbline -2
+ 05F2           L89:
+ 05F2                   .dbline 0 ; func end
+ 05F2 5991              ld R21,y+
+ 05F4 4991              ld R20,y+
+ 05F6 0895              ret
+ 05F8                   .dbsym r uiYear 20 i
+ 05F8                   .dbend
+ 05F8                   .dbfunc e AllWriteIntoDS1302 _AllWriteIntoDS1302 fV
+                        .even
+ 05F8           _AllWriteIntoDS1302::
+ 05F8                   .dbline -1
+ 05F8                   .dbline 212
+ 05F8           ; }
+ 05F8           ; 
+ 05F8           ; /*****************************************************
+ 05F8           ; 写入DS1302
+ 05F8           ; ******************************************************/
+ 05F8           ; void AllWriteIntoDS1302(void)
+ 05F8           ; {
+ 05F8                   .dbline 213
+ 05F8           ;       Write_ds1302(0x8e,0x00);   //关闭写保护
+ 05F8 2227              clr R18
+ 05FA 0EE8              ldi R16,142
+ 05FC 0E940000          xcall _Write_ds1302
+ 0600                   .dbline 214
+ 0600           ;       Write_ds1302(0x90,0xab);
+ 0600 2BEA              ldi R18,171
+ 0602 00E9              ldi R16,144
+ 0604 0E940000          xcall _Write_ds1302
+ 0608                   .dbline 215
+ 0608           ;       Write_ds1302(0x8c,Year-2000);
+ 0608 20910400          lds R18,_Year
+ 060C 30910500          lds R19,_Year+1
+ 0610 205D              subi R18,208
+ 0612 3740              sbci R19,7
+ 0614 0CE8              ldi R16,140
+ 0616 0E940000          xcall _Write_ds1302
+ 061A                   .dbline 216
+ 061A           ;     Write_ds1302(0x88,Month);
+ 061A 20910B00          lds R18,_Month
+ 061E 08E8              ldi R16,136
+ 0620 0E940000          xcall _Write_ds1302
+ 0624                   .dbline 217
+ 0624           ;       Write_ds1302(0x86,Day);
+ 0624 20910E00          lds R18,_Day
+ 0628 06E8              ldi R16,134
+ 062A 0E940000          xcall _Write_ds1302
+ 062E                   .dbline 218
+ 062E           ;       Write_ds1302(0x8a,1);
+ 062E 21E0              ldi R18,1
+ 0630 0AE8              ldi R16,138
+ 0632 0E940000          xcall _Write_ds1302
+ 0636                   .dbline 219
+ 0636           ;       Write_ds1302(0x84,Hour);
+ 0636 20911700          lds R18,_Hour
+ 063A 04E8              ldi R16,132
+ 063C 0E940000          xcall _Write_ds1302
+ 0640                   .dbline 220
+ 0640           ;       Write_ds1302(0x82,Min);
+ 0640 20911200          lds R18,_Min
+ 0644 02E8              ldi R16,130
+ 0646 0E940000          xcall _Write_ds1302
+ 064A                   .dbline 221
+ 064A           ;       Write_ds1302(0x80,Sec);
+ 064A 20910F00          lds R18,_Sec
+ 064E 00E8              ldi R16,128
+ 0650 0E940000          xcall _Write_ds1302
+ 0654                   .dbline 222
+ 0654           ;       Write_ds1302(0x8e,0x80);   //打开写保护
+ 0654 20E8              ldi R18,128
+ 0656 0EE8              ldi R16,142
+ 0658                   .dbline -2
+ 0658           L94:
+ 0658                   .dbline 0 ; func end
+ 0658 0C940000          xjmp _Write_ds1302
+ 065C                   .dbend
+ 065C                   .dbfunc e AllReadDS1302 _AllReadDS1302 fV
+                        .even
+ 065C           _AllReadDS1302::
+ 065C AA92              st -y,R10
+ 065E                   .dbline -1
+ 065E                   .dbline 226
+ 065E           ; }
+ 065E           ; 
+ 065E           ; void AllReadDS1302(void)
+ 065E           ; {
+ 065E                   .dbline 227
+ 065E           ;       Year=Read_ds1302(0x8d);
+ 065E 0DE8              ldi R16,141
+ 0660 0E940000          xcall _Read_ds1302
+ 0664 202E              mov R2,R16
+ 0666 3324              clr R3
+ 0668 30920500          sts _Year+1,R3
+ 066C 20920400          sts _Year,R2
+ 0670                   .dbline 228
+ 0670           ;       Month=Read_ds1302(0x89);
+ 0670 09E8              ldi R16,137
+ 0672 0E940000          xcall _Read_ds1302
+ 0676 00930B00          sts _Month,R16
+ 067A                   .dbline 229
+ 067A           ;       Day=Read_ds1302(0x87);
+ 067A 07E8              ldi R16,135
+ 067C 0E940000          xcall _Read_ds1302
+ 0680 A02E              mov R10,R16
+ 0682 A0920E00          sts _Day,R10
+ 0686                   .dbline 230
+ 0686           ;       Hour=Read_ds1302(0x85);
+ 0686 05E8              ldi R16,133
+ 0688 0E940000          xcall _Read_ds1302
+ 068C A02E              mov R10,R16
+ 068E A0921700          sts _Hour,R10
+ 0692                   .dbline 231
+ 0692           ;       Min=Read_ds1302(0x83);
+ 0692 03E8              ldi R16,131
+ 0694 0E940000          xcall _Read_ds1302
+ 0698 A02E              mov R10,R16
+ 069A A0921200          sts _Min,R10
+ 069E                   .dbline 232
+ 069E           ;       Sec=Read_ds1302(0x81);
+ 069E 01E8              ldi R16,129
+ 06A0 0E940000          xcall _Read_ds1302
+ 06A4 A02E              mov R10,R16
+ 06A6 A0920F00          sts _Sec,R10
+ 06AA                   .dbline -2
+ 06AA           L95:
+ 06AA                   .dbline 0 ; func end
+ 06AA A990              ld R10,y+
+ 06AC 0895              ret
+ 06AE                   .dbend
+ 06AE                   .dbfunc e DataToASCII _DataToASCII fV
+                        .even
+ 06AE           _DataToASCII::
+ 06AE                   .dbline -1
+ 06AE                   .dbline 239
+ 06AE           ; }
+ 06AE           ; 
+ 06AE           ; /****************************************************
+ 06AE           ; 转ASCII
+ 06AE           ; *****************************************************/
+ 06AE           ; void DataToASCII(void)
+ 06AE           ; {
+ 06AE                   .dbline 241
+ 06AE           ;       
+ 06AE           ;       Hour_High = Hour/10+0x30;                       //时间转成ASCII码
+ 06AE 1AE0              ldi R17,10
+ 06B0 00911700          lds R16,_Hour
+ 06B4 0E940000          xcall div8u
+ 06B8 802F              mov R24,R16
+ 06BA 805D              subi R24,208    ; addi 48
+ 06BC 80931600          sts _Hour_High,R24
+ 06C0                   .dbline 242
+ 06C0           ;       Hour_Low = Hour%10+0x30;
+ 06C0 1AE0              ldi R17,10
+ 06C2 00911700          lds R16,_Hour
+ 06C6 0E940000          xcall mod8u
+ 06CA 802F              mov R24,R16
+ 06CC 805D              subi R24,208    ; addi 48
+ 06CE 80931500          sts _Hour_Low,R24
+ 06D2                   .dbline 244
+ 06D2           ;       
+ 06D2           ;       Sec_High = Sec/10+0x30;
+ 06D2 1AE0              ldi R17,10
+ 06D4 00910F00          lds R16,_Sec
+ 06D8 0E940000          xcall div8u
+ 06DC 802F              mov R24,R16
+ 06DE 805D              subi R24,208    ; addi 48
+ 06E0 80931100          sts _Sec_High,R24
+ 06E4                   .dbline 245
+ 06E4           ;       Sec_Low = Sec%10+0x30;
+ 06E4 1AE0              ldi R17,10
+ 06E6 00910F00          lds R16,_Sec
+ 06EA 0E940000          xcall mod8u
+ 06EE 802F              mov R24,R16
+ 06F0 805D              subi R24,208    ; addi 48
+ 06F2 80931000          sts _Sec_Low,R24
+ 06F6                   .dbline 247
+ 06F6           ;       
+ 06F6           ;       Min_High = Min/10+0x30;
+ 06F6 1AE0              ldi R17,10
+ 06F8 00911200          lds R16,_Min
+ 06FC 0E940000          xcall div8u
+ 0700 802F              mov R24,R16
+ 0702 805D              subi R24,208    ; addi 48
+ 0704 80931400          sts _Min_High,R24
+ 0708                   .dbline 248
+ 0708           ;       Min_Low = Min%10+0x30;
+ 0708 1AE0              ldi R17,10
+ 070A 00911200          lds R16,_Min
+ 070E 0E940000          xcall mod8u
+ 0712 802F              mov R24,R16
+ 0714 805D              subi R24,208    ; addi 48
+ 0716 80931300          sts _Min_Low,R24
+ 071A                   .dbline 250
+ 071A           ;       
+ 071A           ;       Day_High = Day/10 + 0x30;                               //转换日期值为ASCII
+ 071A 1AE0              ldi R17,10
+ 071C 00910E00          lds R16,_Day
+ 0720 0E940000          xcall div8u
+ 0724 802F              mov R24,R16
+ 0726 805D              subi R24,208    ; addi 48
+ 0728 80930D00          sts _Day_High,R24
+ 072C                   .dbline 251
+ 072C           ;       Day_Low = Day%10 + 0x30;
+ 072C 1AE0              ldi R17,10
+ 072E 00910E00          lds R16,_Day
+ 0732 0E940000          xcall mod8u
+ 0736 802F              mov R24,R16
+ 0738 805D              subi R24,208    ; addi 48
+ 073A 80930C00          sts _Day_Low,R24
+ 073E                   .dbline 253
+ 073E           ; 
+ 073E           ;       Month_High = Month/10 + 0x30;                   //转换月份值为ASCII
+ 073E 1AE0              ldi R17,10
+ 0740 00910B00          lds R16,_Month
+ 0744 0E940000          xcall div8u
+ 0748 802F              mov R24,R16
+ 074A 805D              subi R24,208    ; addi 48
+ 074C 80930A00          sts _Month_High,R24
+ 0750                   .dbline 254
+ 0750           ;       Month_Low = Month%10 + 0x30;
+ 0750 1AE0              ldi R17,10
+ 0752 00910B00          lds R16,_Month
+ 0756 0E940000          xcall mod8u
+ 075A 802F              mov R24,R16
+ 075C 805D              subi R24,208    ; addi 48
+ 075E 80930900          sts _Month_Low,R24
+ 0762                   .dbline 256
+ 0762           ; 
+ 0762           ;       Year_High = Year%100/10 + 0x30;                 //转换年份值为ASCII
+ 0762 24E6              ldi R18,100
+ 0764 30E0              ldi R19,0
+ 0766 00910400          lds R16,_Year
+ 076A 10910500          lds R17,_Year+1
+ 076E 0E940000          xcall mod16u
+ 0772 2AE0              ldi R18,10
+ 0774 30E0              ldi R19,0
+ 0776 0E940000          xcall div16u
+ 077A C801              movw R24,R16
+ 077C C096              adiw R24,48
+ 077E 80930800          sts _Year_High,R24
+ 0782                   .dbline 257
+ 0782           ;       Year_Low = Year%10 + 0x30;                      
+ 0782 2AE0              ldi R18,10
+ 0784 30E0              ldi R19,0
+ 0786 00910400          lds R16,_Year
+ 078A 10910500          lds R17,_Year+1
+ 078E 0E940000          xcall mod16u
+ 0792 C801              movw R24,R16
+ 0794 C096              adiw R24,48
+ 0796 80930700          sts _Year_Low,R24
+ 079A                   .dbline -2
+ 079A           L96:
+ 079A                   .dbline 0 ; func end
+ 079A 0895              ret
+ 079C                   .dbend
+ 079C                   .dbfunc e LCD_Display _LCD_Display fV
+                        .even
+ 079C           _LCD_Display::
+ 079C                   .dbline -1
+ 079C                   .dbline 266
+ 079C           ;       
+ 079C           ;       
+ 079C           ; }
+ 079C           ; 
+ 079C           ; /******************************************************
+ 079C           ; LCD显示时间
+ 079C           ; *******************************************************/
+ 079C           ; void LCD_Display(void)
+ 079C           ; {
+ 079C                   .dbline 267
+ 079C           ;       lcd_xy(3,1);
+ 079C 21E0              ldi R18,1
+ 079E 03E0              ldi R16,3
+ 07A0 0E940000          xcall _lcd_xy
+ 07A4                   .dbline 268
+ 07A4           ;       lcd_write_data(Hour_High);   
+ 07A4 00911600          lds R16,_Hour_High
+ 07A8 0E940000          xcall _lcd_write_data
+ 07AC                   .dbline 269
+ 07AC           ;       lcd_write_data(Hour_Low);
+ 07AC 00911500          lds R16,_Hour_Low
+ 07B0 0E940000          xcall _lcd_write_data
+ 07B4                   .dbline 270
+ 07B4           ;       lcd_xy(3,3);
+ 07B4 23E0              ldi R18,3
+ 07B6 03E0              ldi R16,3
+ 07B8 0E940000          xcall _lcd_xy
+ 07BC                   .dbline 271
+ 07BC           ;       lcd_write_data(Min_High);
+ 07BC 00911400          lds R16,_Min_High
+ 07C0 0E940000          xcall _lcd_write_data
+ 07C4                   .dbline 272
+ 07C4           ;       lcd_write_data(Min_Low);
+ 07C4 00911300          lds R16,_Min_Low
+ 07C8 0E940000          xcall _lcd_write_data
+ 07CC                   .dbline 273
+ 07CC           ;       lcd_xy(3,5);
+ 07CC 25E0              ldi R18,5
+ 07CE 03E0              ldi R16,3
+ 07D0 0E940000          xcall _lcd_xy
+ 07D4                   .dbline 274
+ 07D4           ;       lcd_write_data(Sec_High);
+ 07D4 00911100          lds R16,_Sec_High
+ 07D8 0E940000          xcall _lcd_write_data
+ 07DC                   .dbline 275
+ 07DC           ;       lcd_write_data(Sec_Low);
+ 07DC 00911000          lds R16,_Sec_Low
+ 07E0 0E940000          xcall _lcd_write_data
+ 07E4                   .dbline 276
+ 07E4           ;       lcd_xy(2,1);
+ 07E4 21E0              ldi R18,1
+ 07E6 02E0              ldi R16,2
+ 07E8 0E940000          xcall _lcd_xy
+ 07EC                   .dbline 277
+ 07EC           ;       lcd_write_data(Year_High);
+ 07EC 00910800          lds R16,_Year_High
+ 07F0 0E940000          xcall _lcd_write_data
+ 07F4                   .dbline 278
+ 07F4           ;       lcd_write_data(Year_Low);
+ 07F4 00910700          lds R16,_Year_Low
+ 07F8 0E940000          xcall _lcd_write_data
+ 07FC                   .dbline 279
+ 07FC           ;       lcd_xy(2,3);
+ 07FC 23E0              ldi R18,3
+ 07FE 02E0              ldi R16,2
+ 0800 0E940000          xcall _lcd_xy
+ 0804                   .dbline 280
+ 0804           ;       lcd_write_data(Month_High);
+ 0804 00910A00          lds R16,_Month_High
+ 0808 0E940000          xcall _lcd_write_data
+ 080C                   .dbline 281
+ 080C           ;       lcd_write_data(Month_Low);
+ 080C 00910900          lds R16,_Month_Low
+ 0810 0E940000          xcall _lcd_write_data
+ 0814                   .dbline 282
+ 0814           ;       lcd_xy(2,5);
+ 0814 25E0              ldi R18,5
+ 0816 02E0              ldi R16,2
+ 0818 0E940000          xcall _lcd_xy
+ 081C                   .dbline 283
+ 081C           ;       lcd_write_data(Day_High);
+ 081C 00910D00          lds R16,_Day_High
+ 0820 0E940000          xcall _lcd_write_data
+ 0824                   .dbline 284
+ 0824           ;       lcd_write_data(Day_Low);
+ 0824 00910C00          lds R16,_Day_Low
+ 0828                   .dbline -2
+ 0828           L97:
+ 0828                   .dbline 0 ; func end
+ 0828 0C940000          xjmp _lcd_write_data
+ 082C                   .dbend
+ 082C                   .dbfunc e EEPROM_Write _EEPROM_Write fV
+ 082C           ;          adata -> R18,R19
+ 082C           ;           addr -> R16,R17
+                        .even
+ 082C           _EEPROM_Write::
+ 082C                   .dbline -1
+ 082C                   .dbline 290
+ 082C           ; }
+ 082C           ; 
+ 082C           ; 
+ 082C           ; /*EEPROM的写操作*/
+ 082C           ; void EEPROM_Write(uint addr,uint adata)
+ 082C           ; {
+ 082C                   .dbline 291
+ 082C           ;    SREG &= ~BIT(7);//关闭总中断
+ 082C F894              bclr 7
+ 082E           L99:
+ 082E                   .dbline 292
+ 082E           ;       while(EECR & BIT(EEWE));//等待EEWE为0
+ 082E           L100:
+ 082E                   .dbline 292
+ 082E E199              sbic 0x1c,1
+ 0830 FECF              rjmp L99
+ 0832           X96:
+ 0832                   .dbline 294
+ 0832           ;       
+ 0832           ;       EEAR = addr;//写地址
+ 0832 1FBB              out 0x1f,R17
+ 0834 0EBB              out 0x1e,R16
+ 0836                   .dbline 295
+ 0836           ;       EEDR = adata;//写数据
+ 0836 2DBB              out 0x1d,R18
+ 0838                   .dbline 297
+ 0838           ;       
+ 0838           ;       EECR |= BIT(EEMWE);//将EEMWE置"1"
+ 0838 E29A              sbi 0x1c,2
+ 083A                   .dbline 298
+ 083A           ;       EECR |= BIT(EEWE);//将EEWE置"1"
+ 083A E19A              sbi 0x1c,1
+ 083C                   .dbline 300
+ 083C           ;       
+ 083C           ;       SREG |= BIT(7);//打开总中断
+ 083C 7894              bset 7
+ 083E                   .dbline -2
+ 083E           L98:
+ 083E                   .dbline 0 ; func end
+ 083E 0895              ret
+ 0840                   .dbsym r adata 18 i
+ 0840                   .dbsym r addr 16 i
+ 0840                   .dbend
+ 0840                   .dbfunc e EEPROM_Read _EEPROM_Read fc
+ 0840           ;          edata -> R10
+ 0840           ;           addr -> R16,R17
+                        .even
+ 0840           _EEPROM_Read::
+ 0840 AA92              st -y,R10
+ 0842                   .dbline -1
+ 0842                   .dbline 305
+ 0842           ; }
+ 0842           ; 
+ 0842           ; /*EEPROM读操作*/
+ 0842           ; uchar EEPROM_Read(uint addr)
+ 0842           ; {
+ 0842                   .dbline 307
+ 0842           ;   uchar edata;
+ 0842           ;   SREG &= ~BIT(7);
+ 0842 F894              bclr 7
+ 0844           L103:
+ 0844                   .dbline 308
+ 0844           ;   while( EECR & BIT(EEWE) );
+ 0844           L104:
+ 0844                   .dbline 308
+ 0844 E199              sbic 0x1c,1
+ 0846 FECF              rjmp L103
+ 0848           X97:
+ 0848                   .dbline 309
+ 0848           ;   EEAR = addr;
+ 0848 1FBB              out 0x1f,R17
+ 084A 0EBB              out 0x1e,R16
+ 084C                   .dbline 310
+ 084C           ;   EECR |= BIT(EERE);//判断读操作是否完成
+ 084C E09A              sbi 0x1c,0
+ 084E                   .dbline 311
+ 084E           ;   edata = EEDR;
+ 084E ADB2              in R10,0x1d
+ 0850                   .dbline 312
+ 0850           ;   return edata; 
+ 0850 0A2D              mov R16,R10
+ 0852                   .dbline -2
+ 0852           L102:
+ 0852                   .dbline 0 ; func end
+ 0852 A990              ld R10,y+
+ 0854 0895              ret
+ 0856                   .dbsym r edata 10 c
+ 0856                   .dbsym r addr 16 i
+ 0856                   .dbend
+                        .area bss(ram, con, rel)
+ 0000                   .dbfile F:\AVRtest\双模\接收\main.c
+ 0000           _Timetable_Flag::
+ 0000                   .blkb 1
+ 0001                   .dbsym e Timetable_Flag _Timetable_Flag c
+ 0001           _Timetable::
+ 0001                   .blkb 2
+ 0003                   .dbsym e Timetable _Timetable i
+ 0003           _TimeCorrect::
+ 0003                   .blkb 1
+ 0004                   .dbsym e TimeCorrect _TimeCorrect c
+ 0004           _Year::
+ 0004                   .blkb 2
+ 0006                   .dbsym e Year _Year i
+ 0006           _MaxDay::
+ 0006                   .blkb 1
+ 0007                   .dbsym e MaxDay _MaxDay c
+ 0007           _Year_Low::
+ 0007                   .blkb 1
+ 0008                   .dbsym e Year_Low _Year_Low c
+ 0008           _Year_High::
+ 0008                   .blkb 1
+ 0009                   .dbsym e Year_High _Year_High c
+ 0009           _Month_Low::
+ 0009                   .blkb 1
+ 000A                   .dbsym e Month_Low _Month_Low c
+ 000A           _Month_High::
+ 000A                   .blkb 1
+ 000B                   .dbsym e Month_High _Month_High c
+ 000B           _Month::
+ 000B                   .blkb 1
+ 000C                   .dbsym e Month _Month c
+ 000C           _Day_Low::
+ 000C                   .blkb 1
+ 000D                   .dbsym e Day_Low _Day_Low c
+ 000D           _Day_High::
+ 000D                   .blkb 1
+ 000E                   .dbsym e Day_High _Day_High c
+ 000E           _Day::
+ 000E                   .blkb 1
+ 000F                   .dbsym e Day _Day c
+ 000F           _Sec::
+ 000F                   .blkb 1
+ 0010                   .dbsym e Sec _Sec c
+ 0010           _Sec_Low::
+ 0010                   .blkb 1
+ 0011                   .dbsym e Sec_Low _Sec_Low c
+ 0011           _Sec_High::
+ 0011                   .blkb 1
+ 0012                   .dbsym e Sec_High _Sec_High c
+ 0012           _Min::
+ 0012                   .blkb 1
+ 0013                   .dbsym e Min _Min c
+ 0013           _Min_Low::
+ 0013                   .blkb 1
+ 0014                   .dbsym e Min_Low _Min_Low c
+ 0014           _Min_High::
+ 0014                   .blkb 1
+ 0015                   .dbsym e Min_High _Min_High c
+ 0015           _Hour_Low::
+ 0015                   .blkb 1
+ 0016                   .dbsym e Hour_Low _Hour_Low c
+ 0016           _Hour_High::
+ 0016                   .blkb 1
+ 0017                   .dbsym e Hour_High _Hour_High c
+ 0017           _Hour::
+ 0017                   .blkb 1
+ 0018                   .dbsym e Hour _Hour c
+ 0018           _RXbuf::
+ 0018                   .blkb 32
+ 0038                   .dbsym e RXbuf _RXbuf A[32:32]c
+                        .area data(ram, con, rel)
+ 0020                   .dbfile F:\AVRtest\双模\接收\main.c
+ 0020           L32:
+ 0020                   .blkb 5
+                        .area idata
+ 0020 B9CAD5CF00        .byte 185,202,213,207,0
+                        .area data(ram, con, rel)
+ 0025                   .dbfile F:\AVRtest\双模\接收\main.c
+ 0025           L20:
+ 0025                   .blkb 7
+                        .area idata
+ 0025 CEDED0C5BAC500    .byte 206,222,208,197,186,197,0
+                        .area data(ram, con, rel)
+ 002C                   .dbfile F:\AVRtest\双模\接收\main.c
+ 002C           L19:
+ 002C                   .blkb 7
+                        .area idata
+ 002C 20202020202000    .byte 32,32,32,32,32,32,0
+                        .area data(ram, con, rel)
+ 0033                   .dbfile F:\AVRtest\双模\接收\main.c
+ 0033           L4:
+ 0033                   .blkb 15
+                        .area idata
+ 0033 20202020CAB12020B7D62020C3EB00    .byte 32,32,32,32,202,177,32,32,183,214,32,32,195,235,0
+                        .area data(ram, con, rel)
+ 0042                   .dbfile F:\AVRtest\双模\接收\main.c
+ 0042           L3:
+ 0042                   .blkb 15
+                        .area idata
+ 0042 32302020C4EA2020D4C22020C8D500    .byte 50,48,32,32,196,234,32,32,212,194,32,32,200,213,0
+                        .area data(ram, con, rel)
+ 0051                   .dbfile F:\AVRtest\双模\接收\main.c
+ 0051           L2:
+ 0051                   .blkb 7
+                        .area idata
+ 0051 CAB1BCE4A3BA00    .byte 202,177,188,228,163,186,0
+                        .area data(ram, con, rel)
+ 0058                   .dbfile F:\AVRtest\双模\接收\main.c
+ 0058           ; }
+ 0058           ; 
+ 0058           ; 

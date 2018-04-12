@@ -1,0 +1,57 @@
+XL
+H 3 areas 6 global symbols
+M delay.c
+S push_xgset300C Ref0000
+S empy16s Ref0000
+S pop_xgset300C Ref0000
+A text size 4E flags 0
+dbfile delay.c
+dbfile F:\AVRtest\双模\接收\delay.c
+dbfunc e delay_ms 0 fV
+dbsym l j 1 i
+dbsym r i 14 i
+dbsym r xms A i
+dbline FFFFFFFF 6
+dbline A 6
+dbline C 6
+dbline D C
+dbline C 12
+dbline C 16
+dbline FFFFFFFE 1C
+dbline 0 1C
+dbfunc e delay_us 20 fV
+dbsym r i 14 i
+dbsym r us A i
+dbline FFFFFFFF 26
+dbline 12 26
+dbline 14 26
+dbline 15 3A
+dbline 15 40
+dbline 15 40
+dbline 15 44
+dbline FFFFFFFE 4A
+dbline 0 4A
+S _delay_ms Def0000
+S _delay_us Def0020
+A data size 1 flags 20
+dbfile delay.c
+dbfile F:\AVRtest\双模\接收\delay.c
+dbsym e history_messages_number 0 c
+S _history_messages_number Def0000
+A idata size 1 flags 0
+T 00 00 00
+R 00 00 02 00
+T 00 00 0E 94 00 00 58 01 44 27 55 27 05 C0 08 EE
+R 00 00 00 00 12 04 00 00
+T 0E 00 13 E0 07 D0 4F 5F 5F 4F 4A 15 5B 05 C0 F3
+R 00 00 00 00
+T 1C 00 0C 94 00 00
+R 00 00 00 00 12 04 02 00
+T 20 00 0E 94 00 00 58 01 05 E0 10 E0 95 01
+R 00 00 00 00 12 04 00 00
+T 2C 00 0E 94 00 00 58 01 B6 94 A7 94 B6 94 A7 94
+R 00 00 00 00 12 04 01 00
+T 3A 00 44 27 55 27 02 C0 4F 5F 5F 4F 4A 15 5B 05
+R 00 00 00 00
+T 48 00 D8 F3 0C 94 00 00
+R 00 00 00 00 12 06 02 00

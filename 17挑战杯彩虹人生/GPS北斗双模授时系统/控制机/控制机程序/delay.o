@@ -1,0 +1,39 @@
+XL
+H 1 areas 2 global symbols
+M delay.c
+A text size 2E flags 0
+dbfile delay.c
+dbfile F:\AVRtest\˫ģ\control\delay.c
+dbfunc e delay_us 0 fV
+dbsym r time 10 i
+dbline FFFFFFFF 0
+dbline 5 0
+dbline 7 0
+dbline 7 0
+dbline 7 4
+dbline 8 4
+dbline FFFFFFFE E
+dbline 0 E
+dbfunc e delay_ms 10 fV
+dbsym r time 14 i
+dbline FFFFFFFF 16
+dbline D 16
+dbline F 18
+dbline 10 18
+dbline 11 1E
+dbline 12 22
+dbline E 22
+dbline FFFFFFFE 28
+dbline 0 28
+S _delay_ms Def0010
+S _delay_us Def0000
+T 00 00 01 50 10 40 81 E0 90 E0 80 17 91 07 C8 F3
+R 00 00 00 00
+T 0E 00 08 95
+R 00 00 00 00
+T 10 00 4A 93 5A 93 A8 01 05 C0 08 EE 13 E0 F1 DF
+R 00 00 00 00
+T 1E 00 41 50 50 40 40 30 45 07 C1 F7 59 91 49 91
+R 00 00 00 00
+T 2C 00 08 95
+R 00 00 00 00

@@ -1,0 +1,1672 @@
+                        .module main.c
+                        .area text(rom, con, rel)
+ 0000                   .dbfile main.c
+                        .area data(ram, con, rel)
+ 0000                   .dbfile main.c
+ 0000           _Data_legitimate::
+ 0000                   .blkb 1
+                        .area idata
+ 0000 00                .byte 0
+                        .area data(ram, con, rel)
+ 0001                   .dbfile main.c
+ 0001                   .dbfile F:\AVRtest\双模\fs\main.c
+ 0001                   .dbsym e Data_legitimate _Data_legitimate c
+ 0001           _GPS_speed::
+ 0001                   .blkb 2
+                        .area idata
+ 0001 3030              .byte 48,48
+                        .area data(ram, con, rel)
+ 0003                   .dbfile F:\AVRtest\双模\fs\main.c
+ 0003                   .blkb 2
+                        .area idata
+ 0003 302E              .byte 48,46
+                        .area data(ram, con, rel)
+ 0005                   .dbfile F:\AVRtest\双模\fs\main.c
+ 0005                   .blkb 1
+                        .area idata
+ 0005 30                .byte 48
+                        .area data(ram, con, rel)
+ 0006                   .dbfile F:\AVRtest\双模\fs\main.c
+ 0006                   .dbsym e GPS_speed _GPS_speed A[5:5]c
+ 0006           _GPS_Angle::
+ 0006                   .blkb 2
+                        .area idata
+ 0006 3030              .byte 48,48
+                        .area data(ram, con, rel)
+ 0008                   .dbfile F:\AVRtest\双模\fs\main.c
+ 0008                   .blkb 2
+                        .area idata
+ 0008 3030              .byte 48,48
+                        .area data(ram, con, rel)
+ 000A                   .dbfile F:\AVRtest\双模\fs\main.c
+ 000A                   .blkb 1
+                        .area idata
+ 000A 30                .byte 48
+                        .area data(ram, con, rel)
+ 000B                   .dbfile F:\AVRtest\双模\fs\main.c
+ 000B                   .dbsym e GPS_Angle _GPS_Angle A[5:5]c
+ 000B           _Flag_GPSEnd::
+ 000B                   .blkb 1
+                        .area idata
+ 000B 00                .byte 0
+                        .area data(ram, con, rel)
+ 000C                   .dbfile F:\AVRtest\双模\fs\main.c
+ 000C                   .dbsym e Flag_GPSEnd _Flag_GPSEnd c
+ 000C           _Flag_S::
+ 000C                   .blkb 2
+                        .area idata
+ 000C 0000              .byte 0,0
+                        .area data(ram, con, rel)
+ 000E                   .dbfile F:\AVRtest\双模\fs\main.c
+ 000E                   .blkb 2
+                        .area idata
+ 000E 0000              .byte 0,0
+                        .area data(ram, con, rel)
+ 0010                   .dbfile F:\AVRtest\双模\fs\main.c
+ 0010                   .blkb 2
+                        .area idata
+ 0010 0000              .byte 0,0
+                        .area data(ram, con, rel)
+ 0012                   .dbfile F:\AVRtest\双模\fs\main.c
+ 0012                   .blkb 2
+                        .area idata
+ 0012 0000              .byte 0,0
+                        .area data(ram, con, rel)
+ 0014                   .dbfile F:\AVRtest\双模\fs\main.c
+ 0014                   .blkb 2
+                        .area idata
+ 0014 0000              .byte 0,0
+                        .area data(ram, con, rel)
+ 0016                   .dbfile F:\AVRtest\双模\fs\main.c
+ 0016                   .blkb 2
+                        .area idata
+ 0016 0000              .byte 0,0
+                        .area data(ram, con, rel)
+ 0018                   .dbfile F:\AVRtest\双模\fs\main.c
+ 0018                   .blkb 2
+                        .area idata
+ 0018 0000              .byte 0,0
+                        .area data(ram, con, rel)
+ 001A                   .dbfile F:\AVRtest\双模\fs\main.c
+ 001A                   .blkb 1
+                        .area idata
+ 001A 00                .byte 0
+                        .area data(ram, con, rel)
+ 001B                   .dbfile F:\AVRtest\双模\fs\main.c
+ 001B                   .dbsym e Flag_S _Flag_S A[15:15]c
+                        .area text(rom, con, rel)
+ 0000                   .dbfile F:\AVRtest\双模\fs\main.c
+ 0000                   .dbfunc e uart_init _uart_init fV
+                        .even
+ 0000           _uart_init::
+ 0000                   .dbline -1
+ 0000                   .dbline 35
+ 0000           ; #include "nrf2401.h"
+ 0000           ; 
+ 0000           ; #define uchar unsigned char
+ 0000           ; #define uint unsigned int
+ 0000           ; 
+ 0000           ; uchar Data_legitimate=0;                      //接收数据有效判断
+ 0000           ; uchar GPS_lock;                                               //定位有效判断
+ 0000           ; uchar GPSUSE_satellite[2];                    //检测使用卫星个数<4就无法定位
+ 0000           ; uchar GPSVISIBLE_satellite[2];                //可见卫星个数
+ 0000           ; uchar GPSDATA_number;                         //数据类型$GPGGA$GPGSV$GPGMC
+ 0000           ; uchar GPSDATA_mode;                                   //数据模式
+ 0000           ; uchar GPSDOT_count;                                   //逗号个数
+ 0000           ; uchar GPSDATA_count;                          //数据存放计数
+ 0000           ; uchar GPSDATA_cmd[5];                         //用来装数据类型
+ 0000           ; uchar GPS_latitude[9];                                //用来装纬度
+ 0000           ; uchar GPS_latitude_dir;                               //纬度的方向NS
+ 0000           ; uchar GPS_longitude[10];                      //用来装经度
+ 0000           ; uchar GPS_longitude_dir;                      //经度的方向WE
+ 0000           ; uchar GPS_speed[5]={'0','0','0','.','0'};//速度
+ 0000           ; uchar GPS_altitude[6];                                //海拔高度
+ 0000           ; uchar GPS_date[6];                                    //日期
+ 0000           ; uchar GPS_time[6];                                    //时间
+ 0000           ; uchar GPS_Angle[5]={'0','0','0','0','0'};//方位角，初始为0
+ 0000           ; uchar OUT_speed[5];                                   //方位角
+ 0000           ; 
+ 0000           ; uchar Flag_GPSEnd=0;
+ 0000           ; uchar TXbuf[32];
+ 0000           ; uchar Flag_S[15]={0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+ 0000           ; 
+ 0000           ; void Mode1_TXbufSet(void);
+ 0000           ; parity_check(unsigned x);
+ 0000           ; 
+ 0000           ; /*************************串口初始化*******************************/
+ 0000           ; void uart_init(void)
+ 0000           ; {
+ 0000                   .dbline 36
+ 0000           ;       UCSRA=0X00;
+ 0000 2224              clr R2
+ 0002 2BB8              out 0xb,R2
+ 0004                   .dbline 37
+ 0004           ;       UCSRC=0x86;                                                             //异步不倍速
+ 0004 86E8              ldi R24,134
+ 0006 80BD              out 0x20,R24
+ 0008                   .dbline 38
+ 0008           ;       UBRRH=0x00;
+ 0008 20BC              out 0x20,R2
+ 000A                   .dbline 39
+ 000A           ;       UBRRL=0x33;                                                             //波特率9600
+ 000A 83E3              ldi R24,51
+ 000C 89B9              out 0x9,R24
+ 000E                   .dbline 40
+ 000E           ;       UCSRB=0X98;                                                             //使能
+ 000E 88E9              ldi R24,152
+ 0010 8AB9              out 0xa,R24
+ 0012                   .dbline 41
+ 0012           ;       SREG|=BIT(7);
+ 0012 7894              bset 7
+ 0014                   .dbline -2
+ 0014           L1:
+ 0014                   .dbline 0 ; func end
+ 0014 0895              ret
+ 0016                   .dbend
+                        .area vector(rom, abs)
+                        .org 44
+ 002C 0C940B00          jmp _usart
+                        .area text(rom, con, rel)
+ 0016                   .dbfile F:\AVRtest\双模\fs\main.c
+ 0016                   .dbfunc e usart _usart fV
+ 0016           ;      UART_data -> R16
+                        .even
+ 0016           _usart::
+ 0016 2A92              st -y,R2
+ 0018 0A93              st -y,R16
+ 001A 2A93              st -y,R18
+ 001C 3A93              st -y,R19
+ 001E 8A93              st -y,R24
+ 0020 9A93              st -y,R25
+ 0022 AA93              st -y,R26
+ 0024 EA93              st -y,R30
+ 0026 FA93              st -y,R31
+ 0028 2FB6              IN R2,63
+ 002A 2A92              st -y,R2
+ 002C                   .dbline -1
+ 002C                   .dbline 46
+ 002C           ; }
+ 002C           ; /***************串口中断GPS解码***************************/
+ 002C           ; #pragma interrupt_handler usart:12
+ 002C           ; void usart(void)
+ 002C           ; {
+ 002C                   .dbline 48
+ 002C           ;       uchar UART_data;
+ 002C           ;               UART_data=UDR;
+ 002C 0CB1              in R16,0xc
+ 002E                   .dbline 49
+ 002E           ;               switch(UART_data)
+ 002E 202F              mov R18,R16
+ 0030 3327              clr R19
+ 0032 2432              cpi R18,36
+ 0034 E0E0              ldi R30,0
+ 0036 3E07              cpc R19,R30
+ 0038 71F0              breq L6
+ 003A           X0:
+ 003A 2432              cpi R18,36
+ 003C E0E0              ldi R30,0
+ 003E 3E07              cpc R19,R30
+ 0040 0CF4              brge X73
+ 0042 43C0              xjmp L3
+ 0044           X73:
+ 0044           X1:
+ 0044           L124:
+ 0044 2A32              cpi R18,42
+ 0046 E0E0              ldi R30,0
+ 0048 3E07              cpc R19,R30
+ 004A B9F0              breq L8
+ 004C           X2:
+ 004C 2C32              cpi R18,44
+ 004E E0E0              ldi R30,0
+ 0050 3E07              cpc R19,R30
+ 0052 51F0              breq L7
+ 0054           X3:
+ 0054 3AC0              xjmp L3
+ 0056           L6:
+ 0056                   .dbline 52
+ 0056           ;               {
+ 0056           ;                       case '$':
+ 0056           ;                               GPSDATA_number=0;               //GPS数据类型清空
+ 0056 2224              clr R2
+ 0058 20925400          sts _GPSDATA_number,R2
+ 005C                   .dbline 53
+ 005C           ;                               GPSDATA_mode=1;                 //接收命令模式
+ 005C 81E0              ldi R24,1
+ 005E 80935300          sts _GPSDATA_mode,R24
+ 0062                   .dbline 54
+ 0062           ;                               GPSDATA_count=0;                //接收位数清空
+ 0062 20925100          sts _GPSDATA_count,R2
+ 0066                   .dbline 55
+ 0066           ;                               break;
+ 0066 FFC1              xjmp L4
+ 0068           L7:
+ 0068                   .dbline 58
+ 0068           ;                       
+ 0068           ;                       case ',':
+ 0068           ;                               GPSDOT_count++;         //逗号计数加1
+ 0068 80915200          lds R24,_GPSDOT_count
+ 006C 8F5F              subi R24,255    ; addi 1
+ 006E 80935200          sts _GPSDOT_count,R24
+ 0072                   .dbline 59
+ 0072           ;                               GPSDATA_count=0;
+ 0072 2224              clr R2
+ 0074 20925100          sts _GPSDATA_count,R2
+ 0078                   .dbline 60
+ 0078           ;                               break;
+ 0078 F6C1              xjmp L4
+ 007A           L8:
+ 007A                   .dbline 63
+ 007A           ;                       
+ 007A           ;                       case '*':
+ 007A           ;                               Flag_GPSEnd=1;
+ 007A 81E0              ldi R24,1
+ 007C 80930B00          sts _Flag_GPSEnd,R24
+ 0080                   .dbline 64
+ 0080           ;                               switch(GPSDATA_number)
+ 0080 20915400          lds R18,_GPSDATA_number
+ 0084 3327              clr R19
+ 0086 2130              cpi R18,1
+ 0088 E0E0              ldi R30,0
+ 008A 3E07              cpc R19,R30
+ 008C 49F0              breq L12
+ 008E           X4:
+ 008E 2230              cpi R18,2
+ 0090 E0E0              ldi R30,0
+ 0092 3E07              cpc R19,R30
+ 0094 59F0              breq L13
+ 0096           X5:
+ 0096 2330              cpi R18,3
+ 0098 E0E0              ldi R30,0
+ 009A 3E07              cpc R19,R30
+ 009C 69F0              breq L14
+ 009E           X6:
+ 009E 11C0              xjmp L9
+ 00A0           L12:
+ 00A0                   .dbline 67
+ 00A0           ;                               {
+ 00A0           ;                                       case 1:
+ 00A0           ;                                               Data_legitimate|=0x01;//GPGGA
+ 00A0 80910000          lds R24,_Data_legitimate
+ 00A4 8160              ori R24,1
+ 00A6 80930000          sts _Data_legitimate,R24
+ 00AA                   .dbline 68
+ 00AA           ;                                               break;
+ 00AA 0BC0              xjmp L10
+ 00AC           L13:
+ 00AC                   .dbline 70
+ 00AC           ;                                       case 2:
+ 00AC           ;                                               Data_legitimate|=0x02;//GPGSV
+ 00AC 80910000          lds R24,_Data_legitimate
+ 00B0 8260              ori R24,2
+ 00B2 80930000          sts _Data_legitimate,R24
+ 00B6                   .dbline 71
+ 00B6           ;                                               break;
+ 00B6 05C0              xjmp L10
+ 00B8           L14:
+ 00B8                   .dbline 73
+ 00B8           ;                                       case 3:
+ 00B8           ;                                               Data_legitimate|=0x04;//GPRMC
+ 00B8 80910000          lds R24,_Data_legitimate
+ 00BC 8460              ori R24,4
+ 00BE 80930000          sts _Data_legitimate,R24
+ 00C2                   .dbline 74
+ 00C2           ;                                               break;
+ 00C2           L9:
+ 00C2           L10:
+ 00C2                   .dbline 76
+ 00C2           ;                               }
+ 00C2           ;                               GPSDATA_mode=0;
+ 00C2 2224              clr R2
+ 00C4 20925300          sts _GPSDATA_mode,R2
+ 00C8                   .dbline 77
+ 00C8           ;                               break;
+ 00C8 CEC1              xjmp L4
+ 00CA           L3:
+ 00CA                   .dbline 80
+ 00CA           ;                               
+ 00CA           ;                       default:
+ 00CA           ;                               if(GPSDATA_mode==1)                                                                     //类型种类判断
+ 00CA 80915300          lds R24,_GPSDATA_mode
+ 00CE 8130              cpi R24,1
+ 00D0 09F0              breq X74
+ 00D2 83C0              xjmp L15
+ 00D4           X74:
+ 00D4           X7:
+ 00D4                   .dbline 81
+ 00D4           ;                               {
+ 00D4                   .dbline 82
+ 00D4           ;                                       GPSDATA_cmd[GPSDATA_count]=UART_data;                   //接收字符放入类型缓存
+ 00D4 80E0              ldi R24,<_GPSDATA_cmd
+ 00D6 90E0              ldi R25,>_GPSDATA_cmd
+ 00D8 E0915100          lds R30,_GPSDATA_count
+ 00DC FF27              clr R31
+ 00DE E80F              add R30,R24
+ 00E0 F91F              adc R31,R25
+ 00E2 0083              std z+0,R16
+ 00E4                   .dbline 83
+ 00E4           ;                                       if(GPSDATA_count==4)                                                    //如果类型数据接收完毕，判断类型
+ 00E4 80915100          lds R24,_GPSDATA_count
+ 00E8 8430              cpi R24,4
+ 00EA 09F0              breq X75
+ 00EC B7C1              xjmp L16
+ 00EE           X75:
+ 00EE           X8:
+ 00EE                   .dbline 84
+ 00EE           ;                                       {                                                                                       
+ 00EE                   .dbline 87
+ 00EE           ;                                               if              //判断GPGGA
+ 00EE           ;                                               (
+ 00EE           ;                                                       (GPSDATA_cmd[0]=='G' ||GPSDATA_cmd[0]=='B' )
+ 00EE 20904C00          lds R2,_GPSDATA_cmd
+ 00F2 822D              mov R24,R2
+ 00F4 8734              cpi R24,71
+ 00F6 11F0              breq L27
+ 00F8           X9:
+ 00F8 8234              cpi R24,66
+ 00FA F9F4              brne L19
+ 00FC           X10:
+ 00FC           L27:
+ 00FC 80914D00          lds R24,_GPSDATA_cmd+1
+ 0100 8035              cpi R24,80
+ 0102 21F0              breq L29
+ 0104           X11:
+ 0104 8434              cpi R24,68
+ 0106 11F0              breq L29
+ 0108           X12:
+ 0108 8E34              cpi R24,78
+ 010A B9F4              brne L19
+ 010C           X13:
+ 010C           L29:
+ 010C 80914E00          lds R24,_GPSDATA_cmd+2
+ 0110 8734              cpi R24,71
+ 0112 99F4              brne L19
+ 0114           X14:
+ 0114 80914F00          lds R24,_GPSDATA_cmd+3
+ 0118 8734              cpi R24,71
+ 011A 79F4              brne L19
+ 011C           X15:
+ 011C 80915000          lds R24,_GPSDATA_cmd+4
+ 0120 8134              cpi R24,65
+ 0122 59F4              brne L19
+ 0124           X16:
+ 0124                   .dbline 98
+ 0124           ;                                                                       &&
+ 0124           ;                                                       (GPSDATA_cmd[1]=='P' ||GPSDATA_cmd[1]=='D' ||GPSDATA_cmd[1]=='N')
+ 0124           ;                                                                       &&
+ 0124           ;                                                       GPSDATA_cmd[2]=='G'
+ 0124           ;                                                                       &&
+ 0124           ;                                                       GPSDATA_cmd[3]=='G'
+ 0124           ;                                                                       &&
+ 0124           ;                                                       GPSDATA_cmd[4]=='A'
+ 0124           ;                                                                       
+ 0124           ;                                               )
+ 0124           ;                                               {
+ 0124                   .dbline 99
+ 0124           ;                                                       GPSDATA_number=1;
+ 0124 81E0              ldi R24,1
+ 0126 80935400          sts _GPSDATA_number,R24
+ 012A                   .dbline 100
+ 012A           ;                                                       GPSDATA_mode=2;
+ 012A 82E0              ldi R24,2
+ 012C 80935300          sts _GPSDATA_mode,R24
+ 0130                   .dbline 101
+ 0130           ;                                                       GPSDOT_count=0;
+ 0130 2224              clr R2
+ 0132 20925200          sts _GPSDOT_count,R2
+ 0136                   .dbline 102
+ 0136           ;                                                       GPSDATA_count=0;
+ 0136 20925100          sts _GPSDATA_count,R2
+ 013A                   .dbline 103
+ 013A           ;                                               }
+ 013A           L19:
+ 013A                   .dbline 107
+ 013A           ;                                               
+ 013A           ;                                               if              //判断GPGSV
+ 013A           ;                                               (
+ 013A           ;                                                       (GPSDATA_cmd[0]=='G' ||GPSDATA_cmd[0]=='B' )
+ 013A 20904C00          lds R2,_GPSDATA_cmd
+ 013E 822D              mov R24,R2
+ 0140 8734              cpi R24,71
+ 0142 11F0              breq L38
+ 0144           X17:
+ 0144 8234              cpi R24,66
+ 0146 F1F4              brne L30
+ 0148           X18:
+ 0148           L38:
+ 0148 80914D00          lds R24,_GPSDATA_cmd+1
+ 014C 8035              cpi R24,80
+ 014E 21F0              breq L40
+ 0150           X19:
+ 0150 8434              cpi R24,68
+ 0152 11F0              breq L40
+ 0154           X20:
+ 0154 8E34              cpi R24,78
+ 0156 B1F4              brne L30
+ 0158           X21:
+ 0158           L40:
+ 0158 80914E00          lds R24,_GPSDATA_cmd+2
+ 015C 8734              cpi R24,71
+ 015E 91F4              brne L30
+ 0160           X22:
+ 0160 80914F00          lds R24,_GPSDATA_cmd+3
+ 0164 8335              cpi R24,83
+ 0166 71F4              brne L30
+ 0168           X23:
+ 0168 80915000          lds R24,_GPSDATA_cmd+4
+ 016C 8635              cpi R24,86
+ 016E 51F4              brne L30
+ 0170           X24:
+ 0170                   .dbline 117
+ 0170           ;                                                                       &&
+ 0170           ;                                                       (GPSDATA_cmd[1]=='P' ||GPSDATA_cmd[1]=='D' ||GPSDATA_cmd[1]=='N')
+ 0170           ;                                                                       &&
+ 0170           ;                                                       GPSDATA_cmd[2]=='G'
+ 0170           ;                                                                       &&
+ 0170           ;                                                       GPSDATA_cmd[3]=='S'
+ 0170           ;                                                                       &&
+ 0170           ;                                                       GPSDATA_cmd[4]=='V'
+ 0170           ;                                               )
+ 0170           ;                                               {
+ 0170                   .dbline 118
+ 0170           ;                                                       GPSDATA_number=2;
+ 0170 82E0              ldi R24,2
+ 0172 80935400          sts _GPSDATA_number,R24
+ 0176                   .dbline 119
+ 0176           ;                                                       GPSDATA_mode=2;
+ 0176 80935300          sts _GPSDATA_mode,R24
+ 017A                   .dbline 120
+ 017A           ;                                                       GPSDOT_count=0;                                 
+ 017A 2224              clr R2
+ 017C 20925200          sts _GPSDOT_count,R2
+ 0180                   .dbline 121
+ 0180           ;                                                       GPSDATA_count=0;
+ 0180 20925100          sts _GPSDATA_count,R2
+ 0184                   .dbline 122
+ 0184           ;                                               }
+ 0184           L30:
+ 0184                   .dbline 126
+ 0184           ;                                               
+ 0184           ;                                               if              //判断GPRMC
+ 0184           ;                                               (
+ 0184           ;                                                       (GPSDATA_cmd[0]=='G' ||GPSDATA_cmd[0]=='B' )
+ 0184 20914C00          lds R18,_GPSDATA_cmd
+ 0188 2734              cpi R18,71
+ 018A 19F0              breq L49
+ 018C           X25:
+ 018C 2234              cpi R18,66
+ 018E 09F0              breq X76
+ 0190 65C1              xjmp L16
+ 0192           X76:
+ 0192           X26:
+ 0192           L49:
+ 0192 80914D00          lds R24,_GPSDATA_cmd+1
+ 0196 8035              cpi R24,80
+ 0198 29F0              breq L51
+ 019A           X27:
+ 019A 8434              cpi R24,68
+ 019C 19F0              breq L51
+ 019E           X28:
+ 019E 8E34              cpi R24,78
+ 01A0 09F0              breq X77
+ 01A2 5CC1              xjmp L16
+ 01A4           X77:
+ 01A4           X29:
+ 01A4           L51:
+ 01A4 80914E00          lds R24,_GPSDATA_cmd+2
+ 01A8 8235              cpi R24,82
+ 01AA 09F0              breq X78
+ 01AC 57C1              xjmp L16
+ 01AE           X78:
+ 01AE           X30:
+ 01AE 80914F00          lds R24,_GPSDATA_cmd+3
+ 01B2 8D34              cpi R24,77
+ 01B4 09F0              breq X79
+ 01B6 52C1              xjmp L16
+ 01B8           X79:
+ 01B8           X31:
+ 01B8 80915000          lds R24,_GPSDATA_cmd+4
+ 01BC 8334              cpi R24,67
+ 01BE 09F0              breq X80
+ 01C0 4DC1              xjmp L16
+ 01C2           X80:
+ 01C2           X32:
+ 01C2                   .dbline 136
+ 01C2           ;                                                                       &&
+ 01C2           ;                                                       (GPSDATA_cmd[1]=='P' ||GPSDATA_cmd[1]=='D' ||GPSDATA_cmd[1]=='N')
+ 01C2           ;                                                                       &&
+ 01C2           ;                                                       GPSDATA_cmd[2]=='R'
+ 01C2           ;                                                                       &&
+ 01C2           ;                                                       GPSDATA_cmd[3]=='M'
+ 01C2           ;                                                                       &&
+ 01C2           ;                                                       GPSDATA_cmd[4]=='C'
+ 01C2           ;                                               )
+ 01C2           ;                                               {
+ 01C2                   .dbline 137
+ 01C2           ;                                                       GPSDATA_number=3;
+ 01C2 83E0              ldi R24,3
+ 01C4 80935400          sts _GPSDATA_number,R24
+ 01C8                   .dbline 138
+ 01C8           ;                                                       GPSDATA_mode=2;                                 
+ 01C8 82E0              ldi R24,2
+ 01CA 80935300          sts _GPSDATA_mode,R24
+ 01CE                   .dbline 139
+ 01CE           ;                                                       GPSDOT_count=0;
+ 01CE 2224              clr R2
+ 01D0 20925200          sts _GPSDOT_count,R2
+ 01D4                   .dbline 140
+ 01D4           ;                                                       GPSDATA_count=0;
+ 01D4 20925100          sts _GPSDATA_count,R2
+ 01D8                   .dbline 141
+ 01D8           ;                                               }
+ 01D8                   .dbline 143
+ 01D8           ;                                               
+ 01D8           ;                                       }
+ 01D8                   .dbline 144
+ 01D8           ;                               }
+ 01D8 41C1              xjmp L16
+ 01DA           L15:
+ 01DA                   .dbline 145
+ 01DA           ;                               else if(GPSDATA_mode==2)                                        //接收数据处理
+ 01DA 80915300          lds R24,_GPSDATA_mode
+ 01DE 8230              cpi R24,2
+ 01E0 09F0              breq X81
+ 01E2 3CC1              xjmp L52
+ 01E4           X81:
+ 01E4           X33:
+ 01E4                   .dbline 146
+ 01E4           ;                               {
+ 01E4                   .dbline 147
+ 01E4           ;                                       switch (GPSDATA_number)
+ 01E4 20915400          lds R18,_GPSDATA_number
+ 01E8 3327              clr R19
+ 01EA 2130              cpi R18,1
+ 01EC E0E0              ldi R30,0
+ 01EE 3E07              cpc R19,R30
+ 01F0 59F0              breq L57
+ 01F2           X34:
+ 01F2 2230              cpi R18,2
+ 01F4 E0E0              ldi R30,0
+ 01F6 3E07              cpc R19,R30
+ 01F8 09F4              brne X82
+ 01FA 7AC0              xjmp L82
+ 01FC           X82:
+ 01FC           X35:
+ 01FC 2330              cpi R18,3
+ 01FE E0E0              ldi R30,0
+ 0200 3E07              cpc R19,R30
+ 0202 09F4              brne X83
+ 0204 8BC0              xjmp L89
+ 0206           X83:
+ 0206           X36:
+ 0206 2AC1              xjmp L54
+ 0208           L57:
+ 0208                   .dbline 150
+ 0208           ;                                       {
+ 0208           ;                                               case 1:                                                                                         //类型1数据接收。GPGGA
+ 0208           ;                                                       switch(GPSDOT_count)
+ 0208 20915200          lds R18,_GPSDOT_count
+ 020C 3327              clr R19
+ 020E 2230              cpi R18,2
+ 0210 E0E0              ldi R30,0
+ 0212 3E07              cpc R19,R30
+ 0214 E9F0              breq L61
+ 0216           X37:
+ 0216 2330              cpi R18,3
+ 0218 E0E0              ldi R30,0
+ 021A 3E07              cpc R19,R30
+ 021C 39F1              breq L64
+ 021E           X38:
+ 021E 2430              cpi R18,4
+ 0220 E0E0              ldi R30,0
+ 0222 3E07              cpc R19,R30
+ 0224 59F1              breq L67
+ 0226           X39:
+ 0226 2530              cpi R18,5
+ 0228 E0E0              ldi R30,0
+ 022A 3E07              cpc R19,R30
+ 022C 09F4              brne X84
+ 022E 34C0              xjmp L70
+ 0230           X84:
+ 0230           X40:
+ 0230 2630              cpi R18,6
+ 0232 E0E0              ldi R30,0
+ 0234 3E07              cpc R19,R30
+ 0236 09F4              brne X85
+ 0238 37C0              xjmp L73
+ 023A           X85:
+ 023A           X41:
+ 023A 2730              cpi R18,7
+ 023C E0E0              ldi R30,0
+ 023E 3E07              cpc R19,R30
+ 0240 09F4              brne X86
+ 0242 3AC0              xjmp L76
+ 0244           X86:
+ 0244           X42:
+ 0244 2930              cpi R18,9
+ 0246 E0E0              ldi R30,0
+ 0248 3E07              cpc R19,R30
+ 024A 09F4              brne X87
+ 024C 43C0              xjmp L79
+ 024E           X87:
+ 024E           X43:
+ 024E 06C1              xjmp L55
+ 0250           L61:
+ 0250                   .dbline 153
+ 0250           ;                                                       {
+ 0250           ;                                                               case 2:                                                                         //纬度处理
+ 0250           ;                                                                       if(GPSDATA_count<9)
+ 0250 80915100          lds R24,_GPSDATA_count
+ 0254 8930              cpi R24,9
+ 0256 08F0              brlo X88
+ 0258 01C1              xjmp L55
+ 025A           X88:
+ 025A           X44:
+ 025A                   .dbline 154
+ 025A           ;                                                                               GPS_latitude[GPSDATA_count]=UART_data;
+ 025A 80E0              ldi R24,<_GPS_latitude
+ 025C 90E0              ldi R25,>_GPS_latitude
+ 025E E0915100          lds R30,_GPSDATA_count
+ 0262 FF27              clr R31
+ 0264 E80F              add R30,R24
+ 0266 F91F              adc R31,R25
+ 0268 0083              std z+0,R16
+ 026A                   .dbline 155
+ 026A           ;                                                                       break;
+ 026A F8C0              xjmp L55
+ 026C           L64:
+ 026C                   .dbline 157
+ 026C           ;                                                               case 3:                                                                         //纬度方向处理
+ 026C           ;                                                                       if(GPSDATA_count<1)
+ 026C 80915100          lds R24,_GPSDATA_count
+ 0270 8130              cpi R24,1
+ 0272 08F0              brlo X89
+ 0274 F3C0              xjmp L55
+ 0276           X89:
+ 0276           X45:
+ 0276                   .dbline 158
+ 0276           ;                                                                               GPS_latitude_dir=UART_data;
+ 0276 00934200          sts _GPS_latitude_dir,R16
+ 027A                   .dbline 159
+ 027A           ;                                                                       break;
+ 027A F0C0              xjmp L55
+ 027C           L67:
+ 027C                   .dbline 161
+ 027C           ;                                                               case 4:                                                                         //经度处理
+ 027C           ;                                                                       if(GPSDATA_count<10)
+ 027C 80915100          lds R24,_GPSDATA_count
+ 0280 8A30              cpi R24,10
+ 0282 08F0              brlo X90
+ 0284 EBC0              xjmp L55
+ 0286           X90:
+ 0286           X46:
+ 0286                   .dbline 162
+ 0286           ;                                                                               GPS_longitude[GPSDATA_count]=UART_data;
+ 0286 80E0              ldi R24,<_GPS_longitude
+ 0288 90E0              ldi R25,>_GPS_longitude
+ 028A E0915100          lds R30,_GPSDATA_count
+ 028E FF27              clr R31
+ 0290 E80F              add R30,R24
+ 0292 F91F              adc R31,R25
+ 0294 0083              std z+0,R16
+ 0296                   .dbline 163
+ 0296           ;                                                                       break;
+ 0296 E2C0              xjmp L55
+ 0298           L70:
+ 0298                   .dbline 165
+ 0298           ;                                                               case 5:                                                                         //经度方向处理
+ 0298           ;                                                                       if(GPSDATA_count<1)
+ 0298 80915100          lds R24,_GPSDATA_count
+ 029C 8130              cpi R24,1
+ 029E 08F0              brlo X91
+ 02A0 DDC0              xjmp L55
+ 02A2           X91:
+ 02A2           X47:
+ 02A2                   .dbline 166
+ 02A2           ;                                                                               GPS_longitude_dir=UART_data;
+ 02A2 00933700          sts _GPS_longitude_dir,R16
+ 02A6                   .dbline 167
+ 02A6           ;                                                                       break;
+ 02A6 DAC0              xjmp L55
+ 02A8           L73:
+ 02A8                   .dbline 169
+ 02A8           ;                                                               case 6:                                                                         //定位判断
+ 02A8           ;                                                                       if(GPSDATA_count<1)
+ 02A8 80915100          lds R24,_GPSDATA_count
+ 02AC 8130              cpi R24,1
+ 02AE 08F0              brlo X92
+ 02B0 D5C0              xjmp L55
+ 02B2           X92:
+ 02B2           X48:
+ 02B2                   .dbline 170
+ 02B2           ;                                                                               GPS_lock=UART_data;
+ 02B2 00935900          sts _GPS_lock,R16
+ 02B6                   .dbline 171
+ 02B6           ;                                                                       break;
+ 02B6 D2C0              xjmp L55
+ 02B8           L76:
+ 02B8                   .dbline 173
+ 02B8           ;                                                               case 7:                                                                         //GPS使用卫星个数
+ 02B8           ;                                                                       if(GPSDATA_count<2)
+ 02B8 80915100          lds R24,_GPSDATA_count
+ 02BC 8230              cpi R24,2
+ 02BE 08F0              brlo X93
+ 02C0 CDC0              xjmp L55
+ 02C2           X93:
+ 02C2           X49:
+ 02C2                   .dbline 174
+ 02C2           ;                                                                               GPSUSE_satellite[GPSDATA_count]=UART_data;
+ 02C2 80E0              ldi R24,<_GPSUSE_satellite
+ 02C4 90E0              ldi R25,>_GPSUSE_satellite
+ 02C6 E0915100          lds R30,_GPSDATA_count
+ 02CA FF27              clr R31
+ 02CC E80F              add R30,R24
+ 02CE F91F              adc R31,R25
+ 02D0 0083              std z+0,R16
+ 02D2                   .dbline 175
+ 02D2           ;                                                                       break;
+ 02D2 C4C0              xjmp L55
+ 02D4           L79:
+ 02D4                   .dbline 177
+ 02D4           ;                                                               case 9:                                                                         //海拔高度处理
+ 02D4           ;                                                                       if(GPSDATA_count<6)
+ 02D4 80915100          lds R24,_GPSDATA_count
+ 02D8 8630              cpi R24,6
+ 02DA 08F0              brlo X94
+ 02DC BFC0              xjmp L55
+ 02DE           X94:
+ 02DE           X50:
+ 02DE                   .dbline 178
+ 02DE           ;                                                                               GPS_altitude[GPSDATA_count]=UART_data;
+ 02DE 80E0              ldi R24,<_GPS_altitude
+ 02E0 90E0              ldi R25,>_GPS_altitude
+ 02E2 E0915100          lds R30,_GPSDATA_count
+ 02E6 FF27              clr R31
+ 02E8 E80F              add R30,R24
+ 02EA F91F              adc R31,R25
+ 02EC 0083              std z+0,R16
+ 02EE                   .dbline 179
+ 02EE           ;                                                                       break;
+ 02EE                   .dbline 181
+ 02EE           ;                                                       }
+ 02EE           ;                                                       break;
+ 02EE B6C0              xjmp L55
+ 02F0           L82:
+ 02F0                   .dbline 184
+ 02F0           ;                                                       
+ 02F0           ;                                               case 2:                                                                                         //类型2数据接收。GPGSV
+ 02F0           ;                                                       switch(GPSDOT_count)
+ 02F0 20915200          lds R18,_GPSDOT_count
+ 02F4 3327              clr R19
+ 02F6 2330              cpi R18,3
+ 02F8 E0E0              ldi R30,0
+ 02FA 3E07              cpc R19,R30
+ 02FC 09F0              breq L86
+ 02FE           X51:
+ 02FE AEC0              xjmp L55
+ 0300           L86:
+ 0300                   .dbline 187
+ 0300           ;                                                       {
+ 0300           ;                                                               case 3:                                                                         //GPS可见卫星个数
+ 0300           ;                                                                       if(GPSDATA_count<2)
+ 0300 80915100          lds R24,_GPSDATA_count
+ 0304 8230              cpi R24,2
+ 0306 08F0              brlo X95
+ 0308 A9C0              xjmp L55
+ 030A           X95:
+ 030A           X52:
+ 030A                   .dbline 188
+ 030A           ;                                                                               GPSVISIBLE_satellite[GPSDATA_count]=UART_data;
+ 030A 80E0              ldi R24,<_GPSVISIBLE_satellite
+ 030C 90E0              ldi R25,>_GPSVISIBLE_satellite
+ 030E E0915100          lds R30,_GPSDATA_count
+ 0312 FF27              clr R31
+ 0314 E80F              add R30,R24
+ 0316 F91F              adc R31,R25
+ 0318 0083              std z+0,R16
+ 031A                   .dbline 189
+ 031A           ;                                                                       break;
+ 031A                   .dbline 191
+ 031A           ;                                                       }
+ 031A           ;                                               break;
+ 031A A0C0              xjmp L55
+ 031C           L89:
+ 031C                   .dbline 194
+ 031C           ;                                                       
+ 031C           ;                                               case 3:                                                                                         //类型3数据接收。GPRMC
+ 031C           ;                                                       switch(GPSDOT_count)
+ 031C 20915200          lds R18,_GPSDOT_count
+ 0320 3327              clr R19
+ 0322 2130              cpi R18,1
+ 0324 E0E0              ldi R30,0
+ 0326 3E07              cpc R19,R30
+ 0328 49F1              breq L93
+ 032A           X53:
+ 032A 2230              cpi R18,2
+ 032C E0E0              ldi R30,0
+ 032E 3E07              cpc R19,R30
+ 0330 09F4              brne X96
+ 0332 32C0              xjmp L96
+ 0334           X96:
+ 0334           X54:
+ 0334 2330              cpi R18,3
+ 0336 E0E0              ldi R30,0
+ 0338 3E07              cpc R19,R30
+ 033A 09F4              brne X97
+ 033C 3EC0              xjmp L103
+ 033E           X97:
+ 033E           X55:
+ 033E 2430              cpi R18,4
+ 0340 E0E0              ldi R30,0
+ 0342 3E07              cpc R19,R30
+ 0344 09F4              brne X98
+ 0346 47C0              xjmp L106
+ 0348           X98:
+ 0348           X56:
+ 0348 2530              cpi R18,5
+ 034A E0E0              ldi R30,0
+ 034C 3E07              cpc R19,R30
+ 034E 09F4              brne X99
+ 0350 4AC0              xjmp L109
+ 0352           X99:
+ 0352           X57:
+ 0352 2630              cpi R18,6
+ 0354 E0E0              ldi R30,0
+ 0356 3E07              cpc R19,R30
+ 0358 09F4              brne X100
+ 035A 53C0              xjmp L112
+ 035C           X100:
+ 035C           X58:
+ 035C 2730              cpi R18,7
+ 035E E0E0              ldi R30,0
+ 0360 3E07              cpc R19,R30
+ 0362 09F4              brne X101
+ 0364 55C0              xjmp L115
+ 0366           X101:
+ 0366           X59:
+ 0366 2830              cpi R18,8
+ 0368 E0E0              ldi R30,0
+ 036A 3E07              cpc R19,R30
+ 036C 09F4              brne X102
+ 036E 5DC0              xjmp L118
+ 0370           X102:
+ 0370           X60:
+ 0370 2930              cpi R18,9
+ 0372 E0E0              ldi R30,0
+ 0374 3E07              cpc R19,R30
+ 0376 09F4              brne X103
+ 0378 65C0              xjmp L121
+ 037A           X103:
+ 037A           X61:
+ 037A 70C0              xjmp L55
+ 037C           L93:
+ 037C                   .dbline 197
+ 037C           ;                                                       {
+ 037C           ;                                                               case 1:                                                                         //时间处理
+ 037C           ;                                                                       if(GPSDATA_count<6)             
+ 037C 80915100          lds R24,_GPSDATA_count
+ 0380 8630              cpi R24,6
+ 0382 08F0              brlo X104
+ 0384 6BC0              xjmp L55
+ 0386           X104:
+ 0386           X62:
+ 0386                   .dbline 198
+ 0386           ;                                                                               GPS_time[GPSDATA_count]=UART_data;      
+ 0386 80E0              ldi R24,<_GPS_time
+ 0388 90E0              ldi R25,>_GPS_time
+ 038A E0915100          lds R30,_GPSDATA_count
+ 038E FF27              clr R31
+ 0390 E80F              add R30,R24
+ 0392 F91F              adc R31,R25
+ 0394 0083              std z+0,R16
+ 0396                   .dbline 199
+ 0396           ;                                                                       break;
+ 0396 62C0              xjmp L55
+ 0398           L96:
+ 0398                   .dbline 201
+ 0398           ;                                                               case 2:                                                                         //定位判断                                              
+ 0398           ;                                                                       if(GPSDATA_count<1)
+ 0398 80915100          lds R24,_GPSDATA_count
+ 039C 8130              cpi R24,1
+ 039E 08F0              brlo X105
+ 03A0 5DC0              xjmp L55
+ 03A2           X105:
+ 03A2           X63:
+ 03A2                   .dbline 202
+ 03A2           ;                                                                       {
+ 03A2                   .dbline 203
+ 03A2           ;                                                                         if(UART_data=='A')
+ 03A2 0134              cpi R16,65
+ 03A4 19F4              brne L99
+ 03A6           X64:
+ 03A6                   .dbline 204
+ 03A6           ;                                                                                       GPS_lock=1;
+ 03A6 81E0              ldi R24,1
+ 03A8 80935900          sts _GPS_lock,R24
+ 03AC           L99:
+ 03AC                   .dbline 205
+ 03AC           ;                                                                         if(UART_data=='V')
+ 03AC 0635              cpi R16,86
+ 03AE 09F0              breq X106
+ 03B0 55C0              xjmp L55
+ 03B2           X106:
+ 03B2           X65:
+ 03B2                   .dbline 206
+ 03B2           ;                                                                           GPS_lock=0;
+ 03B2 2224              clr R2
+ 03B4 20925900          sts _GPS_lock,R2
+ 03B8                   .dbline 207
+ 03B8           ;                                                                       }
+ 03B8                   .dbline 208
+ 03B8           ;                                                                       break;
+ 03B8 51C0              xjmp L55
+ 03BA           L103:
+ 03BA                   .dbline 210
+ 03BA           ;                                                               case 3:                                                                         //纬度处理                                              
+ 03BA           ;                                                                       if(GPSDATA_count<9)
+ 03BA 80915100          lds R24,_GPSDATA_count
+ 03BE 8930              cpi R24,9
+ 03C0 08F0              brlo X107
+ 03C2 4CC0              xjmp L55
+ 03C4           X107:
+ 03C4           X66:
+ 03C4                   .dbline 211
+ 03C4           ;                                                                       {
+ 03C4                   .dbline 212
+ 03C4           ;                                                                               GPS_latitude[GPSDATA_count]=UART_data;
+ 03C4 80E0              ldi R24,<_GPS_latitude
+ 03C6 90E0              ldi R25,>_GPS_latitude
+ 03C8 E0915100          lds R30,_GPSDATA_count
+ 03CC FF27              clr R31
+ 03CE E80F              add R30,R24
+ 03D0 F91F              adc R31,R25
+ 03D2 0083              std z+0,R16
+ 03D4                   .dbline 213
+ 03D4           ;                                                                       }
+ 03D4                   .dbline 214
+ 03D4           ;                                                                       break;
+ 03D4 43C0              xjmp L55
+ 03D6           L106:
+ 03D6                   .dbline 216
+ 03D6           ;                                                               case 4:                                                                         //纬度方向处理                                          
+ 03D6           ;                                                                       if(GPSDATA_count<1)
+ 03D6 80915100          lds R24,_GPSDATA_count
+ 03DA 8130              cpi R24,1
+ 03DC 08F0              brlo X108
+ 03DE 3EC0              xjmp L55
+ 03E0           X108:
+ 03E0           X67:
+ 03E0                   .dbline 217
+ 03E0           ;                                                                       {
+ 03E0                   .dbline 218
+ 03E0           ;                                                                               GPS_latitude_dir=UART_data;
+ 03E0 00934200          sts _GPS_latitude_dir,R16
+ 03E4                   .dbline 219
+ 03E4           ;                                                                       }
+ 03E4                   .dbline 220
+ 03E4           ;                                                                       break;
+ 03E4 3BC0              xjmp L55
+ 03E6           L109:
+ 03E6                   .dbline 222
+ 03E6           ;                                                               case 5:                                                                         //经度处理                                              
+ 03E6           ;                                                                       if(GPSDATA_count<10)
+ 03E6 80915100          lds R24,_GPSDATA_count
+ 03EA 8A30              cpi R24,10
+ 03EC 08F0              brlo X109
+ 03EE 36C0              xjmp L55
+ 03F0           X109:
+ 03F0           X68:
+ 03F0                   .dbline 223
+ 03F0           ;                                                                       {
+ 03F0                   .dbline 224
+ 03F0           ;                                                                               GPS_longitude[GPSDATA_count]=UART_data;
+ 03F0 80E0              ldi R24,<_GPS_longitude
+ 03F2 90E0              ldi R25,>_GPS_longitude
+ 03F4 E0915100          lds R30,_GPSDATA_count
+ 03F8 FF27              clr R31
+ 03FA E80F              add R30,R24
+ 03FC F91F              adc R31,R25
+ 03FE 0083              std z+0,R16
+ 0400                   .dbline 225
+ 0400           ;                                                                       }
+ 0400                   .dbline 226
+ 0400           ;                                                                       break;
+ 0400 2DC0              xjmp L55
+ 0402           L112:
+ 0402                   .dbline 228
+ 0402           ;                                                               case 6:                                                                         //经度方向处理                                          
+ 0402           ;                                                                       if(GPSDATA_count<1)
+ 0402 80915100          lds R24,_GPSDATA_count
+ 0406 8130              cpi R24,1
+ 0408 48F5              brsh L55
+ 040A           X69:
+ 040A                   .dbline 229
+ 040A           ;                                                                       {
+ 040A                   .dbline 230
+ 040A           ;                                                                               GPS_longitude_dir=UART_data;
+ 040A 00933700          sts _GPS_longitude_dir,R16
+ 040E                   .dbline 231
+ 040E           ;                                                                       }
+ 040E                   .dbline 232
+ 040E           ;                                                                       break;
+ 040E 26C0              xjmp L55
+ 0410           L115:
+ 0410                   .dbline 234
+ 0410           ;                                                               case 7:                                                                         //速度处理                                              
+ 0410           ;                                                                       if(GPSDATA_count<5)
+ 0410 80915100          lds R24,_GPSDATA_count
+ 0414 8530              cpi R24,5
+ 0416 10F5              brsh L55
+ 0418           X70:
+ 0418                   .dbline 235
+ 0418           ;                                                                       {
+ 0418                   .dbline 236
+ 0418           ;                                                                               GPS_speed[GPSDATA_count]=UART_data;
+ 0418 80E0              ldi R24,<_GPS_speed
+ 041A 90E0              ldi R25,>_GPS_speed
+ 041C E0915100          lds R30,_GPSDATA_count
+ 0420 FF27              clr R31
+ 0422 E80F              add R30,R24
+ 0424 F91F              adc R31,R25
+ 0426 0083              std z+0,R16
+ 0428                   .dbline 237
+ 0428           ;                                                                       }
+ 0428                   .dbline 238
+ 0428           ;                                                                       break;
+ 0428 19C0              xjmp L55
+ 042A           L118:
+ 042A                   .dbline 240
+ 042A           ;                                                               case 8:                                                                         //方位角处理                                            
+ 042A           ;                                                                       if(GPSDATA_count<5)
+ 042A 80915100          lds R24,_GPSDATA_count
+ 042E 8530              cpi R24,5
+ 0430 A8F4              brsh L55
+ 0432           X71:
+ 0432                   .dbline 241
+ 0432           ;                                                                       {
+ 0432                   .dbline 242
+ 0432           ;                                                                               GPS_Angle[GPSDATA_count]=UART_data;
+ 0432 80E0              ldi R24,<_GPS_Angle
+ 0434 90E0              ldi R25,>_GPS_Angle
+ 0436 E0915100          lds R30,_GPSDATA_count
+ 043A FF27              clr R31
+ 043C E80F              add R30,R24
+ 043E F91F              adc R31,R25
+ 0440 0083              std z+0,R16
+ 0442                   .dbline 243
+ 0442           ;                                                                       }
+ 0442                   .dbline 244
+ 0442           ;                                                                       break;
+ 0442 0CC0              xjmp L55
+ 0444           L121:
+ 0444                   .dbline 246
+ 0444           ;                                                               case 9:                                                                         //日期                          
+ 0444           ;                                                                       if(GPSDATA_count<6)
+ 0444 80915100          lds R24,_GPSDATA_count
+ 0448 8630              cpi R24,6
+ 044A 40F4              brsh L55
+ 044C           X72:
+ 044C                   .dbline 247
+ 044C           ;                                                                       {
+ 044C                   .dbline 248
+ 044C           ;                                                                               GPS_date[GPSDATA_count]=UART_data;
+ 044C 80E0              ldi R24,<_GPS_date
+ 044E 90E0              ldi R25,>_GPS_date
+ 0450 E0915100          lds R30,_GPSDATA_count
+ 0454 FF27              clr R31
+ 0456 E80F              add R30,R24
+ 0458 F91F              adc R31,R25
+ 045A 0083              std z+0,R16
+ 045C                   .dbline 249
+ 045C           ;                                                                       }
+ 045C                   .dbline 250
+ 045C           ;                                                                       break;
+ 045C                   .dbline 252
+ 045C           ;                                                       }
+ 045C           ;                                                       break;
+ 045C           L54:
+ 045C           L55:
+ 045C                   .dbline 254
+ 045C           ;                                       }
+ 045C           ;                               }
+ 045C           L52:
+ 045C           L16:
+ 045C                   .dbline 255
+ 045C           ;                               GPSDATA_count++;                //接收数位加1
+ 045C 80915100          lds R24,_GPSDATA_count
+ 0460 8F5F              subi R24,255    ; addi 1
+ 0462 80935100          sts _GPSDATA_count,R24
+ 0466                   .dbline 256
+ 0466           ;                               break;
+ 0466           L4:
+ 0466                   .dbline -2
+ 0466           L2:
+ 0466                   .dbline 0 ; func end
+ 0466 2990              ld R2,y+
+ 0468 2FBE              OUT 63,R2
+ 046A F991              ld R31,y+
+ 046C E991              ld R30,y+
+ 046E A991              ld R26,y+
+ 0470 9991              ld R25,y+
+ 0472 8991              ld R24,y+
+ 0474 3991              ld R19,y+
+ 0476 2991              ld R18,y+
+ 0478 0991              ld R16,y+
+ 047A 2990              ld R2,y+
+ 047C 1895              reti
+ 047E                   .dbsym r UART_data 16 c
+ 047E                   .dbend
+ 047E                   .dbfunc e delay _delay fV
+ 047E           ;              i -> R20,R21
+ 047E           ;              j -> R22,R23
+ 047E           ;             ms -> R16,R17
+                        .even
+ 047E           _delay::
+ 047E 0E940000          xcall push_xgsetF000
+ 0482                   .dbline -1
+ 0482                   .dbline 261
+ 0482           ;               }
+ 0482           ; }
+ 0482           ; 
+ 0482           ; void delay(uint ms) 
+ 0482           ; {    
+ 0482                   .dbline 263
+ 0482           ;       uint i,j;  
+ 0482           ;     for (i=0;i<ms;i++) 
+ 0482 4427              clr R20
+ 0484 5527              clr R21
+ 0486 0BC0              xjmp L129
+ 0488           L126:
+ 0488                   .dbline 264
+ 0488           ;       {   
+ 0488                   .dbline 265
+ 0488           ;               for(j=0;j<1140;j++); 
+ 0488 6627              clr R22
+ 048A 7727              clr R23
+ 048C 02C0              xjmp L133
+ 048E           L130:
+ 048E                   .dbline 265
+ 048E           L131:
+ 048E                   .dbline 265
+ 048E 6F5F              subi R22,255  ; offset = 1
+ 0490 7F4F              sbci R23,255
+ 0492           L133:
+ 0492                   .dbline 265
+ 0492 6437              cpi R22,116
+ 0494 E4E0              ldi R30,4
+ 0496 7E07              cpc R23,R30
+ 0498 D0F3              brlo L130
+ 049A           X110:
+ 049A                   .dbline 266
+ 049A           ;       }
+ 049A           L127:
+ 049A                   .dbline 263
+ 049A 4F5F              subi R20,255  ; offset = 1
+ 049C 5F4F              sbci R21,255
+ 049E           L129:
+ 049E                   .dbline 263
+ 049E 4017              cp R20,R16
+ 04A0 5107              cpc R21,R17
+ 04A2 90F3              brlo L126
+ 04A4           X111:
+ 04A4                   .dbline -2
+ 04A4           L125:
+ 04A4                   .dbline 0 ; func end
+ 04A4 0C940000          xjmp pop_xgsetF000
+ 04A8                   .dbsym r i 20 i
+ 04A8                   .dbsym r j 22 i
+ 04A8                   .dbsym r ms 16 i
+ 04A8                   .dbend
+ 04A8                   .dbfunc e main _main fV
+                        .even
+ 04A8           _main::
+ 04A8                   .dbline -1
+ 04A8                   .dbline 270
+ 04A8           ; }
+ 04A8           ; 
+ 04A8           ; void main(void) 
+ 04A8           ; {     
+ 04A8                   .dbline 271
+ 04A8           ;       DDRC=0XFF;
+ 04A8 8FEF              ldi R24,255
+ 04AA 84BB              out 0x14,R24
+ 04AC                   .dbline 272
+ 04AC           ;       DDRD|=0XF0 ;
+ 04AC 81B3              in R24,0x11
+ 04AE 806F              ori R24,240
+ 04B0 81BB              out 0x11,R24
+ 04B2                   .dbline 273
+ 04B2           ;       DDRB=(1<<PB3)|(1<<PB4)|(1<<PB5)|(1<<PB7);  //24L01端口初始化 //把MISO设置为输入和IRQ设置为输入既可 
+ 04B2 88EB              ldi R24,184
+ 04B4 87BB              out 0x17,R24
+ 04B6                   .dbline 274
+ 04B6           ;       PORTB = 0xff;
+ 04B6 8FEF              ldi R24,255
+ 04B8 88BB              out 0x18,R24
+ 04BA                   .dbline 275
+ 04BA           ;       DDRA&=0x3f;                                                             //电池检测脚初始化
+ 04BA 8AB3              in R24,0x1a
+ 04BC 8F73              andi R24,63
+ 04BE 8ABB              out 0x1a,R24
+ 04C0                   .dbline 276
+ 04C0           ;       PORTA|=0XC0;
+ 04C0 8BB3              in R24,0x1b
+ 04C2 806C              ori R24,192
+ 04C4 8BBB              out 0x1b,R24
+ 04C6                   .dbline 277
+ 04C6           ;       init_NRF24L01();        
+ 04C6 0E940000          xcall _init_NRF24L01
+ 04CA                   .dbline 278
+ 04CA           ;       uart_init();      
+ 04CA 9ADD              xcall _uart_init
+ 04CC 10C0              xjmp L136
+ 04CE           L135:
+ 04CE                   .dbline 280
+ 04CE           ;       while(1)  
+ 04CE           ;       {                   
+ 04CE                   .dbline 281
+ 04CE           ;               if(Flag_GPSEnd)
+ 04CE 20900B00          lds R2,_Flag_GPSEnd
+ 04D2 2220              tst R2
+ 04D4 61F0              breq L138
+ 04D6           X112:
+ 04D6                   .dbline 282
+ 04D6           ;               {
+ 04D6                   .dbline 283
+ 04D6           ;                       Mode1_TXbufSet();
+ 04D6 0DD0              xcall _Mode1_TXbufSet
+ 04D8                   .dbline 284
+ 04D8           ;                       nRF24L01_TxPacket(TXbuf);
+ 04D8 00E0              ldi R16,<_TXbuf
+ 04DA 10E0              ldi R17,>_TXbuf
+ 04DC 0E940000          xcall _nRF24L01_TxPacket
+ 04E0                   .dbline 285
+ 04E0           ;                       SPI_RW_Reg(WRITE_REG+STATUS,0XFF);   //将24L01的状态标志位置“1
+ 04E0 2FEF              ldi R18,255
+ 04E2 07E2              ldi R16,39
+ 04E4 0E940000          xcall _SPI_RW_Reg
+ 04E8                   .dbline 286
+ 04E8           ;                       Flag_GPSEnd=0;
+ 04E8 2224              clr R2
+ 04EA 20920B00          sts _Flag_GPSEnd,R2
+ 04EE                   .dbline 287
+ 04EE           ;               }
+ 04EE           L138:
+ 04EE                   .dbline 289
+ 04EE           ;               //delay(5);
+ 04EE           ;       } 
+ 04EE           L136:
+ 04EE                   .dbline 279
+ 04EE EFCF              xjmp L135
+ 04F0           X113:
+ 04F0                   .dbline -2
+ 04F0           L134:
+ 04F0                   .dbline 0 ; func end
+ 04F0 0895              ret
+ 04F2                   .dbend
+ 04F2                   .dbfunc e Mode1_TXbufSet _Mode1_TXbufSet fV
+ 04F2           ;            sum -> R10
+ 04F2           ;              i -> R20
+                        .even
+ 04F2           _Mode1_TXbufSet::
+ 04F2 0E940000          xcall push_xgsetF00C
+ 04F6                   .dbline -1
+ 04F6                   .dbline 297
+ 04F6           ; }
+ 04F6           ; 
+ 04F6           ; /****************************************************************
+ 04F6           ;  //广播模式下发送的数据处理函数 
+ 04F6           ;        详情见项目目录下通信协议
+ 04F6           ;  ***************************************************************/
+ 04F6           ; void Mode1_TXbufSet(void)                                     
+ 04F6           ; {
+ 04F6                   .dbline 299
+ 04F6           ;       uchar i,sum; 
+ 04F6           ;       TXbuf[0]=0x43;                                                  //起始位
+ 04F6 83E4              ldi R24,67
+ 04F8 80930000          sts _TXbuf,R24
+ 04FC                   .dbline 300
+ 04FC           ;       TXbuf[1]=0x01;                                                  //工作模式
+ 04FC 81E0              ldi R24,1
+ 04FE 80930100          sts _TXbuf+1,R24
+ 0502                   .dbline 301
+ 0502           ;       for(i=2;i<8;i++)                                                //时间日期
+ 0502 42E0              ldi R20,2
+ 0504 1DC0              xjmp L145
+ 0506           L142:
+ 0506                   .dbline 302
+ 0506           ;       {
+ 0506                   .dbline 303
+ 0506           ;               TXbuf[i]=GPS_time[i-2];
+ 0506 80E0              ldi R24,<_GPS_time-2
+ 0508 90E0              ldi R25,>_GPS_time-2
+ 050A E42F              mov R30,R20
+ 050C FF27              clr R31
+ 050E E80F              add R30,R24
+ 0510 F91F              adc R31,R25
+ 0512 2080              ldd R2,z+0
+ 0514 80E0              ldi R24,<_TXbuf
+ 0516 90E0              ldi R25,>_TXbuf
+ 0518 E42F              mov R30,R20
+ 051A FF27              clr R31
+ 051C E80F              add R30,R24
+ 051E F91F              adc R31,R25
+ 0520 2082              std z+0,R2
+ 0522                   .dbline 304
+ 0522           ;               TXbuf[i+6]=GPS_date[i-2];
+ 0522 80E0              ldi R24,<_GPS_date-2
+ 0524 90E0              ldi R25,>_GPS_date-2
+ 0526 E42F              mov R30,R20
+ 0528 FF27              clr R31
+ 052A E80F              add R30,R24
+ 052C F91F              adc R31,R25
+ 052E 2080              ldd R2,z+0
+ 0530 80E0              ldi R24,<_TXbuf+6
+ 0532 90E0              ldi R25,>_TXbuf+6
+ 0534 E42F              mov R30,R20
+ 0536 FF27              clr R31
+ 0538 E80F              add R30,R24
+ 053A F91F              adc R31,R25
+ 053C 2082              std z+0,R2
+ 053E                   .dbline 305
+ 053E           ;       } 
+ 053E           L143:
+ 053E                   .dbline 301
+ 053E 4395              inc R20
+ 0540           L145:
+ 0540                   .dbline 301
+ 0540 4830              cpi R20,8
+ 0542 08F3              brlo L142
+ 0544           X114:
+ 0544                   .dbline 306
+ 0544           ;       switch(PINA&0xc0)                                               //电池充电状态
+ 0544 69B3              in R22,0x19
+ 0546 7727              clr R23
+ 0548 607C              andi R22,192
+ 054A 7070              andi R23,0
+ 054C 6034              cpi R22,64
+ 054E E0E0              ldi R30,0
+ 0550 7E07              cpc R23,R30
+ 0552 49F0              breq L152
+ 0554           X115:
+ 0554 6034              cpi R22,64
+ 0556 E0E0              ldi R30,0
+ 0558 7E07              cpc R23,R30
+ 055A 6CF0              brlt L149
+ 055C           X116:
+ 055C           L157:
+ 055C 6038              cpi R22,128
+ 055E E0E0              ldi R30,0
+ 0560 7E07              cpc R23,R30
+ 0562 29F0              breq L154
+ 0564           X117:
+ 0564 08C0              xjmp L149
+ 0566           L152:
+ 0566                   .dbline 308
+ 0566           ;       {
+ 0566           ;               case 0x40:TXbuf[14]=0x10;break;
+ 0566 80E1              ldi R24,16
+ 0568 80930E00          sts _TXbuf+14,R24
+ 056C                   .dbline 308
+ 056C 07C0              xjmp L150
+ 056E           L154:
+ 056E                   .dbline 309
+ 056E           ;               case 0x80:TXbuf[14]=0x01;break;
+ 056E 81E0              ldi R24,1
+ 0570 80930E00          sts _TXbuf+14,R24
+ 0574                   .dbline 309
+ 0574 03C0              xjmp L150
+ 0576           L149:
+ 0576                   .dbline 310
+ 0576           ;               default :TXbuf[14]=0x11;
+ 0576 81E1              ldi R24,17
+ 0578 80930E00          sts _TXbuf+14,R24
+ 057C                   .dbline 311
+ 057C           ;       }
+ 057C           L150:
+ 057C                   .dbline 312
+ 057C           ;       for(i=0;i<14;i++)                                               //从机工作状态
+ 057C 4427              clr R20
+ 057E 1BC0              xjmp L161
+ 0580           L158:
+ 0580                   .dbline 313
+ 0580           ;       {
+ 0580                   .dbline 314
+ 0580           ;               if(Flag_S[i])
+ 0580 80E0              ldi R24,<_Flag_S
+ 0582 90E0              ldi R25,>_Flag_S
+ 0584 E42F              mov R30,R20
+ 0586 FF27              clr R31
+ 0588 E80F              add R30,R24
+ 058A F91F              adc R31,R25
+ 058C 2080              ldd R2,z+0
+ 058E 2220              tst R2
+ 0590 49F0              breq L162
+ 0592           X118:
+ 0592                   .dbline 315
+ 0592           ;               TXbuf[i+14]=1;
+ 0592 80E0              ldi R24,<_TXbuf+14
+ 0594 90E0              ldi R25,>_TXbuf+14
+ 0596 E42F              mov R30,R20
+ 0598 FF27              clr R31
+ 059A E80F              add R30,R24
+ 059C F91F              adc R31,R25
+ 059E 81E0              ldi R24,1
+ 05A0 8083              std z+0,R24
+ 05A2 08C0              xjmp L163
+ 05A4           L162:
+ 05A4                   .dbline 317
+ 05A4           ;               else
+ 05A4           ;               TXbuf[i+14]=0;
+ 05A4 80E0              ldi R24,<_TXbuf+14
+ 05A6 90E0              ldi R25,>_TXbuf+14
+ 05A8 E42F              mov R30,R20
+ 05AA FF27              clr R31
+ 05AC E80F              add R30,R24
+ 05AE F91F              adc R31,R25
+ 05B0 2224              clr R2
+ 05B2 2082              std z+0,R2
+ 05B4           L163:
+ 05B4                   .dbline 318
+ 05B4           ;       }
+ 05B4           L159:
+ 05B4                   .dbline 312
+ 05B4 4395              inc R20
+ 05B6           L161:
+ 05B6                   .dbline 312
+ 05B6 4E30              cpi R20,14
+ 05B8 18F3              brlo L158
+ 05BA           X119:
+ 05BA                   .dbline 319
+ 05BA           ;       if((GPS_time[5]>=0x30)&&(GPS_time[5]<=0x30+60))         //判断GPS是否收到时间
+ 05BA 80912A00          lds R24,_GPS_time+5
+ 05BE 8033              cpi R24,48
+ 05C0 48F0              brlo L166
+ 05C2           X120:
+ 05C2 8CE6              ldi R24,108
+ 05C4 20902A00          lds R2,_GPS_time+5
+ 05C8 8215              cp R24,R2
+ 05CA 20F0              brlo L166
+ 05CC           X121:
+ 05CC                   .dbline 320
+ 05CC           ;       {
+ 05CC                   .dbline 321
+ 05CC           ;               TXbuf[29]=1;                                                                    
+ 05CC 81E0              ldi R24,1
+ 05CE 80931D00          sts _TXbuf+29,R24
+ 05D2                   .dbline 322
+ 05D2           ;       }
+ 05D2 03C0              xjmp L167
+ 05D4           L166:
+ 05D4                   .dbline 324
+ 05D4           ;       else
+ 05D4           ;               TXbuf[29]=0;
+ 05D4 2224              clr R2
+ 05D6 20921D00          sts _TXbuf+29,R2
+ 05DA           L167:
+ 05DA                   .dbline 325
+ 05DA           ;       for(i=1;i<29;i++)                                               //求校验和
+ 05DA 41E0              ldi R20,1
+ 05DC 09C0              xjmp L175
+ 05DE           L172:
+ 05DE                   .dbline 326
+ 05DE           ;                sum=sum+TXbuf[i];
+ 05DE 80E0              ldi R24,<_TXbuf
+ 05E0 90E0              ldi R25,>_TXbuf
+ 05E2 E42F              mov R30,R20
+ 05E4 FF27              clr R31
+ 05E6 E80F              add R30,R24
+ 05E8 F91F              adc R31,R25
+ 05EA 2080              ldd R2,z+0
+ 05EC A20C              add R10,R2
+ 05EE           L173:
+ 05EE                   .dbline 325
+ 05EE 4395              inc R20
+ 05F0           L175:
+ 05F0                   .dbline 325
+ 05F0 4D31              cpi R20,29
+ 05F2 A8F3              brlo L172
+ 05F4           X122:
+ 05F4                   .dbline 327
+ 05F4           ;       if(parity_check(sum))                                   //奇偶校验位
+ 05F4 0A2D              mov R16,R10
+ 05F6 1127              clr R17
+ 05F8 10D0              xcall _parity_check
+ 05FA 0030              cpi R16,0
+ 05FC 0107              cpc R16,R17
+ 05FE 21F0              breq L176
+ 0600           X123:
+ 0600                   .dbline 328
+ 0600           ;               TXbuf[30]=1;
+ 0600 81E0              ldi R24,1
+ 0602 80931E00          sts _TXbuf+30,R24
+ 0606 03C0              xjmp L177
+ 0608           L176:
+ 0608                   .dbline 330
+ 0608           ;       else
+ 0608           ;               TXbuf[30]=0;
+ 0608 2224              clr R2
+ 060A 20921E00          sts _TXbuf+30,R2
+ 060E           L177:
+ 060E                   .dbline 331
+ 060E           ;       sum=0;
+ 060E AA24              clr R10
+ 0610                   .dbline 332
+ 0610           ;       TXbuf[31]=0x34;                                                 //停止位
+ 0610 84E3              ldi R24,52
+ 0612 80931F00          sts _TXbuf+31,R24
+ 0616                   .dbline -2
+ 0616           L140:
+ 0616                   .dbline 0 ; func end
+ 0616 0C940000          xjmp pop_xgsetF00C
+ 061A                   .dbsym r sum 10 c
+ 061A                   .dbsym r i 20 c
+ 061A                   .dbend
+ 061A                   .dbfunc e parity_check _parity_check fI
+ 061A           ;            val -> R20,R21
+ 061A           ;              x -> R16,R17
+                        .even
+ 061A           _parity_check::
+ 061A 4A93              st -y,R20
+ 061C 5A93              st -y,R21
+ 061E                   .dbline -1
+ 061E                   .dbline 338
+ 061E           ; }
+ 061E           ; 
+ 061E           ; 
+ 061E           ; /*函数功能：如果1的个数为奇数个，则返回1，如果1的个数为偶数个，则返回0。*/
+ 061E           ; parity_check(unsigned int x)
+ 061E           ; {
+ 061E                   .dbline 339
+ 061E           ;     unsigned int val=0;
+ 061E 4427              clr R20
+ 0620 5527              clr R21
+ 0622 04C0              xjmp L183
+ 0624           L182:
+ 0624                   .dbline 341
+ 0624           ;     while(x)
+ 0624           ;     {
+ 0624                   .dbline 342
+ 0624           ;         val^=x;//val 和x进行异或运算
+ 0624 4027              eor R20,R16
+ 0626 5127              eor R21,R17
+ 0628                   .dbline 343
+ 0628           ;         x>>=1;//x右移一位
+ 0628 1695              lsr R17
+ 062A 0795              ror R16
+ 062C                   .dbline 344
+ 062C           ;     }
+ 062C           L183:
+ 062C                   .dbline 340
+ 062C 0030              cpi R16,0
+ 062E 0107              cpc R16,R17
+ 0630 C9F7              brne L182
+ 0632           X124:
+ 0632                   .dbline 345
+ 0632           ;     return val&0x1;//取末位运算. val的二进制形式最后一位位1则返回1，为0则返回0.
+ 0632 8A01              movw R16,R20
+ 0634 0170              andi R16,1
+ 0636 1070              andi R17,0
+ 0638                   .dbline -2
+ 0638           L181:
+ 0638                   .dbline 0 ; func end
+ 0638 5991              ld R21,y+
+ 063A 4991              ld R20,y+
+ 063C 0895              ret
+ 063E                   .dbsym r val 20 i
+ 063E                   .dbsym r x 16 i
+ 063E                   .dbend
+                        .area bss(ram, con, rel)
+ 0000                   .dbfile F:\AVRtest\双模\fs\main.c
+ 0000           _TXbuf::
+ 0000                   .blkb 32
+ 0020                   .dbsym e TXbuf _TXbuf A[32:32]c
+ 0020           _OUT_speed::
+ 0020                   .blkb 5
+ 0025                   .dbsym e OUT_speed _OUT_speed A[5:5]c
+ 0025           _GPS_time::
+ 0025                   .blkb 6
+ 002B                   .dbsym e GPS_time _GPS_time A[6:6]c
+ 002B           _GPS_date::
+ 002B                   .blkb 6
+ 0031                   .dbsym e GPS_date _GPS_date A[6:6]c
+ 0031           _GPS_altitude::
+ 0031                   .blkb 6
+ 0037                   .dbsym e GPS_altitude _GPS_altitude A[6:6]c
+ 0037           _GPS_longitude_dir::
+ 0037                   .blkb 1
+ 0038                   .dbsym e GPS_longitude_dir _GPS_longitude_dir c
+ 0038           _GPS_longitude::
+ 0038                   .blkb 10
+ 0042                   .dbsym e GPS_longitude _GPS_longitude A[10:10]c
+ 0042           _GPS_latitude_dir::
+ 0042                   .blkb 1
+ 0043                   .dbsym e GPS_latitude_dir _GPS_latitude_dir c
+ 0043           _GPS_latitude::
+ 0043                   .blkb 9
+ 004C                   .dbsym e GPS_latitude _GPS_latitude A[9:9]c
+ 004C           _GPSDATA_cmd::
+ 004C                   .blkb 5
+ 0051                   .dbsym e GPSDATA_cmd _GPSDATA_cmd A[5:5]c
+ 0051           _GPSDATA_count::
+ 0051                   .blkb 1
+ 0052                   .dbsym e GPSDATA_count _GPSDATA_count c
+ 0052           _GPSDOT_count::
+ 0052                   .blkb 1
+ 0053                   .dbsym e GPSDOT_count _GPSDOT_count c
+ 0053           _GPSDATA_mode::
+ 0053                   .blkb 1
+ 0054                   .dbsym e GPSDATA_mode _GPSDATA_mode c
+ 0054           _GPSDATA_number::
+ 0054                   .blkb 1
+ 0055                   .dbsym e GPSDATA_number _GPSDATA_number c
+ 0055           _GPSVISIBLE_satellite::
+ 0055                   .blkb 2
+ 0057                   .dbsym e GPSVISIBLE_satellite _GPSVISIBLE_satellite A[2:2]c
+ 0057           _GPSUSE_satellite::
+ 0057                   .blkb 2
+ 0059                   .dbsym e GPSUSE_satellite _GPSUSE_satellite A[2:2]c
+ 0059           _GPS_lock::
+ 0059                   .blkb 1
+ 005A                   .dbsym e GPS_lock _GPS_lock c
+ 005A           ; }
+ 005A           ; 

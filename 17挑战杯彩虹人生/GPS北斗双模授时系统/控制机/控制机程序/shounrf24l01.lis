@@ -1,0 +1,698 @@
+                        .module shounrf24l01.c
+                        .area text(rom, con, rel)
+ 0000                   .dbfile shounrf24l01.c
+                        .area data(ram, con, rel)
+ 0000                   .dbfile shounrf24l01.c
+ 0000           _TX_ADDRESS::
+ 0000                   .blkb 2
+                        .area idata
+ 0000 3443              .byte 52,'C
+                        .area data(ram, con, rel)
+ 0002                   .dbfile shounrf24l01.c
+ 0002                   .blkb 2
+                        .area idata
+ 0002 1010              .byte 16,16
+                        .area data(ram, con, rel)
+ 0004                   .dbfile shounrf24l01.c
+ 0004                   .blkb 1
+                        .area idata
+ 0004 01                .byte 1
+                        .area data(ram, con, rel)
+ 0005                   .dbfile shounrf24l01.c
+ 0005                   .dbfile F:\AVRtest\双模\control\shounrf24l01.c
+ 0005                   .dbsym e TX_ADDRESS _TX_ADDRESS A[5:5]c
+ 0005           _RX_ADDRESS::
+ 0005                   .blkb 2
+                        .area idata
+ 0005 3443              .byte 52,'C
+                        .area data(ram, con, rel)
+ 0007                   .dbfile F:\AVRtest\双模\control\shounrf24l01.c
+ 0007                   .blkb 2
+                        .area idata
+ 0007 1010              .byte 16,16
+                        .area data(ram, con, rel)
+ 0009                   .dbfile F:\AVRtest\双模\control\shounrf24l01.c
+ 0009                   .blkb 1
+                        .area idata
+ 0009 01                .byte 1
+                        .area data(ram, con, rel)
+ 000A                   .dbfile F:\AVRtest\双模\control\shounrf24l01.c
+ 000A                   .dbsym e RX_ADDRESS _RX_ADDRESS A[5:5]c
+                        .area text(rom, con, rel)
+ 0000                   .dbfile F:\AVRtest\双模\control\shounrf24l01.c
+ 0000                   .dbfunc e Delay _Delay fV
+ 0000           ;              i -> R20,R21
+ 0000           ;              s -> R16,R17
+                        .even
+ 0000           _Delay::
+ 0000 4A93              st -y,R20
+ 0002 5A93              st -y,R21
+ 0004                   .dbline -1
+ 0004                   .dbline 8
+ 0004           ; #include "shounrf24l01.h"
+ 0004           ; char sta,count,tf;
+ 0004           ; char  TX_ADDRESS[TX_ADR_WIDTH]= {0x34,0x43,0x10,0x10,0x01}; 
+ 0004           ; //本地地址 
+ 0004           ; char  RX_ADDRESS[RX_ADR_WIDTH]= {0x34,0x43,0x10,0x10,0x01}; 
+ 0004           ; //接收地址
+ 0004           ; void Delay(int s) 
+ 0004           ; { 
+ 0004                   .dbline 10
+ 0004           ;       unsigned int i; 
+ 0004           ;       for(i=0; i<s; i++); 
+ 0004 4427              clr R20
+ 0006 5527              clr R21
+ 0008 02C0              xjmp L5
+ 000A           L2:
+ 000A                   .dbline 10
+ 000A           L3:
+ 000A                   .dbline 10
+ 000A 4F5F              subi R20,255  ; offset = 1
+ 000C 5F4F              sbci R21,255
+ 000E           L5:
+ 000E                   .dbline 10
+ 000E 4017              cp R20,R16
+ 0010 5107              cpc R21,R17
+ 0012 D8F3              brlo L2
+ 0014           X0:
+ 0014                   .dbline 11
+ 0014           ;       for(i=0; i<s; i++);
+ 0014 4427              clr R20
+ 0016 5527              clr R21
+ 0018 02C0              xjmp L9
+ 001A           L6:
+ 001A                   .dbline 11
+ 001A           L7:
+ 001A                   .dbline 11
+ 001A 4F5F              subi R20,255  ; offset = 1
+ 001C 5F4F              sbci R21,255
+ 001E           L9:
+ 001E                   .dbline 11
+ 001E 4017              cp R20,R16
+ 0020 5107              cpc R21,R17
+ 0022 D8F3              brlo L6
+ 0024           X1:
+ 0024                   .dbline -2
+ 0024           L1:
+ 0024                   .dbline 0 ; func end
+ 0024 5991              ld R21,y+
+ 0026 4991              ld R20,y+
+ 0028 0895              ret
+ 002A                   .dbsym r i 20 i
+ 002A                   .dbsym r s 16 I
+ 002A                   .dbend
+ 002A                   .dbfunc e SPI_RW _SPI_RW fc
+ 002A           ;           temp -> R10
+ 002A           ;              i -> R20
+ 002A           ;           data -> R16
+                        .even
+ 002A           _SPI_RW::
+ 002A AA92              st -y,R10
+ 002C 4A93              st -y,R20
+ 002E                   .dbline -1
+ 002E                   .dbline 17
+ 002E           ; } 
+ 002E           ; 
+ 002E           ; //函数：uint SPI_RW(uint uchar) 
+ 002E           ; //功能：NRF24L01的SPI写时序  *************************/ 
+ 002E           ; char SPI_RW(char data) 
+ 002E           ; {  
+ 002E                   .dbline 18
+ 002E           ; char i,temp=0;      
+ 002E AA24              clr R10
+ 0030                   .dbline 19
+ 0030           ; for(i=0;i<8;i++) // output 8-bit     
+ 0030 4427              clr R20
+ 0032 0DC0              xjmp L14
+ 0034           L11:
+ 0034                   .dbline 20
+ 0034           ; {   
+ 0034                   .dbline 21
+ 0034           ; if(data & 0x80)   
+ 0034 07FF              sbrs R16,7
+ 0036 02C0              rjmp L15
+ 0038           X2:
+ 0038                   .dbline 22
+ 0038           ; {    
+ 0038                   .dbline 23
+ 0038           ; Hign_24L01_MOSI;                      // output 'uchar', MSB to MOSI   
+ 0038 2D9A              sbi 0x5,5
+ 003A                   .dbline 24
+ 003A           ; }   
+ 003A 01C0              xjmp L16
+ 003C           L15:
+ 003C                   .dbline 26
+ 003C           ; else   
+ 003C           ; {    
+ 003C                   .dbline 27
+ 003C           ; Low_24L01_MOSI;    
+ 003C 2D98              cbi 0x5,5
+ 003E                   .dbline 28
+ 003E           ; }    
+ 003E           L16:
+ 003E                   .dbline 29
+ 003E           ; data = (data << 1);            // shift next bit into MSB..   
+ 003E 000F              lsl R16
+ 0040                   .dbline 30
+ 0040           ; temp<<=1;   
+ 0040 AA0C              lsl R10
+ 0042                   .dbline 31
+ 0042           ; Hign_24L01_SCK;                 // Set SCK high..   
+ 0042 2F9A              sbi 0x5,7
+ 0044                   .dbline 32
+ 0044           ; if(Read_24L01_MISO){temp++;}           // capture current MISO bfit   
+ 0044 1E9B              sbis 0x3,6
+ 0046 01C0              rjmp L17
+ 0048           X3:
+ 0048                   .dbline 32
+ 0048                   .dbline 32
+ 0048 A394              inc R10
+ 004A                   .dbline 32
+ 004A           L17:
+ 004A                   .dbline 33
+ 004A           ; Low_24L01_SCK;                 // ..then set SCK low again     
+ 004A 2F98              cbi 0x5,7
+ 004C                   .dbline 34
+ 004C           ; }     
+ 004C           L12:
+ 004C                   .dbline 19
+ 004C 4395              inc R20
+ 004E           L14:
+ 004E                   .dbline 19
+ 004E 4830              cpi R20,8
+ 0050 88F3              brlo L11
+ 0052           X4:
+ 0052                   .dbline 35
+ 0052           ; return(temp);                    // return read uchar 
+ 0052 0A2D              mov R16,R10
+ 0054                   .dbline -2
+ 0054           L10:
+ 0054                   .dbline 0 ; func end
+ 0054 4991              ld R20,y+
+ 0056 A990              ld R10,y+
+ 0058 0895              ret
+ 005A                   .dbsym r temp 10 c
+ 005A                   .dbsym r i 20 c
+ 005A                   .dbsym r data 16 c
+ 005A                   .dbend
+ 005A                   .dbfunc e SPI_Read _SPI_Read fc
+ 005A           ;        reg_val -> R10
+ 005A           ;            reg -> R10
+                        .even
+ 005A           _SPI_Read::
+ 005A AA92              st -y,R10
+ 005C A02E              mov R10,R16
+ 005E                   .dbline -1
+ 005E                   .dbline 42
+ 005E           ; }  
+ 005E           ; /***
+ 005E           ; //函数：uchar SPI_Read(uchar reg)
+ 005E           ;  //功能：NRF24L01的SPI时序  ******************/ 
+ 005E           ;  
+ 005E           ; char SPI_Read(char reg) 
+ 005E           ; {  
+ 005E                   .dbline 44
+ 005E           ; char reg_val;
+ 005E           ; Low_24L01_CSN;                // CSN low, initialize SPI communication...  
+ 005E 2C98              cbi 0x5,4
+ 0060                   .dbline 45
+ 0060           ; SPI_RW(reg);            // Select register to read from..  
+ 0060 0A2D              mov R16,R10
+ 0062 E3DF              xcall _SPI_RW
+ 0064                   .dbline 46
+ 0064           ; reg_val = SPI_RW(0);          // ..then read registervalue  
+ 0064 0027              clr R16
+ 0066 E1DF              xcall _SPI_RW
+ 0068 A02E              mov R10,R16
+ 006A                   .dbline 47
+ 006A           ; Hign_24L01_CSN;                // CSN high, terminate SPI communication    
+ 006A 2C9A              sbi 0x5,4
+ 006C                   .dbline 48
+ 006C           ; return(reg_val);        // return register value 
+ 006C                   .dbline -2
+ 006C           L19:
+ 006C                   .dbline 0 ; func end
+ 006C A990              ld R10,y+
+ 006E 0895              ret
+ 0070                   .dbsym r reg_val 10 c
+ 0070                   .dbsym r reg 10 c
+ 0070                   .dbend
+ 0070                   .dbfunc e SPI_RW_Reg _SPI_RW_Reg fc
+ 0070           ;         status -> R10
+ 0070           ;          value -> R12
+ 0070           ;            reg -> R10
+                        .even
+ 0070           _SPI_RW_Reg::
+ 0070 AA92              st -y,R10
+ 0072 CA92              st -y,R12
+ 0074 C22E              mov R12,R18
+ 0076 A02E              mov R10,R16
+ 0078                   .dbline -1
+ 0078                   .dbline 52
+ 0078           ; } 
+ 0078           ;  /***************  //功能：NRF24L01读写寄存器函数  ********************/  
+ 0078           ; char SPI_RW_Reg(char reg, char value) 
+ 0078           ; {  
+ 0078                   .dbline 54
+ 0078           ; char status;
+ 0078           ; Low_24L01_CSN;                   // CSN low, init SPI transaction  
+ 0078 2C98              cbi 0x5,4
+ 007A                   .dbline 55
+ 007A           ; status = SPI_RW(reg);      // select register  
+ 007A 0A2D              mov R16,R10
+ 007C D6DF              xcall _SPI_RW
+ 007E A02E              mov R10,R16
+ 0080                   .dbline 56
+ 0080           ; SPI_RW(value);             // ..and write value to it..  
+ 0080 0C2D              mov R16,R12
+ 0082 D3DF              xcall _SPI_RW
+ 0084                   .dbline 57
+ 0084           ; Hign_24L01_CSN;            // CSN high again    
+ 0084 2C9A              sbi 0x5,4
+ 0086                   .dbline 58
+ 0086           ; return(status);            // return nRF24L01 status uchar 
+ 0086 0A2D              mov R16,R10
+ 0088                   .dbline -2
+ 0088           L20:
+ 0088                   .dbline 0 ; func end
+ 0088 C990              ld R12,y+
+ 008A A990              ld R10,y+
+ 008C 0895              ret
+ 008E                   .dbsym r status 10 c
+ 008E                   .dbsym r value 12 c
+ 008E                   .dbsym r reg 10 c
+ 008E                   .dbend
+ 008E                   .dbfunc e SPI_Read_Buf _SPI_Read_Buf fc
+ 008E           ;        status1 -> R10,R11
+ 008E           ;      uchar_ctr -> R20,R21
+ 008E           ;         uchars -> R12
+ 008E           ;           pBuf -> R14,R15
+ 008E           ;            reg -> R10
+                        .even
+ 008E           _SPI_Read_Buf::
+ 008E 0E940000          xcall push_xgset30FC
+ 0092 7901              movw R14,R18
+ 0094 A02E              mov R10,R16
+ 0096 C884              ldd R12,y+8
+ 0098                   .dbline -1
+ 0098                   .dbline 63
+ 0098           ; }  /****************************************  
+ 0098           ; //函数：uint SPI_Read_Buf(uchar reg, uchar *pBuf, uchar uchars)  
+ 0098           ; //功能: 用于读数据，reg：为寄存器地址，pBuf：为待读出数据地址，uchars：读出数据的个数  ******************/  
+ 0098           ; char SPI_Read_Buf(char reg, char *pBuf, char uchars) 
+ 0098           ; {  
+ 0098                   .dbline 65
+ 0098           ; int status1,uchar_ctr;
+ 0098           ; Low_24L01_CSN;                      // Set CSN low, init SPI tranaction  
+ 0098 2C98              cbi 0x5,4
+ 009A                   .dbline 66
+ 009A           ; status1 = SPI_RW(reg);         // Select register to write to and read status uchar
+ 009A 0A2D              mov R16,R10
+ 009C C6DF              xcall _SPI_RW
+ 009E A02E              mov R10,R16
+ 00A0 BB24              clr R11
+ 00A2                   .dbline 67
+ 00A2           ; for(uchar_ctr=0;uchar_ctr<uchars;uchar_ctr++) 
+ 00A2 4427              clr R20
+ 00A4 5527              clr R21
+ 00A6 08C0              xjmp L25
+ 00A8           L22:
+ 00A8                   .dbline 68
+ 00A8           ; pBuf[uchar_ctr] = SPI_RW(0);    //     
+ 00A8 0027              clr R16
+ 00AA BFDF              xcall _SPI_RW
+ 00AC FA01              movw R30,R20
+ 00AE EE0D              add R30,R14
+ 00B0 FF1D              adc R31,R15
+ 00B2 0083              std z+0,R16
+ 00B4           L23:
+ 00B4                   .dbline 67
+ 00B4 4F5F              subi R20,255  ; offset = 1
+ 00B6 5F4F              sbci R21,255
+ 00B8           L25:
+ 00B8                   .dbline 67
+ 00B8 2C2C              mov R2,R12
+ 00BA 3324              clr R3
+ 00BC 4215              cp R20,R2
+ 00BE 5305              cpc R21,R3
+ 00C0 9CF3              brlt L22
+ 00C2           X5:
+ 00C2                   .dbline 69
+ 00C2           ; Hign_24L01_CSN;                               
+ 00C2 2C9A              sbi 0x5,4
+ 00C4                   .dbline 70
+ 00C4           ; return(status1);                    // return nRF24L01 status uchar 
+ 00C4 0A2D              mov R16,R10
+ 00C6                   .dbline -2
+ 00C6           L21:
+ 00C6                   .dbline 0 ; func end
+ 00C6 0C940000          xjmp pop_xgset30FC
+ 00CA                   .dbsym r status1 10 I
+ 00CA                   .dbsym r uchar_ctr 20 I
+ 00CA                   .dbsym r uchars 12 c
+ 00CA                   .dbsym r pBuf 14 pc
+ 00CA                   .dbsym r reg 10 c
+ 00CA                   .dbend
+ 00CA                   .dbfunc e SPI_Write_Buf _SPI_Write_Buf fc
+ 00CA           ;        status1 -> R10
+ 00CA           ;      uchar_ctr -> R12
+ 00CA           ;         uchars -> R20
+ 00CA           ;           pBuf -> R14,R15
+ 00CA           ;            reg -> R10
+                        .even
+ 00CA           _SPI_Write_Buf::
+ 00CA 0E940000          xcall push_xgset30FC
+ 00CE 7901              movw R14,R18
+ 00D0 A02E              mov R10,R16
+ 00D2 4885              ldd R20,y+8
+ 00D4                   .dbline -1
+ 00D4                   .dbline 75
+ 00D4           ; }  /**************************************************************  
+ 00D4           ; //函数：uint SPI_Write_Buf(uchar reg, uchar *pBuf, uchar uchars)  
+ 00D4           ; //功能: 用于写数据：为寄存器地址，pBuf：为待写入数据地址，uchars：写入数据的个数 ***********************/  
+ 00D4           ; char SPI_Write_Buf(char reg, char *pBuf, char uchars) 
+ 00D4           ; {  
+ 00D4                   .dbline 77
+ 00D4           ; char status1,uchar_ctr;    
+ 00D4           ; Low_24L01_CSN;             //SPI使能  
+ 00D4 2C98              cbi 0x5,4
+ 00D6                   .dbline 78
+ 00D6           ; status1 = SPI_RW(reg);     
+ 00D6 0A2D              mov R16,R10
+ 00D8 A8DF              xcall _SPI_RW
+ 00DA A02E              mov R10,R16
+ 00DC                   .dbline 79
+ 00DC           ; for(uchar_ctr=0; uchar_ctr<uchars; uchar_ctr++) 
+ 00DC CC24              clr R12
+ 00DE 05C0              xjmp L30
+ 00E0           L27:
+ 00E0                   .dbline 81
+ 00E0           ; //  
+ 00E0           ; SPI_RW(*pBuf++);  
+ 00E0 F701              movw R30,R14
+ 00E2 0191              ld R16,Z+
+ 00E4 7F01              movw R14,R30
+ 00E6 A1DF              xcall _SPI_RW
+ 00E8           L28:
+ 00E8                   .dbline 79
+ 00E8 C394              inc R12
+ 00EA           L30:
+ 00EA                   .dbline 79
+ 00EA C416              cp R12,R20
+ 00EC C8F3              brlo L27
+ 00EE           X6:
+ 00EE                   .dbline 82
+ 00EE           ; Hign_24L01_CSN;           //关闭SPI  
+ 00EE 2C9A              sbi 0x5,4
+ 00F0                   .dbline 83
+ 00F0           ; return(status1); 
+ 00F0 0A2D              mov R16,R10
+ 00F2                   .dbline -2
+ 00F2           L26:
+ 00F2                   .dbline 0 ; func end
+ 00F2 0C940000          xjmp pop_xgset30FC
+ 00F6                   .dbsym r status1 10 c
+ 00F6                   .dbsym r uchar_ctr 12 c
+ 00F6                   .dbsym r uchars 20 c
+ 00F6                   .dbsym r pBuf 14 pc
+ 00F6                   .dbsym r reg 10 c
+ 00F6                   .dbend
+ 00F6                   .dbfunc e SetRX_Mode _SetRX_Mode fV
+                        .even
+ 00F6           _SetRX_Mode::
+ 00F6                   .dbline -1
+ 00F6                   .dbline 87
+ 00F6           ; }  /************************  
+ 00F6           ; 功能：数据接收配置   ********************************************/ 
+ 00F6           ; void SetRX_Mode(void) 
+ 00F6           ; {  
+ 00F6                   .dbline 88
+ 00F6           ; Low_24L01_CE;
+ 00F6 2B98              cbi 0x5,3
+ 00F8                   .dbline 90
+ 00F8           ; //SPI_Write_Buf(WRITE_REG + RX_PW_P0, TX_ADDRESS,TX_ADR_WIDTH);
+ 00F8           ; SPI_RW_Reg(WRITE_REG + CONFIG, 0x0f);     // IRQ收发完成中断响应，16位CRC ，主接收  
+ 00F8 2FE0              ldi R18,15
+ 00FA 00E2              ldi R16,32
+ 00FC B9DF              xcall _SPI_RW_Reg
+ 00FE                   .dbline 91
+ 00FE           ; Hign_24L01_CE; 
+ 00FE 2B9A              sbi 0x5,3
+ 0100                   .dbline 92
+ 0100           ; Delay(1200);                    //注意不能太小 
+ 0100 00EB              ldi R16,1200
+ 0102 14E0              ldi R17,4
+ 0104                   .dbline -2
+ 0104           L31:
+ 0104                   .dbline 0 ; func end
+ 0104 7DCF              xjmp _Delay
+ 0106                   .dbend
+ 0106                   .dbfunc e nRF24L01_RxPacket _nRF24L01_RxPacket fc
+ 0106           ;         revale -> R20
+ 0106           ;         rx_buf -> R10,R11
+                        .even
+ 0106           _nRF24L01_RxPacket::
+ 0106 0E940000          xcall push_xgset300C
+ 010A 5801              movw R10,R16
+ 010C 2197              sbiw R28,1
+ 010E                   .dbline -1
+ 010E                   .dbline 99
+ 010E           ; }  
+ 010E           ; /*****************************************************  
+ 010E           ; //函数：unsigned char nRF24L01_RxPacket(unsigned char* rx_buf) 
+ 010E           ; //功能：数据读取后放如rx_buf接收缓冲区中  ************/
+ 010E           ; 
+ 010E           ; char nRF24L01_RxPacket(char* rx_buf) 
+ 010E           ; {      
+ 010E                   .dbline 100
+ 010E           ; char revale=0;  
+ 010E 4427              clr R20
+ 0110                   .dbline 101
+ 0110           ; SetRX_Mode();
+ 0110 F2DF              xcall _SetRX_Mode
+ 0112                   .dbline 102
+ 0112           ; sta=SPI_Read(STATUS);      // 读取状态寄存其来判断数据接收状况    
+ 0112 07E0              ldi R16,7
+ 0114 A2DF              xcall _SPI_Read
+ 0116 00930200          sts _sta,R16
+ 011A                   .dbline 103
+ 011A           ; if(sta&0x40)                 // 判断是否接收到数据  
+ 011A 06FF              sbrs R16,6
+ 011C 07C0              rjmp L33
+ 011E           X7:
+ 011E                   .dbline 104
+ 011E           ; {     
+ 011E                   .dbline 105
+ 011E           ; Low_24L01_CE;    //SPI使能   
+ 011E 2B98              cbi 0x5,3
+ 0120                   .dbline 106
+ 0120           ; SPI_Read_Buf(RD_RX_PLOAD,rx_buf,TX_PLOAD_WIDTH);// 读接受到的数据从RX_FIFO buffer   
+ 0120 80E2              ldi R24,32
+ 0122 8883              std y+0,R24
+ 0124 9501              movw R18,R10
+ 0126 01E6              ldi R16,97
+ 0128 B2DF              xcall _SPI_Read_Buf
+ 012A                   .dbline 107
+ 012A           ; revale =1;                            //读取数据完成标志  
+ 012A 41E0              ldi R20,1
+ 012C                   .dbline 108
+ 012C           ; }  
+ 012C           L33:
+ 012C                   .dbline 109
+ 012C           ; SPI_RW_Reg(WRITE_REG+STATUS,sta);   //接收到数据后RX_DR,TX_DS,MAX_PT都置高为1，通过写1来清除中断标志  
+ 012C 20910200          lds R18,_sta
+ 0130 07E2              ldi R16,39
+ 0132 9EDF              xcall _SPI_RW_Reg
+ 0134                   .dbline 113
+ 0134           ;               /*  Low_24L01_CSN;
+ 0134           ;           SPI_RW(FLUSH_RX);
+ 0134           ;           Hign_24L01_CSN;*/
+ 0134           ; return revale; 
+ 0134 042F              mov R16,R20
+ 0136                   .dbline -2
+ 0136           L32:
+ 0136                   .dbline 0 ; func end
+ 0136 2196              adiw R28,1
+ 0138 0C940000          xjmp pop_xgset300C
+ 013C                   .dbsym r revale 20 c
+ 013C                   .dbsym r rx_buf 10 pc
+ 013C                   .dbend
+ 013C                   .dbfunc e nRF24L01_TxPacket _nRF24L01_TxPacket fV
+ 013C           ;         tx_buf -> R10,R11
+                        .even
+ 013C           _nRF24L01_TxPacket::
+ 013C AA92              st -y,R10
+ 013E BA92              st -y,R11
+ 0140 5801              movw R10,R16
+ 0142 2197              sbiw R28,1
+ 0144                   .dbline -1
+ 0144                   .dbline 119
+ 0144           ; }  
+ 0144           ; /**********************************************  
+ 0144           ; //函数：void nRF24L01_TxPacket(char * tx_buf) 
+ 0144           ; //功能：发送 tx_buf中数据  ****************************************/  
+ 0144           ; void nRF24L01_TxPacket(char * tx_buf) 
+ 0144           ; {  
+ 0144                   .dbline 120
+ 0144           ; Low_24L01_CE;   //StandBy I模式   
+ 0144 2B98              cbi 0x5,3
+ 0146                   .dbline 121
+ 0146           ; SPI_Write_Buf(WRITE_REG + RX_ADDR_P0, TX_ADDRESS, TX_ADR_WIDTH); 
+ 0146 85E0              ldi R24,5
+ 0148 8883              std y+0,R24
+ 014A 20E0              ldi R18,<_TX_ADDRESS
+ 014C 30E0              ldi R19,>_TX_ADDRESS
+ 014E 0AE2              ldi R16,42
+ 0150 BCDF              xcall _SPI_Write_Buf
+ 0152                   .dbline 123
+ 0152           ; // 装载接收端地址     
+ 0152           ; SPI_Write_Buf(WR_TX_PLOAD, tx_buf, TX_PLOAD_WIDTH);     
+ 0152 80E2              ldi R24,32
+ 0154 8883              std y+0,R24
+ 0156 9501              movw R18,R10
+ 0158 00EA              ldi R16,160
+ 015A B7DF              xcall _SPI_Write_Buf
+ 015C                   .dbline 125
+ 015C           ; // 装载数据   
+ 015C           ; SPI_RW_Reg(WRITE_REG + CONFIG, 0x0e);      
+ 015C 2EE0              ldi R18,14
+ 015E 00E2              ldi R16,32
+ 0160 87DF              xcall _SPI_RW_Reg
+ 0162                   .dbline 127
+ 0162           ; // IRQ收发完成中断响应，16位CRC，主发送  
+ 0162           ; Hign_24L01_CE;   
+ 0162 2B9A              sbi 0x5,3
+ 0164                   .dbline 129
+ 0164           ; //置高CE，激发数据发送  
+ 0164           ; Delay(600); 
+ 0164 08E5              ldi R16,600
+ 0166 12E0              ldi R17,2
+ 0168 4BDF              xcall _Delay
+ 016A                   .dbline -2
+ 016A           L35:
+ 016A                   .dbline 0 ; func end
+ 016A 2196              adiw R28,1
+ 016C B990              ld R11,y+
+ 016E A990              ld R10,y+
+ 0170 0895              ret
+ 0172                   .dbsym r tx_buf 10 pc
+ 0172                   .dbend
+ 0172                   .dbfunc e init_NRF24L01 _init_NRF24L01 fV
+                        .even
+ 0172           _init_NRF24L01::
+ 0172 2197              sbiw R28,1
+ 0174                   .dbline -1
+ 0174                   .dbline 135
+ 0174           ; }  
+ 0174           ; /**********************************************/
+ 0174           ; 
+ 0174           ; 
+ 0174           ; void init_NRF24L01(void)
+ 0174           ; {   
+ 0174                   .dbline 136
+ 0174           ;       Low_24L01_CE;   
+ 0174 2B98              cbi 0x5,3
+ 0176                   .dbline 138
+ 0176           ;       // chip enable 
+ 0176           ;     Hign_24L01_CSN; 
+ 0176 2C9A              sbi 0x5,4
+ 0178                   .dbline 140
+ 0178           ;       // Spi disable    
+ 0178           ;       Low_24L01_SCK; 
+ 0178 2F98              cbi 0x5,7
+ 017A                   .dbline 143
+ 017A           ;        
+ 017A           ;       // Spi clock line init high 
+ 017A           ;       SPI_Write_Buf(WRITE_REG + TX_ADDR, TX_ADDRESS, TX_ADR_WIDTH); 
+ 017A 85E0              ldi R24,5
+ 017C 8883              std y+0,R24
+ 017E 20E0              ldi R18,<_TX_ADDRESS
+ 0180 30E0              ldi R19,>_TX_ADDRESS
+ 0182 00E3              ldi R16,48
+ 0184 A2DF              xcall _SPI_Write_Buf
+ 0186                   .dbline 145
+ 0186           ;       // 写本地地址  
+ 0186           ;       SPI_Write_Buf(WRITE_REG +  RX_ADDR_P0, RX_ADDRESS, RX_ADR_WIDTH);
+ 0186 85E0              ldi R24,5
+ 0188 8883              std y+0,R24
+ 018A 20E0              ldi R18,<_RX_ADDRESS
+ 018C 30E0              ldi R19,>_RX_ADDRESS
+ 018E 0AE2              ldi R16,42
+ 0190 9CDF              xcall _SPI_Write_Buf
+ 0192                   .dbline 150
+ 0192           ;       // 写接收端地址  
+ 0192           ;       
+ 0192           ;       //SPI_Write_Buf(WR_TX_PLOAD, TxBuf, TX_PLOAD_WIDTH);/*******/
+ 0192           ;       
+ 0192           ;       SPI_RW_Reg(WRITE_REG + EN_AA,0x01); // 0
+ 0192 21E0              ldi R18,1
+ 0194 01E2              ldi R16,33
+ 0196 6CDF              xcall _SPI_RW_Reg
+ 0198                   .dbline 152
+ 0198           ;       //  频道0自动 ACK应答允许 （使能）  
+ 0198           ;       SPI_RW_Reg(WRITE_REG + EN_RXADDR,0x01); // 0
+ 0198 21E0              ldi R18,1
+ 019A 02E2              ldi R16,34
+ 019C 69DF              xcall _SPI_RW_Reg
+ 019E                   .dbline 157
+ 019E           ;       //  允许接收地址只有频道0，如果需要多频道可以参考Page21 （使能）
+ 019E           ;       // SPI_RW_Reg(WRITE_REG + EN_AA, 0x00);          // 关闭通道0自动应答
+ 019E           ;    // SPI_RW_Reg(WRITE_REG + EN_RXADDR, 0x00);     // 关闭接收通道0
+ 019E           ;       //SPI_RW_Reg(WRITE_REG + SETUP_RETR, 0x00); 
+ 019E           ;       SPI_RW_Reg(WRITE_REG + SETUP_RETR, 0x1a);//自动重发
+ 019E 2AE1              ldi R18,26
+ 01A0 04E2              ldi R16,36
+ 01A2 66DF              xcall _SPI_RW_Reg
+ 01A4                   .dbline 159
+ 01A4           ;       
+ 01A4           ;       SPI_RW_Reg(WRITE_REG + RF_CH, 3);   //   设置信道工作为2.4GHZ，收发必须一致 
+ 01A4 23E0              ldi R18,3
+ 01A6 05E2              ldi R16,37
+ 01A8 63DF              xcall _SPI_RW_Reg
+ 01AA                   .dbline 161
+ 01AA           ;            
+ 01AA           ;       SPI_RW_Reg(WRITE_REG + RF_SETUP, 0x07);  // 0//设置发射速率为1MHZ，发射功率为最大值0dB 
+ 01AA 27E0              ldi R18,7
+ 01AC 06E2              ldi R16,38
+ 01AE 60DF              xcall _SPI_RW_Reg
+ 01B0                   .dbline 163
+ 01B0           ;       
+ 01B0           ;       SPI_RW_Reg(WRITE_REG + RX_PW_P0, RX_PLOAD_WIDTH); //设置接收数据长度，本次设置为32字节 
+ 01B0 20E2              ldi R18,32
+ 01B2 01E3              ldi R16,49
+ 01B4 5DDF              xcall _SPI_RW_Reg
+ 01B6                   .dbline 167
+ 01B6           ;       
+ 01B6           ;       
+ 01B6           ;        
+ 01B6           ;       SPI_RW_Reg(WRITE_REG + CONFIG, 0x0E);  // IRQ收发完成中断响应，16位CRC ，主发送   
+ 01B6 2EE0              ldi R18,14
+ 01B8 00E2              ldi R16,32
+ 01BA 5ADF              xcall _SPI_RW_Reg
+ 01BC                   .dbline 168
+ 01BC           ;       Hign_24L01_CE;
+ 01BC 2B9A              sbi 0x5,3
+ 01BE                   .dbline 169
+ 01BE           ;       Delay(6000); 
+ 01BE 00E7              ldi R16,6000
+ 01C0 17E1              ldi R17,23
+ 01C2 1EDF              xcall _Delay
+ 01C4                   .dbline -2
+ 01C4           L36:
+ 01C4                   .dbline 0 ; func end
+ 01C4 2196              adiw R28,1
+ 01C6 0895              ret
+ 01C8                   .dbend
+                        .area bss(ram, con, rel)
+ 0000                   .dbfile F:\AVRtest\双模\control\shounrf24l01.c
+ 0000           _tf::
+ 0000                   .blkb 1
+ 0001                   .dbsym e tf _tf c
+ 0001           _count::
+ 0001                   .blkb 1
+ 0002                   .dbsym e count _count c
+ 0002           _sta::
+ 0002                   .blkb 1
+ 0003                   .dbsym e sta _sta c
+ 0003           ; 
+ 0003           ; }

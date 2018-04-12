@@ -1,0 +1,330 @@
+                        .module uart.c
+                        .area text(rom, con, rel)
+ 0000                   .dbfile uart.c
+ 0000                   .dbfile F:\AVRtest\˫ģ\control\uart.c
+ 0000                   .dbfunc e UART1_Init _UART1_Init fV
+                        .even
+ 0000           _UART1_Init::
+ 0000                   .dbline -1
+ 0000                   .dbline 7
+ 0000           ; 
+ 0000           ;               #include "UART.h"               
+ 0000           ;               #define fosc 8000000
+ 0000           ;               #define baud 9600
+ 0000           ;               
+ 0000           ;               void UART1_Init(void)
+ 0000           ;               {
+ 0000                   .dbline 8
+ 0000           ;                   UCSR1A = 0X00;
+ 0000 2224              clr R2
+ 0002 2092C800          sts 200,R2
+ 0006                   .dbline 9
+ 0006           ;                       UCSR1B |=(1<<RXCIE1)|(1<<RXEN1)|(1<<TXEN1) ;
+ 0006 8091C900          lds R24,201
+ 000A 8869              ori R24,152
+ 000C 8093C900          sts 201,R24
+ 0010                   .dbline 10
+ 0010           ;                       UCSR1C |=(1 << UCSZ11) | (1 << UCSZ10);
+ 0010 8091CA00          lds R24,202
+ 0014 8660              ori R24,6
+ 0016 8093CA00          sts 202,R24
+ 001A                   .dbline 11
+ 001A           ;                       UBRR1L = (fosc / 16 / (baud + 1))%256;
+ 001A 84E3              ldi R24,52
+ 001C 8093CC00          sts 204,R24
+ 0020                   .dbline 12
+ 0020           ;                       UBRR1H = (fosc / 16 / (baud + 1))/256;
+ 0020 2092CD00          sts 205,R2
+ 0024                   .dbline 13
+ 0024           ;                       SREG|=1<<7;
+ 0024 7894              bset 7
+ 0026                   .dbline -2
+ 0026           L1:
+ 0026                   .dbline 0 ; func end
+ 0026 0895              ret
+ 0028                   .dbend
+ 0028                   .dbfunc e UART1_Send _UART1_Send fV
+ 0028           ;              i -> R16
+                        .even
+ 0028           _UART1_Send::
+ 0028                   .dbline -1
+ 0028                   .dbline 17
+ 0028           ;               }
+ 0028           ;               
+ 0028           ;               void UART1_Send(uchar i)
+ 0028           ;               {
+ 0028           L3:
+ 0028                   .dbline 18
+ 0028           ;                    while(!(UCSR1A & (1 << UDRE1)));
+ 0028           L4:
+ 0028                   .dbline 18
+ 0028 2090C800          lds R2,200
+ 002C 25FE              sbrs R2,5
+ 002E FCCF              rjmp L3
+ 0030           X0:
+ 0030                   .dbline 19
+ 0030           ;                       UDR1 = i;
+ 0030 0093CE00          sts 206,R16
+ 0034                   .dbline -2
+ 0034           L2:
+ 0034                   .dbline 0 ; func end
+ 0034 0895              ret
+ 0036                   .dbsym r i 16 c
+ 0036                   .dbend
+ 0036                   .dbfunc e UART1_Receive _UART1_Receive fc
+                        .even
+ 0036           _UART1_Receive::
+ 0036                   .dbline -1
+ 0036                   .dbline 23
+ 0036           ;               }
+ 0036           ;               
+ 0036           ;               uchar UART1_Receive(void)
+ 0036           ;               {
+ 0036           L7:
+ 0036                   .dbline 24
+ 0036           ;                   while(!(UCSR1A & (1 << RXC1)));
+ 0036           L8:
+ 0036                   .dbline 24
+ 0036 2090C800          lds R2,200
+ 003A 27FE              sbrs R2,7
+ 003C FCCF              rjmp L7
+ 003E           X1:
+ 003E                   .dbline 25
+ 003E           ;                       return UDR1;
+ 003E 0091CE00          lds R16,206
+ 0042                   .dbline -2
+ 0042           L6:
+ 0042                   .dbline 0 ; func end
+ 0042 0895              ret
+ 0044                   .dbend
+ 0044                   .dbfunc e UART1_Send_Char _UART1_Send_Char fV
+ 0044           ;              p -> R20,R21
+                        .even
+ 0044           _UART1_Send_Char::
+ 0044 4A93              st -y,R20
+ 0046 5A93              st -y,R21
+ 0048 A801              movw R20,R16
+ 004A                   .dbline -1
+ 004A                   .dbline 30
+ 004A           ;               }
+ 004A           ;               
+ 004A           ;               
+ 004A           ;               void UART1_Send_Char(uchar *p)
+ 004A           ;               {
+ 004A 05C0              xjmp L12
+ 004C           L11:
+ 004C                   .dbline 32
+ 004C           ;                       while((uchar)(*p)!='\0')
+ 004C           ;                       {
+ 004C                   .dbline 33
+ 004C           ;                               UART1_Send(*p);
+ 004C FA01              movw R30,R20
+ 004E 0081              ldd R16,z+0
+ 0050 EBDF              xcall _UART1_Send
+ 0052                   .dbline 34
+ 0052           ;                               p++;
+ 0052 4F5F              subi R20,255  ; offset = 1
+ 0054 5F4F              sbci R21,255
+ 0056                   .dbline 35
+ 0056           ;                       }
+ 0056           L12:
+ 0056                   .dbline 31
+ 0056 FA01              movw R30,R20
+ 0058 2080              ldd R2,z+0
+ 005A 2220              tst R2
+ 005C B9F7              brne L11
+ 005E           X2:
+ 005E                   .dbline -2
+ 005E           L10:
+ 005E                   .dbline 0 ; func end
+ 005E 5991              ld R21,y+
+ 0060 4991              ld R20,y+
+ 0062 0895              ret
+ 0064                   .dbsym r p 20 pc
+ 0064                   .dbend
+ 0064                   .dbfunc e UART0_Init _UART0_Init fV
+                        .even
+ 0064           _UART0_Init::
+ 0064                   .dbline -1
+ 0064                   .dbline 39
+ 0064           ;               }
+ 0064           ;       
+ 0064           ;               void UART0_Init(void)
+ 0064           ;               {
+ 0064                   .dbline 40
+ 0064           ;                   UCSR0A = 0X00;
+ 0064 2224              clr R2
+ 0066 2092C000          sts 192,R2
+ 006A                   .dbline 41
+ 006A           ;                       UCSR0B |=(1<<RXCIE0)|(1<<RXEN0)|(1<<TXEN0) ;
+ 006A 8091C100          lds R24,193
+ 006E 8869              ori R24,152
+ 0070 8093C100          sts 193,R24
+ 0074                   .dbline 42
+ 0074           ;                       UCSR0C |=(1 << UCSZ01) | (1 << UCSZ00);
+ 0074 8091C200          lds R24,194
+ 0078 8660              ori R24,6
+ 007A 8093C200          sts 194,R24
+ 007E                   .dbline 43
+ 007E           ;                       UBRR0L = (fosc / 16 / (baud + 1))%256;
+ 007E 84E3              ldi R24,52
+ 0080 8093C400          sts 196,R24
+ 0084                   .dbline 44
+ 0084           ;                       UBRR0H = (fosc / 16 / (baud + 1))/256;
+ 0084 2092C500          sts 197,R2
+ 0088                   .dbline 45
+ 0088           ;                       SREG|=1<<7;
+ 0088 7894              bset 7
+ 008A                   .dbline -2
+ 008A           L14:
+ 008A                   .dbline 0 ; func end
+ 008A 0895              ret
+ 008C                   .dbend
+ 008C                   .dbfunc e UART0_Send _UART0_Send fV
+ 008C           ;              i -> R16
+                        .even
+ 008C           _UART0_Send::
+ 008C                   .dbline -1
+ 008C                   .dbline 49
+ 008C           ;               }
+ 008C           ;               
+ 008C           ;               void UART0_Send(uchar i)
+ 008C           ;               {
+ 008C           L16:
+ 008C                   .dbline 50
+ 008C           ;                    while(!(UCSR0A & (1 << UDRE0)));
+ 008C           L17:
+ 008C                   .dbline 50
+ 008C 2090C000          lds R2,192
+ 0090 25FE              sbrs R2,5
+ 0092 FCCF              rjmp L16
+ 0094           X3:
+ 0094                   .dbline 51
+ 0094           ;                       UDR0 = i;
+ 0094 0093C600          sts 198,R16
+ 0098                   .dbline -2
+ 0098           L15:
+ 0098                   .dbline 0 ; func end
+ 0098 0895              ret
+ 009A                   .dbsym r i 16 c
+ 009A                   .dbend
+ 009A                   .dbfunc e UART0_Receive _UART0_Receive fc
+                        .even
+ 009A           _UART0_Receive::
+ 009A                   .dbline -1
+ 009A                   .dbline 55
+ 009A           ;               }
+ 009A           ;               
+ 009A           ;               uchar UART0_Receive(void)
+ 009A           ;               {
+ 009A           L20:
+ 009A                   .dbline 56
+ 009A           ;                   while(!(UCSR0A & (1 << RXC0)));
+ 009A           L21:
+ 009A                   .dbline 56
+ 009A 2090C000          lds R2,192
+ 009E 27FE              sbrs R2,7
+ 00A0 FCCF              rjmp L20
+ 00A2           X4:
+ 00A2                   .dbline 57
+ 00A2           ;                       return UDR0;
+ 00A2 0091C600          lds R16,198
+ 00A6                   .dbline -2
+ 00A6           L19:
+ 00A6                   .dbline 0 ; func end
+ 00A6 0895              ret
+ 00A8                   .dbend
+ 00A8                   .dbfunc e UART0_Send_Char _UART0_Send_Char fV
+ 00A8           ;              p -> R20,R21
+                        .even
+ 00A8           _UART0_Send_Char::
+ 00A8 4A93              st -y,R20
+ 00AA 5A93              st -y,R21
+ 00AC A801              movw R20,R16
+ 00AE                   .dbline -1
+ 00AE                   .dbline 62
+ 00AE           ;               }
+ 00AE           ;               
+ 00AE           ;               
+ 00AE           ;               void UART0_Send_Char(uchar *p)
+ 00AE           ;               {
+ 00AE 05C0              xjmp L25
+ 00B0           L24:
+ 00B0                   .dbline 64
+ 00B0           ;                       while((uchar)(*p)!='\0')
+ 00B0           ;                       {
+ 00B0                   .dbline 65
+ 00B0           ;                               UART0_Send(*p);
+ 00B0 FA01              movw R30,R20
+ 00B2 0081              ldd R16,z+0
+ 00B4 EBDF              xcall _UART0_Send
+ 00B6                   .dbline 66
+ 00B6           ;                               p++;
+ 00B6 4F5F              subi R20,255  ; offset = 1
+ 00B8 5F4F              sbci R21,255
+ 00BA                   .dbline 67
+ 00BA           ;                       }
+ 00BA           L25:
+ 00BA                   .dbline 63
+ 00BA FA01              movw R30,R20
+ 00BC 2080              ldd R2,z+0
+ 00BE 2220              tst R2
+ 00C0 B9F7              brne L24
+ 00C2           X5:
+ 00C2                   .dbline -2
+ 00C2           L23:
+ 00C2                   .dbline 0 ; func end
+ 00C2 5991              ld R21,y+
+ 00C4 4991              ld R20,y+
+ 00C6 0895              ret
+ 00C8                   .dbsym r p 20 pc
+ 00C8                   .dbend
+ 00C8                   .dbfunc e UART1_Send_RX _UART1_Send_RX fV
+ 00C8           ;              i -> R20
+ 00C8           ;              p -> R22,R23
+                        .even
+ 00C8           _UART1_Send_RX::
+ 00C8 0E940000          xcall push_xgsetF000
+ 00CC B801              movw R22,R16
+ 00CE                   .dbline -1
+ 00CE                   .dbline 71
+ 00CE           ;               }
+ 00CE           ;               
+ 00CE           ;               void UART1_Send_RX(uchar *p)
+ 00CE           ;               {
+ 00CE                   .dbline 73
+ 00CE           ;                               uchar i;
+ 00CE           ;                               for(i=0;i<32;i++)
+ 00CE 4427              clr R20
+ 00D0 06C0              xjmp L31
+ 00D2           L28:
+ 00D2                   .dbline 74
+ 00D2           ;                               {
+ 00D2                   .dbline 75
+ 00D2           ;                                       UART1_Send(*p);
+ 00D2 FB01              movw R30,R22
+ 00D4 0081              ldd R16,z+0
+ 00D6 A8DF              xcall _UART1_Send
+ 00D8                   .dbline 76
+ 00D8           ;                                       p++;
+ 00D8 6F5F              subi R22,255  ; offset = 1
+ 00DA 7F4F              sbci R23,255
+ 00DC                   .dbline 77
+ 00DC           ;                               }
+ 00DC           L29:
+ 00DC                   .dbline 73
+ 00DC 4395              inc R20
+ 00DE           L31:
+ 00DE                   .dbline 73
+ 00DE 4032              cpi R20,32
+ 00E0 C0F3              brlo L28
+ 00E2           X6:
+ 00E2                   .dbline -2
+ 00E2           L27:
+ 00E2                   .dbline 0 ; func end
+ 00E2 0C940000          xjmp pop_xgsetF000
+ 00E6                   .dbsym r i 20 c
+ 00E6                   .dbsym r p 22 pc
+ 00E6                   .dbend
+ 00E6           ;               }
+ 00E6           ;                       

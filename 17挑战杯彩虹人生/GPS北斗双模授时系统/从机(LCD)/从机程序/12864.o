@@ -1,0 +1,187 @@
+XL
+H 3 areas E global symbols
+M _12864.c
+S push_xgset303C Ref0000
+S push_xgsetF00C Ref0000
+S _delay_ms Ref0000
+S pop_xgset303C Ref0000
+S pop_xgsetF00C Ref0000
+A text size 136 flags 0
+dbfile 12864.c
+dbfile F:\AVRtest\双模\接收\12864.c
+dbfunc e lcd_port_init 0 fV
+dbline FFFFFFFF 0
+dbline A 0
+dbline B 0
+dbline C 6
+dbline C C
+dbline FFFFFFFE C
+dbline 0 C
+dbfunc e lcd_xy E fV
+dbsym r x 14 c
+dbsym r y 16 c
+dbline FFFFFFFF 16
+dbline 11 16
+dbline 12 16
+dbline 12 1A
+dbline 13 22
+dbline 13 26
+dbline 14 2E
+dbline 14 32
+dbline 15 3A
+dbline 15 3E
+dbline FFFFFFFE 44
+dbline 0 44
+dbfunc e lcd_send_byte 4A fV
+dbsym r i 14 c
+dbsym r data 10 c
+dbline FFFFFFFF 4C
+dbline 1A 4C
+dbline 1C 4C
+dbline 1D 50
+dbline 1E 50
+dbline 1F 54
+dbline 21 58
+dbline 22 5A
+dbline 23 5C
+dbline 24 5E
+dbline 25 60
+dbline 1C 60
+dbline 1C 62
+dbline FFFFFFFE 66
+dbline 0 66
+dbfunc e lcd_write_com 6A fV
+dbsym r low 14 c
+dbsym r high 16 c
+dbsym r temp A c
+dbsym r com 14 c
+dbline FFFFFFFF 70
+dbline 2A 70
+dbline 2D 70
+dbline 2E 74
+dbline 2F 78
+dbline 30 82
+dbline 32 86
+dbline 34 8A
+dbline FFFFFFFE 8E
+dbline 0 8E
+dbfunc e lcd_write_data 92 fV
+dbsym r low 14 c
+dbsym r high 16 c
+dbsym r temp A c
+dbsym r data 14 c
+dbline FFFFFFFF 98
+dbline 3A 98
+dbline 3C 98
+dbline 3D 9C
+dbline 3E A0
+dbline 3F AA
+dbline 41 AE
+dbline 43 B2
+dbline FFFFFFFE B6
+dbline 0 B6
+dbfunc e lcd_init BA fV
+dbline FFFFFFFF BA
+dbline 49 BA
+dbline 4A BA
+dbline 4B BC
+dbline 4C BE
+dbline 4D C6
+dbline 4E C8
+dbline 4F D0
+dbline 50 D4
+dbline 51 DC
+dbline 52 E0
+dbline 53 E8
+dbline 54 EC
+dbline 55 F4
+dbline 56 F8
+dbline FFFFFFFE FC
+dbline 0 FC
+dbfunc e lcd_clr 100 fV
+dbline FFFFFFFF 100
+dbline 5B 100
+dbline 5C 100
+dbline 5D 104
+dbline FFFFFFFE 108
+dbline 0 108
+dbfunc e lcd_write_char 10C fV
+dbsym r c 14 pc
+dbsym r y A c
+dbsym r x C c
+dbline FFFFFFFF 118
+dbline 61 118
+dbline 62 118
+dbline 64 120
+dbline 65 120
+dbline 66 126
+dbline 67 12A
+dbline 63 12A
+dbline FFFFFFFE 132
+dbline 0 132
+S _lcd_write_data Def0092
+S _lcd_write_char Def010C
+S _lcd_clr Def0100
+S _lcd_init Def00BA
+S _lcd_send_byte Def004A
+S _lcd_write_com Def006A
+S _lcd_port_init Def0000
+S _lcd_xy Def000E
+A data size 1 flags 20
+dbfile 12864.c
+dbfile F:\AVRtest\双模\接收\12864.c
+dbsym e flag_lcd_start 0 c
+S _flag_lcd_start Def0000
+A idata size 1 flags 0
+T 00 00 00
+R 00 00 02 00
+T 00 00 8A B3 8F 61 8A BB 8B B3 8F 61 8B BB 08 95
+R 00 00 00 00
+T 0E 00 4A 93 6A 93 42 2F 60 2F 66 23 21 F4 04 2F
+R 00 00 00 00
+T 1C 00 00 58 25 D0 11 C0 61 30 21 F4 04 2F 00 57
+R 00 00 00 00
+T 2A 00 1F D0 0B C0 62 30 21 F4 04 2F 08 57 19 D0
+R 00 00 00 00
+T 38 00 05 C0 63 30 19 F4 04 2F 08 56 13 D0 69 91
+R 00 00 00 00
+T 46 00 49 91 08 95
+R 00 00 00 00
+T 4A 00 4A 93 44 27 09 C0 07 FF 02 C0 DE 9A 01 C0
+R 00 00 00 00
+T 58 00 DE 98 DF 9A DF 98 00 0F 43 95 48 30 A8 F3
+R 00 00 00 00
+T 66 00 49 91 08 95
+R 00 00 00 00
+T 6A 00 0E 94 00 00 40 2F 88 EF A8 2E 64 2F 60 7F
+R 00 00 00 00 12 04 01 00
+T 78 00 84 2F 8F 70 82 95 80 7F 48 2F 0A 2D E2 DF
+R 00 00 00 00
+T 86 00 06 2F E0 DF 04 2F DE DF 0C 94 00 00
+R 00 00 00 00 12 0C 04 00
+T 92 00 0E 94 00 00 40 2F 8A EF A8 2E 64 2F 60 7F
+R 00 00 00 00 12 04 01 00
+T A0 00 84 2F 8F 70 82 95 80 7F 48 2F 0A 2D CE DF
+R 00 00 00 00
+T AE 00 06 2F CC DF 04 2F CA DF 0C 94 00 00
+R 00 00 00 00 12 0C 04 00
+T BA 00 DC 98 DB 98 05 E0 10 E0 0E 94 00 00 DB 9A
+R 00 00 00 00 12 0C 02 00
+T C8 00 05 E0 10 E0 0E 94 00 00 04 E3 CB DF 07 E0
+R 00 00 00 00 12 08 02 00
+T D6 00 10 E0 0E 94 00 00 00 E3 C5 DF 07 E0 10 E0
+R 00 00 00 00 12 06 02 00
+T E4 00 0E 94 00 00 0C E0 BF DF 07 E0 10 E0
+R 00 00 00 00 12 04 02 00
+T F0 00 0E 94 00 00 01 E0 B9 DF 07 E0 10 E0
+R 00 00 00 00 12 04 02 00
+T FC 00 0C 94 00 00
+R 00 00 00 00 12 04 02 00
+T 00 01 01 E0 B3 DF 03 E0 10 E0 0C 94 00 00
+R 00 00 00 00 12 0C 02 00
+T 0C 01 0E 94 00 00 A2 2E C0 2E 4E 81 5F 81 2C 2D
+R 00 00 00 00 12 04 00 00
+T 1A 01 0A 2D 78 DF 05 C0 FA 01 00 81 B6 DF 4F 5F
+R 00 00 00 00
+T 28 01 5F 4F FA 01 20 80 22 20 B9 F7 0C 94 00 00
+R 00 00 00 00 12 0E 03 00

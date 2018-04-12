@@ -1,0 +1,247 @@
+                        .module main.c
+                        .area text(rom, con, rel)
+ 0000                   .dbfile main.c
+ 0000                   .dbfile F:\AVRtest\˫ģ\control\main.c
+ 0000                   .dbfunc e nrf24l01_Port_init _nrf24l01_Port_init fV
+                        .even
+ 0000           _nrf24l01_Port_init::
+ 0000                   .dbline -1
+ 0000                   .dbline 9
+ 0000           ; #include "uart.h"
+ 0000           ; #include "delay.h"
+ 0000           ; #include "shounrf24l01.h"
+ 0000           ; 
+ 0000           ; uchar ddd;
+ 0000           ; uchar RXbuf[32];
+ 0000           ; 
+ 0000           ; void nrf24l01_Port_init(void)
+ 0000           ; {
+ 0000                   .dbline 10
+ 0000           ;       DDRB=(1<<PB3)|(1<<PB4)|(1<<PB5)|(1<<PB7);
+ 0000 88EB              ldi R24,184
+ 0002 84B9              out 0x4,R24
+ 0004                   .dbline -2
+ 0004           L1:
+ 0004                   .dbline 0 ; func end
+ 0004 0895              ret
+ 0006                   .dbend
+ 0006                   .dbfunc e main _main fV
+                        .even
+ 0006           _main::
+ 0006                   .dbline -1
+ 0006                   .dbline 14
+ 0006           ; }
+ 0006           ; 
+ 0006           ; void main(void)
+ 0006           ; {
+ 0006                   .dbline 15
+ 0006           ;       nrf24l01_Port_init();
+ 0006 FCDF              xcall _nrf24l01_Port_init
+ 0008                   .dbline 16
+ 0008           ;       init_NRF24L01();
+ 0008 0E940000          xcall _init_NRF24L01
+ 000C                   .dbline 17
+ 000C           ;       UART1_Init();
+ 000C 0E940000          xcall _UART1_Init
+ 0010                   .dbline 18
+ 0010           ;       UART0_Init();
+ 0010 0E940000          xcall _UART0_Init
+ 0014 0CC0              xjmp L4
+ 0016           L3:
+ 0016                   .dbline 20
+ 0016           ;       while(1)
+ 0016           ;       {
+ 0016                   .dbline 21
+ 0016           ;               nRF24L01_RxPacket(RXbuf); 
+ 0016 00E0              ldi R16,<_RXbuf
+ 0018 10E0              ldi R17,>_RXbuf
+ 001A 0E940000          xcall _nRF24L01_RxPacket
+ 001E                   .dbline 22
+ 001E           ;               UART1_Send_RX(RXbuf);
+ 001E 00E0              ldi R16,<_RXbuf
+ 0020 10E0              ldi R17,>_RXbuf
+ 0022 0E940000          xcall _UART1_Send_RX
+ 0026                   .dbline 23
+ 0026           ;               delay_ms(1000);
+ 0026 08EE              ldi R16,1000
+ 0028 13E0              ldi R17,3
+ 002A 0E940000          xcall _delay_ms
+ 002E                   .dbline 24
+ 002E           ;       }
+ 002E           L4:
+ 002E                   .dbline 19
+ 002E F3CF              xjmp L3
+ 0030           X0:
+ 0030                   .dbline -2
+ 0030           L2:
+ 0030                   .dbline 0 ; func end
+ 0030 0895              ret
+ 0032                   .dbend
+                        .area vector(rom, abs)
+                        .org 80
+ 0050 0C941900          jmp _UART0
+                        .area text(rom, con, rel)
+ 0032                   .dbfile F:\AVRtest\˫ģ\control\main.c
+ 0032                   .dbfunc e UART0 _UART0 fV
+                        .even
+ 0032           _UART0::
+ 0032 0A92              st -y,R0
+ 0034 1A92              st -y,R1
+ 0036 2A92              st -y,R2
+ 0038 3A92              st -y,R3
+ 003A 4A92              st -y,R4
+ 003C 5A92              st -y,R5
+ 003E 6A92              st -y,R6
+ 0040 7A92              st -y,R7
+ 0042 8A92              st -y,R8
+ 0044 9A92              st -y,R9
+ 0046 0A93              st -y,R16
+ 0048 1A93              st -y,R17
+ 004A 2A93              st -y,R18
+ 004C 3A93              st -y,R19
+ 004E 8A93              st -y,R24
+ 0050 9A93              st -y,R25
+ 0052 AA93              st -y,R26
+ 0054 BA93              st -y,R27
+ 0056 EA93              st -y,R30
+ 0058 FA93              st -y,R31
+ 005A 0FB6              IN R0,63
+ 005C 0A92              st -y,R0
+ 005E                   .dbline -1
+ 005E                   .dbline 29
+ 005E           ; }
+ 005E           ; 
+ 005E           ; #pragma interrupt_handler UART0:21
+ 005E           ; void UART0(void)
+ 005E           ; {
+ 005E                   .dbline 30
+ 005E           ;       ddd=UDR0;
+ 005E 2090C600          lds R2,198
+ 0062 20922000          sts _ddd,R2
+ 0066                   .dbline 31
+ 0066           ;       UART0_Send(ddd);
+ 0066 022D              mov R16,R2
+ 0068 0E940000          xcall _UART0_Send
+ 006C                   .dbline 32
+ 006C           ;       UART0_Send('6');
+ 006C 06E3              ldi R16,54
+ 006E 0E940000          xcall _UART0_Send
+ 0072                   .dbline 33
+ 0072           ;       SREG|=(1<<7);
+ 0072 7894              bset 7
+ 0074                   .dbline -2
+ 0074           L6:
+ 0074                   .dbline 0 ; func end
+ 0074 0990              ld R0,y+
+ 0076 0FBE              OUT 63,R0
+ 0078 F991              ld R31,y+
+ 007A E991              ld R30,y+
+ 007C B991              ld R27,y+
+ 007E A991              ld R26,y+
+ 0080 9991              ld R25,y+
+ 0082 8991              ld R24,y+
+ 0084 3991              ld R19,y+
+ 0086 2991              ld R18,y+
+ 0088 1991              ld R17,y+
+ 008A 0991              ld R16,y+
+ 008C 9990              ld R9,y+
+ 008E 8990              ld R8,y+
+ 0090 7990              ld R7,y+
+ 0092 6990              ld R6,y+
+ 0094 5990              ld R5,y+
+ 0096 4990              ld R4,y+
+ 0098 3990              ld R3,y+
+ 009A 2990              ld R2,y+
+ 009C 1990              ld R1,y+
+ 009E 0990              ld R0,y+
+ 00A0 1895              reti
+ 00A2                   .dbend
+                        .area vector(rom, abs)
+                        .org 112
+ 0070 0C945100          jmp _UART1
+                        .area text(rom, con, rel)
+ 00A2                   .dbfile F:\AVRtest\˫ģ\control\main.c
+ 00A2                   .dbfunc e UART1 _UART1 fV
+                        .even
+ 00A2           _UART1::
+ 00A2 0A92              st -y,R0
+ 00A4 1A92              st -y,R1
+ 00A6 2A92              st -y,R2
+ 00A8 3A92              st -y,R3
+ 00AA 4A92              st -y,R4
+ 00AC 5A92              st -y,R5
+ 00AE 6A92              st -y,R6
+ 00B0 7A92              st -y,R7
+ 00B2 8A92              st -y,R8
+ 00B4 9A92              st -y,R9
+ 00B6 0A93              st -y,R16
+ 00B8 1A93              st -y,R17
+ 00BA 2A93              st -y,R18
+ 00BC 3A93              st -y,R19
+ 00BE 8A93              st -y,R24
+ 00C0 9A93              st -y,R25
+ 00C2 AA93              st -y,R26
+ 00C4 BA93              st -y,R27
+ 00C6 EA93              st -y,R30
+ 00C8 FA93              st -y,R31
+ 00CA 0FB6              IN R0,63
+ 00CC 0A92              st -y,R0
+ 00CE                   .dbline -1
+ 00CE                   .dbline 38
+ 00CE           ; }
+ 00CE           ; 
+ 00CE           ; #pragma interrupt_handler UART1:29
+ 00CE           ; void UART1(void)
+ 00CE           ; {
+ 00CE                   .dbline 39
+ 00CE           ;       ddd=UDR1;
+ 00CE 2090CE00          lds R2,206
+ 00D2 20922000          sts _ddd,R2
+ 00D6                   .dbline 40
+ 00D6           ;       UART1_Send(ddd);
+ 00D6 022D              mov R16,R2
+ 00D8 0E940000          xcall _UART1_Send
+ 00DC                   .dbline 41
+ 00DC           ;       UART1_Send('6');
+ 00DC 06E3              ldi R16,54
+ 00DE 0E940000          xcall _UART1_Send
+ 00E2                   .dbline 42
+ 00E2           ;       SREG|=(1<<7);
+ 00E2 7894              bset 7
+ 00E4                   .dbline -2
+ 00E4           L7:
+ 00E4                   .dbline 0 ; func end
+ 00E4 0990              ld R0,y+
+ 00E6 0FBE              OUT 63,R0
+ 00E8 F991              ld R31,y+
+ 00EA E991              ld R30,y+
+ 00EC B991              ld R27,y+
+ 00EE A991              ld R26,y+
+ 00F0 9991              ld R25,y+
+ 00F2 8991              ld R24,y+
+ 00F4 3991              ld R19,y+
+ 00F6 2991              ld R18,y+
+ 00F8 1991              ld R17,y+
+ 00FA 0991              ld R16,y+
+ 00FC 9990              ld R9,y+
+ 00FE 8990              ld R8,y+
+ 0100 7990              ld R7,y+
+ 0102 6990              ld R6,y+
+ 0104 5990              ld R5,y+
+ 0106 4990              ld R4,y+
+ 0108 3990              ld R3,y+
+ 010A 2990              ld R2,y+
+ 010C 1990              ld R1,y+
+ 010E 0990              ld R0,y+
+ 0110 1895              reti
+ 0112                   .dbend
+                        .area bss(ram, con, rel)
+ 0000                   .dbfile F:\AVRtest\˫ģ\control\main.c
+ 0000           _RXbuf::
+ 0000                   .blkb 32
+ 0020                   .dbsym e RXbuf _RXbuf A[32:32]c
+ 0020           _ddd::
+ 0020                   .blkb 1
+ 0021                   .dbsym e ddd _ddd c
+ 0021           ; }
+ 0021           ; 

@@ -1,0 +1,26 @@
+Removed Pin From Net: NetName=GND Pin=C15-1
+Removed Pin From Net: NetName=GND Pin=C16-2
+Removed Pin From Net: NetName=GND Pin=USB-2
+Removed Member From Class: ClassName=Sheet2 Member=C15
+Removed Member From Class: ClassName=Sheet2 Member=C16
+Removed Member From Class: ClassName=Sheet2 Member=D3
+Removed Member From Class: ClassName=Sheet2 Member=D4
+Removed Member From Class: ClassName=Sheet2 Member=R3
+Removed Member From Class: ClassName=Sheet2 Member=R7
+Removed Member From Class: ClassName=Sheet2 Member=S3
+Removed Member From Class: ClassName=Sheet2 Member=USB
+Added Pin To Net: NetName=NetBAT_1 Pin=1117_3.3V-3
+Added Pin To Net: NetName=NetBAT_1 Pin=C3-1
+Added Pin To Net: NetName=NetBAT_1 Pin=Z2-3
+Change Net Name : Old Net Name=NetBAT_1 New Net Name=VCC
+Added Pin To Net: NetName=NetC6_2 Pin=C6-2
+Added Pin To Net: NetName=NetC6_2 Pin=C12-2
+Added Pin To Net: NetName=NetC6_2 Pin=M1-3
+Added Pin To Net: NetName=NetC6_2 Pin=P5-1
+Added Pin To Net: NetName=NetC6_2 Pin=U2-15
+Added Net: Name=NetC6_2
+Added Pin To Net: NetName=PA6 Pin=U2-5
+Added Net: Name=PA6
+Added Pin To Net: NetName=PA7 Pin=U2-4
+Added Net: Name=PA7
+Added Room: Name=Sheet2

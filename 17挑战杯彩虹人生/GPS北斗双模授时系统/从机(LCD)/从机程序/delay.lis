@@ -1,0 +1,116 @@
+                        .module delay.c
+                        .area text(rom, con, rel)
+ 0000                   .dbfile delay.c
+                        .area data(ram, con, rel)
+ 0000                   .dbfile delay.c
+ 0000           _history_messages_number::
+ 0000                   .blkb 1
+                        .area idata
+ 0000 00                .byte 0
+                        .area data(ram, con, rel)
+ 0001                   .dbfile delay.c
+ 0001                   .dbfile F:\AVRtest\双模\接收\delay.c
+ 0001                   .dbsym e history_messages_number _history_messages_number c
+                        .area text(rom, con, rel)
+ 0000                   .dbfile F:\AVRtest\双模\接收\delay.c
+ 0000                   .dbfunc e delay_ms _delay_ms fV
+ 0000           ;              j -> <dead>
+ 0000           ;              i -> R20,R21
+ 0000           ;            xms -> R10,R11
+                        .even
+ 0000           _delay_ms::
+ 0000 0E940000          xcall push_xgset300C
+ 0004 5801              movw R10,R16
+ 0006                   .dbline -1
+ 0006                   .dbline 10
+ 0006           ;  
+ 0006           ;  
+ 0006           ;  
+ 0006           ;  #include "delay.h"
+ 0006           ;  
+ 0006           ;  uchar history_messages_number = 0;                   //历史信息循环显示变量
+ 0006           ;  
+ 0006           ;  /**************1ms延时函数**************/
+ 0006           ;  void delay_ms(uint xms)
+ 0006           ;  {
+ 0006                   .dbline 12
+ 0006           ;       uint i,j;
+ 0006           ;       for(i=0;i<xms;i++)
+ 0006 4427              clr R20
+ 0008 5527              clr R21
+ 000A 05C0              xjmp L5
+ 000C           L2:
+ 000C                   .dbline 13
+ 000C           ;          delay_us(1000);
+ 000C 08EE              ldi R16,1000
+ 000E 13E0              ldi R17,3
+ 0010 07D0              xcall _delay_us
+ 0012           L3:
+ 0012                   .dbline 12
+ 0012 4F5F              subi R20,255  ; offset = 1
+ 0014 5F4F              sbci R21,255
+ 0016           L5:
+ 0016                   .dbline 12
+ 0016 4A15              cp R20,R10
+ 0018 5B05              cpc R21,R11
+ 001A C0F3              brlo L2
+ 001C           X0:
+ 001C                   .dbline -2
+ 001C           L1:
+ 001C                   .dbline 0 ; func end
+ 001C 0C940000          xjmp pop_xgset300C
+ 0020                   .dbsym l j 1 i
+ 0020                   .dbsym r i 20 i
+ 0020                   .dbsym r xms 10 i
+ 0020                   .dbend
+ 0020                   .dbfunc e delay_us _delay_us fV
+ 0020           ;              i -> R20,R21
+ 0020           ;             us -> R10,R11
+                        .even
+ 0020           _delay_us::
+ 0020 0E940000          xcall push_xgset300C
+ 0024 5801              movw R10,R16
+ 0026                   .dbline -1
+ 0026                   .dbline 18
+ 0026           ;  }
+ 0026           ;  
+ 0026           ;  /*************1us延时函数****************/
+ 0026           ;  void delay_us(uint us)
+ 0026           ;  {
+ 0026                   .dbline 20
+ 0026           ;       uint i;
+ 0026           ;       us=us*5/4;
+ 0026 05E0              ldi R16,5
+ 0028 10E0              ldi R17,0
+ 002A 9501              movw R18,R10
+ 002C 0E940000          xcall empy16s
+ 0030 5801              movw R10,R16
+ 0032 B694              lsr R11
+ 0034 A794              ror R10
+ 0036 B694              lsr R11
+ 0038 A794              ror R10
+ 003A                   .dbline 21
+ 003A           ;       for(i=0;i<us;i++);
+ 003A 4427              clr R20
+ 003C 5527              clr R21
+ 003E 02C0              xjmp L10
+ 0040           L7:
+ 0040                   .dbline 21
+ 0040           L8:
+ 0040                   .dbline 21
+ 0040 4F5F              subi R20,255  ; offset = 1
+ 0042 5F4F              sbci R21,255
+ 0044           L10:
+ 0044                   .dbline 21
+ 0044 4A15              cp R20,R10
+ 0046 5B05              cpc R21,R11
+ 0048 D8F3              brlo L7
+ 004A           X1:
+ 004A                   .dbline -2
+ 004A           L6:
+ 004A                   .dbline 0 ; func end
+ 004A 0C940000          xjmp pop_xgset300C
+ 004E                   .dbsym r i 20 i
+ 004E                   .dbsym r us 10 i
+ 004E                   .dbend
+ 004E           ;  }

@@ -1,0 +1,37 @@
+
+		#include "UART.h"		
+		#define fosc 8000000
+		#define baud 9600
+		
+		void UART1_Init(void)
+		{
+		    UCSR1A = 0X00;
+			UCSR1B |=(1<<RXCIE1)|(1<<RXEN1)|(1<<TXEN1) ;
+			UCSR1C |=(1 << UCSZ11) | (1 << UCSZ10);
+			UBRR1L = (fosc / 16 / (baud + 1))%256;
+			UBRR1H = (fosc / 16 / (baud + 1))/256;
+			SREG|=BIT(7);
+		}
+		
+		void UART1_Send(uchar i)
+		{
+		     while(!(UCSR1A & (1 << UDRE1)));
+			UDR = i;
+		}
+		
+		uchar UART1_Receive(void)
+		{
+		    while(!(UCSR1A & (1 << RXC1)));
+			return UDR;
+		}
+		
+		
+		void UART1_Send_Char(uchar *p)
+		{
+			while((uchar)(*p)!='\0')
+			{
+				UART_Send(*p);
+				p++;
+			}
+		}
+		

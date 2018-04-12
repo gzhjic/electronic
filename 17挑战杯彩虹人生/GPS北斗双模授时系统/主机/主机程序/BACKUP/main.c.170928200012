@@ -1,0 +1,427 @@
+#include "lcd12864.h"
+#include "key_xd.h"
+#include "DS18.h"
+
+uchar mod=0;						//工作模式选择
+uchar choose;						//液晶指示光标位置
+uchar z;							//用于显示
+uchar Data_legitimate=0;			//接收数据有效判断
+uchar GPS_lock;						//定位有效判断
+uchar GPSUSE_satellite[2];			//检测使用卫星个数<4就无法定位
+uchar GPSVISIBLE_satellite[2];		//可见卫星个数
+uchar GPSDATA_number;				//数据类型$GPGGA$GPGSV$GPGMC
+uchar GPSDATA_mode;					//数据模式
+uchar GPSDOT_count;					//逗号个数
+uchar GPSDATA_count;				//数据存放计数
+uchar GPSDATA_cmd[5];				//用来装数据类型
+uchar GPS_latitude[9];				//用来装纬度
+uchar GPS_latitude_dir;				//纬度的方向NS
+uchar GPS_longitude[10];			//用来装经度
+uchar GPS_longitude_dir;			//经度的方向WE
+uchar GPS_speed[5]={'0','0','0','.','0'};//速度
+uchar GPS_altitude[6];				//海拔高度
+uchar GPS_date[6];					//日期
+uchar GPS_time[6];					//时间
+uchar GPS_Angle[5]={'0','0','0','0','0'};//方位角，初始为0
+uchar OUT_speed[5];					//方位角，可以做指南针
+uchar beijingtime1,beijingtime2,beijingtime3;
+uchar beijingtime[2];
+/**************************定时器配置*******************************/
+void timer1_init(void)
+{
+	TCCR1B|=0X03;					//64分频
+	TIMSK|=BIT(2);					//使能
+	TCNT1H=0xff;					
+	TCNT1L=0X06;					//2ms定时
+	SREG|=BIT(7);
+}
+/**************************按键配置IO口****************************/
+void key_ioinit(void)
+{
+	DDRA&=0XF8;
+	PORTA=0Xff;
+	DDRD=0;
+}
+
+/*************************串口初始化*******************************/
+void uart_init(void)
+{
+	UCSRA=0X00;
+	UCSRC=0x86;								//异步不倍速
+	UBRRH=0x00;
+	UBRRL=0x33;								//波特率9600
+	UCSRB=0X98;								//使能
+	SREG|=BIT(7);
+}
+/***************串口中断GPS解码***************************/
+#pragma interrupt_handler usart:12
+void usart(void)
+{
+	uchar UART_data;
+		UART_data=UDR;
+		switch(UART_data)
+		{
+			case '$':
+				GPSDATA_number=0;		//GPS数据类型清空
+				GPSDATA_mode=1;			//接收命令模式
+				GPSDATA_count=0;		//接收位数清空
+				break;
+			
+			case ',':
+				GPSDOT_count++;		//逗号计数加1
+				GPSDATA_count=0;
+				break;
+			
+			case '*':
+				switch(GPSDATA_number)
+				{
+					case 1:
+						Data_legitimate|=0x01;//GPGGA
+						break;
+					case 2:
+						Data_legitimate|=0x02;//GPGSV
+						break;
+					case 3:
+						Data_legitimate|=0x04;//GPRMC
+						break;
+				}
+				GPSDATA_mode=0;
+				break;
+				
+			default:
+				if(GPSDATA_mode==1)									//类型种类判断
+				{
+					GPSDATA_cmd[GPSDATA_count]=UART_data;			//接收字符放入类型缓存
+					if(GPSDATA_count==4)							//如果类型数据接收完毕，判断类型
+					{											
+						if		//判断GPGGA
+						(
+							GPSDATA_cmd[0]=='G'
+									&&
+							GPSDATA_cmd[1]=='P'
+									&&
+							GPSDATA_cmd[2]=='G'
+									&&
+							GPSDATA_cmd[3]=='G'
+									&&
+							GPSDATA_cmd[4]=='A'
+							)
+						{
+							GPSDATA_number=1;
+							GPSDATA_mode=2;
+							GPSDOT_count=0;
+							GPSDATA_count=0;
+						}
+						
+						if		//判断GPGSV
+						(
+							GPSDATA_cmd[0]=='G'
+									&&
+							GPSDATA_cmd[1]=='P'
+									&&
+							GPSDATA_cmd[2]=='G'
+									&&
+							GPSDATA_cmd[3]=='S'
+									&&
+							GPSDATA_cmd[4]=='V'
+						)
+						{
+							GPSDATA_number=2;
+							GPSDATA_mode=2;
+							GPSDOT_count=0;					
+							GPSDATA_count=0;
+						}
+						
+						if		//判断GPRMC
+						(
+							GPSDATA_cmd[0]=='G'
+									&&
+							GPSDATA_cmd[1]=='P'
+									&&
+							GPSDATA_cmd[2]=='R'
+									&&
+							GPSDATA_cmd[3]=='M'
+									&&
+							GPSDATA_cmd[4]=='C'
+						)
+						{
+							GPSDATA_number=3;
+							GPSDATA_mode=2;					
+							GPSDOT_count=0;
+							GPSDATA_count=0;
+						}
+						
+					}
+				}
+				else if(GPSDATA_mode==2)					//接收数据处理
+				{
+					switch (GPSDATA_number)
+					{
+						case 1:												//类型1数据接收。GPGGA
+							switch(GPSDOT_count)
+							{
+								case 2:										//纬度处理
+									if(GPSDATA_count<9)
+										GPS_latitude[GPSDATA_count]=UART_data;
+									break;
+								case 3:										//纬度方向处理
+									if(GPSDATA_count<1)
+										GPS_latitude_dir=UART_data;
+									break;
+								case 4:										//经度处理
+									if(GPSDATA_count<10)
+										GPS_longitude[GPSDATA_count]=UART_data;
+									break;
+								case 5:										//经度方向处理
+									if(GPSDATA_count<1)
+										GPS_longitude_dir=UART_data;
+									break;
+								case 6:										//定位判断
+									if(GPSDATA_count<1)
+										GPS_lock=UART_data;
+									break;
+								case 7:										//GPS使用卫星个数
+									if(GPSDATA_count<2)
+										GPSUSE_satellite[GPSDATA_count]=UART_data;
+									break;
+								case 9:										//海拔高度处理
+									if(GPSDATA_count<6)
+										GPS_altitude[GPSDATA_count]=UART_data;
+									break;
+							}
+							break;
+							
+						case 2:												//类型2数据接收。GPGSV
+							switch(GPSDOT_count)
+							{
+								case 3:										//GPS可见卫星个数
+									if(GPSDATA_count<2)
+										GPSVISIBLE_satellite[GPSDATA_count]=UART_data;
+									break;
+							}
+						break;
+							
+						case 3:												//类型3数据接收。GPRMC
+							switch(GPSDOT_count)
+							{
+								case 1:										//时间处理
+									if(GPSDATA_count<6)		
+										GPS_time[GPSDATA_count]=UART_data;	
+									break;
+								case 2:										//定位判断						
+									if(GPSDATA_count<1)
+									{
+									  if(UART_data=='A')
+											GPS_lock=1;
+									  if(UART_data=='V')
+									    GPS_lock=0;
+									}
+									break;
+								case 3:										//纬度处理						
+									if(GPSDATA_count<9)
+									{
+										GPS_latitude[GPSDATA_count]=UART_data;
+									}
+									break;
+								case 4:										//纬度方向处理						
+									if(GPSDATA_count<1)
+									{
+										GPS_latitude_dir=UART_data;
+									}
+									break;
+								case 5:										//经度处理						
+									if(GPSDATA_count<10)
+									{
+										GPS_longitude[GPSDATA_count]=UART_data;
+									}
+									break;
+								case 6:										//经度方向处理						
+									if(GPSDATA_count<1)
+									{
+										GPS_longitude_dir=UART_data;
+									}
+									break;
+								case 7:										//速度处理						
+									if(GPSDATA_count<5)
+									{
+										GPS_speed[GPSDATA_count]=UART_data;
+									}
+									break;
+								case 8:										//方位角处理						
+									if(GPSDATA_count<5)
+									{
+										GPS_Angle[GPSDATA_count]=UART_data;
+									}
+									break;
+								case 9:										//日期				
+									if(GPSDATA_count<6)
+									{
+										GPS_date[GPSDATA_count]=UART_data;
+									}
+									break;
+							}
+							break;
+					}
+				}
+				GPSDATA_count++;		//接收数位加1
+				break;
+		}
+}
+
+
+/******************定时中断服务函数主要用于按键消抖******************/
+#pragma interrupt_handler timer1:9
+void timer1(void)
+{
+	TCNT1H=0xff;
+	TCNT1L=0X06;
+	key_xd();						//按键消抖
+}
+
+void main(void)
+{	
+	uchar temputer;
+/***********************各种初始化***************************/
+	uart_init();					//串口初始化
+	key_ioinit();					//按键IO口初始化
+	port();							//液晶IO口初始化
+	lcd_init();						//液晶初始化
+	timer1_init();					//定时器初始化
+	
+	display_welcome();				//显示开始界面
+	delay_ms(2000);					//持续2秒
+	lcd_clr();						//清屏
+	while(1)
+	{
+		switch(mod)					//工作界面选择
+		{
+/*********************在菜单界面的按键选择********************/
+			case 0:
+			display_menu();				//显示菜单
+			locateXY(7,3);
+			lcd_wdat(GPSVISIBLE_satellite[0]);				//显示卫星个数
+			lcd_wdat(GPSVISIBLE_satellite[1]);
+			locateXY(7,choose);			//光标位置选择
+			lcd_wdat(17);				
+			if(key1==1)					//模式选择按键
+			{
+				locateXY(7,choose);
+				clean();				//清除原位置光标
+				while(key1==1);
+				if(++choose>=3)
+				{				
+					choose=0;
+				}
+			}
+			if(key2==1)								//模式确定按键
+			{
+				while(key2==1);
+				{
+					lcd_clr();						//清屏
+					if(choose==0)
+					{
+						display_mod1();					//显示模式1时间框架
+						mod=1;							//进入模式1
+					}
+					if(choose==1)					
+					{
+						mod=2;							//进入模式2
+						display_mod2();					//显示模式2位置框架
+					}
+					if(choose==2)
+					{
+						mod=3;							//进入模式3
+						display_mod3();
+					}
+				}
+			}
+			break;
+/*****************************模式1时间*************************/
+			case 1:
+			/*世界时间变成北京时间*/
+			beijingtime1=(GPS_time[0]-0x30);				//字符转数字
+			beijingtime2=(GPS_time[1]-0x30);					
+			beijingtime3=beijingtime1*10+beijingtime2+8;
+			if(beijingtime3>24)
+			{
+				beijingtime3=beijingtime3-24;
+				GPS_date[1]+=1;
+			}
+			beijingtime[0]=(beijingtime3/10+0x30);				//防止切换抖动，用另一个数组来装数据
+			beijingtime[1]=(beijingtime3%10+0x30);				//数字转字符
+			/*显示时间*/
+			locateXY(3,2);			
+			lcd_wdat(beijingtime[0]);	
+			lcd_wdat(beijingtime[1]);				
+			locateXY(5,2);			
+			lcd_wdat(GPS_time[2]);	
+			lcd_wdat(GPS_time[3]);	
+			locateXY(7,2);			
+			lcd_wdat(GPS_time[4]);	
+			lcd_wdat(GPS_time[5]);	
+			/*显示日期*/
+			locateXY(2,3);			
+			lcd_wdat(GPS_date[4]);
+			lcd_wdat(GPS_date[5]);
+			locateXY(4,3);			
+			lcd_wdat(GPS_date[2]);
+			lcd_wdat(GPS_date[3]);
+			locateXY(6,3);			
+			lcd_wdat(GPS_date[0]);
+			lcd_wdat(GPS_date[1]);
+			
+			if(key3==1)								//返回按键
+			{
+				while(key3==1);
+				lcd_clr();							//清屏
+				mod=0;								//返回菜单指令
+			}		
+			break;
+/*****************************模式2位置*************************/
+			case 2:
+			/*显示经度*/
+			locateXY(3,2);			
+			for(z=0;z<4;z++)
+			lcd_wdat(GPS_latitude[z]);	
+			lcd_wdat(GPS_latitude_dir);
+			/*显示纬度*/
+			locateXY(3,3);			
+			for(z=0;z<5;z++)
+			lcd_wdat(GPS_longitude[z]);	
+			lcd_wdat(GPS_longitude_dir);
+			/*显示海拔*/
+			locateXY(3,1);			
+			for(z=0;z<4;z++)
+			lcd_wdat(GPS_altitude[z]);	
+			if(key3==1)								//返回按键
+			{
+				while(key3==1);
+				lcd_clr();							//清屏
+				mod=0;								//返回菜单指令
+			}
+			break;
+/*****************************模式3温度**************************/
+			case 3:
+			temputer=get_temp();					//获得温度
+			locateXY(3,2);							//显示温度
+			lcd_wdat((temputer/100)+0x30);			//十位
+			lcd_wdat((temputer/10%10)+0x30);		//个位
+			locateXY(4,2);							
+			lcd_wdat(46);							//显示小数点
+			lcd_wdat((temputer%10)+0x30);			//小数
+			/*显示速度*/
+			locateXY(3,3);
+			for(z=0;z<5;z++)
+			lcd_wdat(GPS_speed[z]);
+			
+			if(key3==1)								//返回按键
+			{
+				while(key3==1);
+				lcd_clr();							//清屏
+				mod=0;								//返回菜单指令
+			}
+			break;
+		}
+	}
+
+}

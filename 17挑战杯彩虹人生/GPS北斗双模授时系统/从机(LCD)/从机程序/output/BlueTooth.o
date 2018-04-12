@@ -1,0 +1,62 @@
+XL
+H 1 areas 4 global symbols
+M BlueTooth.c
+A text size 4A flags 0
+dbfile C:\Users\Kong\Desktop\≤‚ ‘≥Ã–Ú\BlueTooth.c
+dbfunc e UART_Init 0 fV
+dbline FFFFFFFF 0
+dbline A 0
+dbline B 0
+dbline C 4
+dbline D 6
+dbline E C
+dbline F 10
+dbline 10 12
+dbline FFFFFFFE 18
+dbline 0 18
+dbfunc e UART_Send 1A fV
+dbsym r i 10 c
+dbline FFFFFFFF 1A
+dbline 14 1A
+dbline 15 1A
+dbline 15 1A
+dbline 16 1E
+dbline FFFFFFFE 20
+dbline 0 20
+dbfunc e UART_Receive 22 fc
+dbline FFFFFFFF 22
+dbline 1A 22
+dbline 1B 22
+dbline 1B 22
+dbline 1C 26
+dbline FFFFFFFE 28
+dbline 0 28
+dbfunc e UART_Send_Char 2A fV
+dbsym r p 14 pc
+dbline FFFFFFFF 30
+dbline 21 30
+dbline 23 32
+dbline 24 32
+dbline 25 38
+dbline 26 3C
+dbline 22 3C
+dbline FFFFFFFE 44
+dbline 0 44
+S _UART_Send_Char Def002A
+S _UART_Send Def001A
+S _UART_Init Def0000
+S _UART_Receive Def0022
+T 00 00 22 24 2A B8 2B B8 80 B5 86 68 80 BD 84 E3
+R 00 00 00 00
+T 0E 00 89 B9 20 BC 8A B1 88 61 8A B9 08 95
+R 00 00 00 00
+T 1A 00 5D 9B FE CF 0C B9 08 95
+R 00 00 00 00
+T 22 00 5F 9B FE CF 0C B1 08 95
+R 00 00 00 00
+T 2A 00 4A 93 5A 93 A8 01 05 C0 FA 01 00 81 F1 DF
+R 00 00 00 00
+T 38 00 4F 5F 5F 4F FA 01 20 80 22 20 B9 F7 59 91
+R 00 00 00 00
+T 46 00 49 91 08 95
+R 00 00 00 00

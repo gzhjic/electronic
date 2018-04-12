@@ -1,0 +1,45 @@
+#include"iom16v.h"
+#include "shounrf24l01.h"
+#include "12864.h"
+
+#define uchar unsigned char 
+#define uint unsigned int
+
+uchar nn[]="fhjkjhitgkjnjhj";
+
+uchar KK[32];
+
+void P_init(void)
+{
+	DDRA=0XFF;
+	PORTA=0XFF;
+	DDRB  = 0x6C;  //24L01端口初始化 //把MISO设置为输入和IRQ设置为输入既可 
+	PORTB = 0x93;
+	DDRC=0XFF;
+	PORTC=0XFF;
+	DDRD=0XFF;
+	PORTD=0XFF;  
+}
+
+
+/********************************************/
+void main(void) 
+{  
+P_init();
+init_NRF24L01();
+SetRX_Mode();
+SPI_RW_Reg(FLUSH_RX,0xFF);  
+lcd_port_init();
+lcd_init();
+lcd_clr();       
+while(1)  
+{
+    /*
+	if(nRF24L01_RxPacket(KK)==1)
+    SetRX_Mode();*/
+	lcd_xy(1, 1);
+	lcd_write_char(nn);
+}   
+}
+
+

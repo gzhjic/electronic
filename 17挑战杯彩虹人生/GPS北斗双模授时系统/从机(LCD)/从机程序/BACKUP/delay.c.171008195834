@@ -1,0 +1,29 @@
+ 
+ 
+ 
+ #include "delay.h"
+ 
+ uchar const week_data[] = {"00一二三四五六日"};
+ uchar const lcd_data[] = {"0123456789 "};
+ 
+ uchar const start_lcd_datatwo[]   = {"  20  年  月  日"};
+ uchar const start_lcd_datathree[] = {"    星期        "};
+ uchar const start_lcd_datafour[]  = {"     :    :     "};
+ 
+ uchar history_messages_number = 0;			//历史信息循环显示变量
+ 
+ /**************1ms延时函数**************/
+ void delay_ms(uint xms)
+ {
+ 	uint i,j;
+	for(i=0;i<xms;i++)
+	   for(j=0;j<550;j++);
+ }
+ 
+ /*************1us延时函数****************/
+ void delay_us(uint us)
+ {
+ 	uint i;
+   	us=us*5/4;
+  	for(i=0;i<us;i++);
+ }

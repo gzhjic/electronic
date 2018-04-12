@@ -1,0 +1,83 @@
+                        .module delay.c
+                        .area text(rom, con, rel)
+ 0000                   .dbfile delay.c
+ 0000                   .dbfile F:\AVRtest\双模\control\delay.c
+ 0000                   .dbfunc e delay_us _delay_us fV
+ 0000           ;           time -> R16,R17
+                        .even
+ 0000           _delay_us::
+ 0000                   .dbline -1
+ 0000                   .dbline 5
+ 0000           ; #include "delay.h"
+ 0000           ; 
+ 0000           ; 
+ 0000           ; void delay_us(unsigned int time) //8Mhz内部RC震荡延时Xus  
+ 0000           ; {
+ 0000           L2:
+ 0000                   .dbline 7
+ 0000           ;        do 
+ 0000           ;       {  time--; } 
+ 0000                   .dbline 7
+ 0000 0150              subi R16,1
+ 0002 1040              sbci R17,0
+ 0004                   .dbline 7
+ 0004           L3:
+ 0004                   .dbline 8
+ 0004           ;        while(time>1); 
+ 0004 81E0              ldi R24,1
+ 0006 90E0              ldi R25,0
+ 0008 8017              cp R24,R16
+ 000A 9107              cpc R25,R17
+ 000C C8F3              brlo L2
+ 000E           X0:
+ 000E                   .dbline -2
+ 000E           L1:
+ 000E                   .dbline 0 ; func end
+ 000E 0895              ret
+ 0010                   .dbsym r time 16 i
+ 0010                   .dbend
+ 0010                   .dbfunc e delay_ms _delay_ms fV
+ 0010           ;           time -> R20,R21
+                        .even
+ 0010           _delay_ms::
+ 0010 4A93              st -y,R20
+ 0012 5A93              st -y,R21
+ 0014 A801              movw R20,R16
+ 0016                   .dbline -1
+ 0016                   .dbline 13
+ 0016           ; }
+ 0016           ; 
+ 0016           ;  
+ 0016           ; void delay_ms(unsigned int time) //8Mhz内部RC震荡延时Xms 
+ 0016           ; { 
+ 0016 05C0              xjmp L7
+ 0018           L6:
+ 0018                   .dbline 15
+ 0018           ;       while(time!=0) 
+ 0018           ;       {  
+ 0018                   .dbline 16
+ 0018           ;       delay_us(1000);
+ 0018 08EE              ldi R16,1000
+ 001A 13E0              ldi R17,3
+ 001C F1DF              xcall _delay_us
+ 001E                   .dbline 17
+ 001E           ;       time--; 
+ 001E 4150              subi R20,1
+ 0020 5040              sbci R21,0
+ 0022                   .dbline 18
+ 0022           ;       }  
+ 0022           L7:
+ 0022                   .dbline 14
+ 0022 4030              cpi R20,0
+ 0024 4507              cpc R20,R21
+ 0026 C1F7              brne L6
+ 0028           X1:
+ 0028                   .dbline -2
+ 0028           L5:
+ 0028                   .dbline 0 ; func end
+ 0028 5991              ld R21,y+
+ 002A 4991              ld R20,y+
+ 002C 0895              ret
+ 002E                   .dbsym r time 20 i
+ 002E                   .dbend
+ 002E           ; }

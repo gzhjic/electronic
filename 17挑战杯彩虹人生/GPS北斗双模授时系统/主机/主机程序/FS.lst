@@ -1,0 +1,1536 @@
+Interrupt Vectors
+    00000 940C 004D JMP	__start|__text_start
+    00016 940C 007B JMP	_usart
+
+Program Code (text area)
+__start|__text_start:
+    0004D E5CF      LDI	R28,0x5F
+    0004E E0D4      LDI	R29,4
+    0004F BFCD      OUT	0x3D,R28
+    00050 BFDE      OUT	0x3E,R29
+    00051 51CE      SUBI	R28,0x1E
+    00052 40D0      SBCI	R29,0
+    00053 EA0A      LDI	R16,0xAA
+    00054 8308      ST	Y,R16
+    00055 2400      CLR	R0
+    00056 EAE5      LDI	R30,0xA5
+    00057 E0F0      LDI	R31,0
+    00058 E011      LDI	R17,1
+    00059 30E2      CPI	R30,2
+    0005A 07F1      CPC	R31,R17
+    0005B F011      BEQ	0x005E
+    0005C 9201      ST	Z+,R0
+    0005D CFFB      RJMP	0x0059
+    0005E 8300      ST	Z,R16
+    0005F E5E4      LDI	R30,0x54
+    00060 E0F0      LDI	R31,0
+    00061 E6A0      LDI	R26,0x60
+    00062 E0B0      LDI	R27,0
+    00063 E010      LDI	R17,0
+    00064 E000      LDI	R16,0
+    00065 BF0B      OUT	0x3B,R16
+    00066 39E9      CPI	R30,0x99
+    00067 07F1      CPC	R31,R17
+    00068 F021      BEQ	0x006D
+    00069 95C8      LPM
+    0006A 9631      ADIW	R30,1
+    0006B 920D      ST	X+,R0
+    0006C CFF9      RJMP	0x0066
+    0006D 940E 02C4 CALL	_main
+_exit:
+    0006F CFFF      RJMP	_exit
+FILE: F:\AVRtest\双模\fs\main.c
+(0001) #include "nrf2401.h"
+(0002) 
+(0003) #define uchar unsigned char
+(0004) #define uint unsigned int
+(0005) 
+(0006) uchar Data_legitimate=0;			//接收数据有效判断
+(0007) uchar GPS_lock;						//定位有效判断
+(0008) uchar GPSUSE_satellite[2];			//检测使用卫星个数<4就无法定位
+(0009) uchar GPSVISIBLE_satellite[2];		//可见卫星个数
+(0010) uchar GPSDATA_number;				//数据类型$GPGGA$GPGSV$GPGMC
+(0011) uchar GPSDATA_mode;					//数据模式
+(0012) uchar GPSDOT_count;					//逗号个数
+(0013) uchar GPSDATA_count;				//数据存放计数
+(0014) uchar GPSDATA_cmd[5];				//用来装数据类型
+(0015) uchar GPS_latitude[9];				//用来装纬度
+(0016) uchar GPS_latitude_dir;				//纬度的方向NS
+(0017) uchar GPS_longitude[10];			//用来装经度
+(0018) uchar GPS_longitude_dir;			//经度的方向WE
+(0019) uchar GPS_speed[5]={'0','0','0','.','0'};//速度
+(0020) uchar GPS_altitude[6];				//海拔高度
+(0021) uchar GPS_date[6];					//日期
+(0022) uchar GPS_time[6];					//时间
+(0023) uchar GPS_Angle[5]={'0','0','0','0','0'};//方位角，初始为0
+(0024) uchar OUT_speed[5];					//方位角
+(0025) 
+(0026) uchar Flag_GPSEnd=0;
+(0027) uchar TXbuf[32];
+(0028) uchar Flag_S[15]={0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+(0029) 
+(0030) void Mode1_TXbufSet(void);
+(0031) parity_check(unsigned x);
+(0032) 
+(0033) /*************************串口初始化*******************************/
+(0034) void uart_init(void)
+(0035) {
+(0036) 	UCSRA=0X00;
+_uart_init:
+    00070 2422      CLR	R2
+    00071 B82B      OUT	0x0B,R2
+(0037) 	UCSRC=0x86;								//异步不倍速
+    00072 E886      LDI	R24,0x86
+    00073 BD80      OUT	0x20,R24
+(0038) 	UBRRH=0x00;
+    00074 BC20      OUT	0x20,R2
+(0039) 	UBRRL=0x33;								//波特率9600
+    00075 E383      LDI	R24,0x33
+    00076 B989      OUT	0x09,R24
+(0040) 	UCSRB=0X98;								//使能
+    00077 E988      LDI	R24,0x98
+    00078 B98A      OUT	0x0A,R24
+(0041) 	SREG|=BIT(7);
+    00079 9478      BSET	7
+    0007A 9508      RET
+_usart:
+  UART_data            --> R16
+    0007B 922A      ST	-Y,R2
+    0007C 930A      ST	-Y,R16
+    0007D 932A      ST	-Y,R18
+    0007E 933A      ST	-Y,R19
+    0007F 938A      ST	-Y,R24
+    00080 939A      ST	-Y,R25
+    00081 93AA      ST	-Y,R26
+    00082 93EA      ST	-Y,R30
+    00083 93FA      ST	-Y,R31
+    00084 B62F      IN	R2,0x3F
+    00085 922A      ST	-Y,R2
+(0042) }
+(0043) /***************串口中断GPS解码***************************/
+(0044) #pragma interrupt_handler usart:12
+(0045) void usart(void)
+(0046) {
+(0047) 	uchar UART_data;
+(0048) 		UART_data=UDR;
+    00086 B10C      IN	R16,0x0C
+(0049) 		switch(UART_data)
+    00087 2F20      MOV	R18,R16
+    00088 2733      CLR	R19
+    00089 3224      CPI	R18,0x24
+    0008A E0E0      LDI	R30,0
+    0008B 073E      CPC	R19,R30
+    0008C F071      BEQ	0x009B
+    0008D 3224      CPI	R18,0x24
+    0008E E0E0      LDI	R30,0
+    0008F 073E      CPC	R19,R30
+    00090 F40C      BGE	0x0092
+    00091 C043      RJMP	0x00D5
+    00092 322A      CPI	R18,0x2A
+    00093 E0E0      LDI	R30,0
+    00094 073E      CPC	R19,R30
+    00095 F0B9      BEQ	0x00AD
+    00096 322C      CPI	R18,0x2C
+    00097 E0E0      LDI	R30,0
+    00098 073E      CPC	R19,R30
+    00099 F051      BEQ	0x00A4
+    0009A C03A      RJMP	0x00D5
+(0050) 		{
+(0051) 			case '$':
+(0052) 				GPSDATA_number=0;		//GPS数据类型清空
+    0009B 2422      CLR	R2
+    0009C 9220 00F9 STS	GPSDATA_number,R2
+(0053) 				GPSDATA_mode=1;			//接收命令模式
+    0009E E081      LDI	R24,1
+    0009F 9380 00F8 STS	GPSDATA_mode,R24
+(0054) 				GPSDATA_count=0;		//接收位数清空
+    000A1 9220 00F6 STS	GPSDATA_count,R2
+(0055) 				break;
+    000A3 C1FF      RJMP	0x02A3
+(0056) 			
+(0057) 			case ',':
+(0058) 				GPSDOT_count++;		//逗号计数加1
+    000A4 9180 00F7 LDS	R24,GPSDOT_count
+    000A6 5F8F      SUBI	R24,0xFF
+    000A7 9380 00F7 STS	GPSDOT_count,R24
+(0059) 				GPSDATA_count=0;
+    000A9 2422      CLR	R2
+    000AA 9220 00F6 STS	GPSDATA_count,R2
+(0060) 				break;
+    000AC C1F6      RJMP	0x02A3
+(0061) 			
+(0062) 			case '*':
+(0063) 				Flag_GPSEnd=1;
+    000AD E081      LDI	R24,1
+    000AE 9380 006B STS	Flag_GPSEnd,R24
+(0064) 				switch(GPSDATA_number)
+    000B0 9120 00F9 LDS	R18,GPSDATA_number
+    000B2 2733      CLR	R19
+    000B3 3021      CPI	R18,1
+    000B4 E0E0      LDI	R30,0
+    000B5 073E      CPC	R19,R30
+    000B6 F049      BEQ	0x00C0
+    000B7 3022      CPI	R18,2
+    000B8 E0E0      LDI	R30,0
+    000B9 073E      CPC	R19,R30
+    000BA F059      BEQ	0x00C6
+    000BB 3023      CPI	R18,3
+    000BC E0E0      LDI	R30,0
+    000BD 073E      CPC	R19,R30
+    000BE F069      BEQ	0x00CC
+    000BF C011      RJMP	0x00D1
+(0065) 				{
+(0066) 					case 1:
+(0067) 						Data_legitimate|=0x01;//GPGGA
+    000C0 9180 0060 LDS	R24,Data_legitimate
+    000C2 6081      ORI	R24,1
+    000C3 9380 0060 STS	Data_legitimate,R24
+(0068) 						break;
+    000C5 C00B      RJMP	0x00D1
+(0069) 					case 2:
+(0070) 						Data_legitimate|=0x02;//GPGSV
+    000C6 9180 0060 LDS	R24,Data_legitimate
+    000C8 6082      ORI	R24,2
+    000C9 9380 0060 STS	Data_legitimate,R24
+(0071) 						break;
+    000CB C005      RJMP	0x00D1
+(0072) 					case 3:
+(0073) 						Data_legitimate|=0x04;//GPRMC
+    000CC 9180 0060 LDS	R24,Data_legitimate
+    000CE 6084      ORI	R24,4
+    000CF 9380 0060 STS	Data_legitimate,R24
+(0074) 						break;
+(0075) 				}
+(0076) 				GPSDATA_mode=0;
+    000D1 2422      CLR	R2
+    000D2 9220 00F8 STS	GPSDATA_mode,R2
+(0077) 				break;
+    000D4 C1CE      RJMP	0x02A3
+(0078) 				
+(0079) 			default:
+(0080) 				if(GPSDATA_mode==1)									//类型种类判断
+    000D5 9180 00F8 LDS	R24,GPSDATA_mode
+    000D7 3081      CPI	R24,1
+    000D8 F009      BEQ	0x00DA
+    000D9 C083      RJMP	0x015D
+(0081) 				{
+(0082) 					GPSDATA_cmd[GPSDATA_count]=UART_data;			//接收字符放入类型缓存
+    000DA EF81      LDI	R24,0xF1
+    000DB E090      LDI	R25,0
+    000DC 91E0 00F6 LDS	R30,GPSDATA_count
+    000DE 27FF      CLR	R31
+    000DF 0FE8      ADD	R30,R24
+    000E0 1FF9      ADC	R31,R25
+    000E1 8300      ST	Z,R16
+(0083) 					if(GPSDATA_count==4)							//如果类型数据接收完毕，判断类型
+    000E2 9180 00F6 LDS	R24,GPSDATA_count
+    000E4 3084      CPI	R24,4
+    000E5 F009      BEQ	0x00E7
+    000E6 C1B7      RJMP	0x029E
+(0084) 					{											
+(0085) 						if		//判断GPGGA
+(0086) 						(
+(0087) 							(GPSDATA_cmd[0]=='G' ||GPSDATA_cmd[0]=='B' )
+    000E7 9020 00F1 LDS	R2,GPSDATA_cmd
+    000E9 2D82      MOV	R24,R2
+    000EA 3487      CPI	R24,0x47
+    000EB F011      BEQ	0x00EE
+    000EC 3482      CPI	R24,0x42
+    000ED F4F9      BNE	0x010D
+    000EE 9180 00F2 LDS	R24,GPSDATA_cmd+1
+    000F0 3580      CPI	R24,0x50
+    000F1 F021      BEQ	0x00F6
+    000F2 3484      CPI	R24,0x44
+    000F3 F011      BEQ	0x00F6
+    000F4 348E      CPI	R24,0x4E
+    000F5 F4B9      BNE	0x010D
+    000F6 9180 00F3 LDS	R24,GPSDATA_cmd+2
+    000F8 3487      CPI	R24,0x47
+    000F9 F499      BNE	0x010D
+    000FA 9180 00F4 LDS	R24,GPSDATA_cmd+3
+    000FC 3487      CPI	R24,0x47
+    000FD F479      BNE	0x010D
+    000FE 9180 00F5 LDS	R24,GPSDATA_cmd+4
+    00100 3481      CPI	R24,0x41
+    00101 F459      BNE	0x010D
+(0088) 									&&
+(0089) 							(GPSDATA_cmd[1]=='P' ||GPSDATA_cmd[1]=='D' ||GPSDATA_cmd[1]=='N')
+(0090) 									&&
+(0091) 							GPSDATA_cmd[2]=='G'
+(0092) 									&&
+(0093) 							GPSDATA_cmd[3]=='G'
+(0094) 									&&
+(0095) 							GPSDATA_cmd[4]=='A'
+(0096) 									
+(0097) 						)
+(0098) 						{
+(0099) 							GPSDATA_number=1;
+    00102 E081      LDI	R24,1
+    00103 9380 00F9 STS	GPSDATA_number,R24
+(0100) 							GPSDATA_mode=2;
+    00105 E082      LDI	R24,2
+    00106 9380 00F8 STS	GPSDATA_mode,R24
+(0101) 							GPSDOT_count=0;
+    00108 2422      CLR	R2
+    00109 9220 00F7 STS	GPSDOT_count,R2
+(0102) 							GPSDATA_count=0;
+    0010B 9220 00F6 STS	GPSDATA_count,R2
+(0103) 						}
+(0104) 						
+(0105) 						if		//判断GPGSV
+(0106) 						(
+(0107) 							(GPSDATA_cmd[0]=='G' ||GPSDATA_cmd[0]=='B' )
+    0010D 9020 00F1 LDS	R2,GPSDATA_cmd
+    0010F 2D82      MOV	R24,R2
+    00110 3487      CPI	R24,0x47
+    00111 F011      BEQ	0x0114
+    00112 3482      CPI	R24,0x42
+    00113 F4F1      BNE	0x0132
+    00114 9180 00F2 LDS	R24,GPSDATA_cmd+1
+    00116 3580      CPI	R24,0x50
+    00117 F021      BEQ	0x011C
+    00118 3484      CPI	R24,0x44
+    00119 F011      BEQ	0x011C
+    0011A 348E      CPI	R24,0x4E
+    0011B F4B1      BNE	0x0132
+    0011C 9180 00F3 LDS	R24,GPSDATA_cmd+2
+    0011E 3487      CPI	R24,0x47
+    0011F F491      BNE	0x0132
+    00120 9180 00F4 LDS	R24,GPSDATA_cmd+3
+    00122 3583      CPI	R24,0x53
+    00123 F471      BNE	0x0132
+    00124 9180 00F5 LDS	R24,GPSDATA_cmd+4
+    00126 3586      CPI	R24,0x56
+    00127 F451      BNE	0x0132
+(0108) 									&&
+(0109) 							(GPSDATA_cmd[1]=='P' ||GPSDATA_cmd[1]=='D' ||GPSDATA_cmd[1]=='N')
+(0110) 									&&
+(0111) 							GPSDATA_cmd[2]=='G'
+(0112) 									&&
+(0113) 							GPSDATA_cmd[3]=='S'
+(0114) 									&&
+(0115) 							GPSDATA_cmd[4]=='V'
+(0116) 						)
+(0117) 						{
+(0118) 							GPSDATA_number=2;
+    00128 E082      LDI	R24,2
+    00129 9380 00F9 STS	GPSDATA_number,R24
+(0119) 							GPSDATA_mode=2;
+    0012B 9380 00F8 STS	GPSDATA_mode,R24
+(0120) 							GPSDOT_count=0;					
+    0012D 2422      CLR	R2
+    0012E 9220 00F7 STS	GPSDOT_count,R2
+(0121) 							GPSDATA_count=0;
+    00130 9220 00F6 STS	GPSDATA_count,R2
+(0122) 						}
+(0123) 						
+(0124) 						if		//判断GPRMC
+(0125) 						(
+(0126) 							(GPSDATA_cmd[0]=='G' ||GPSDATA_cmd[0]=='B' )
+    00132 9120 00F1 LDS	R18,GPSDATA_cmd
+    00134 3427      CPI	R18,0x47
+    00135 F019      BEQ	0x0139
+    00136 3422      CPI	R18,0x42
+    00137 F009      BEQ	0x0139
+    00138 C165      RJMP	0x029E
+    00139 9180 00F2 LDS	R24,GPSDATA_cmd+1
+    0013B 3580      CPI	R24,0x50
+    0013C F029      BEQ	0x0142
+    0013D 3484      CPI	R24,0x44
+    0013E F019      BEQ	0x0142
+    0013F 348E      CPI	R24,0x4E
+    00140 F009      BEQ	0x0142
+    00141 C15C      RJMP	0x029E
+    00142 9180 00F3 LDS	R24,GPSDATA_cmd+2
+    00144 3582      CPI	R24,0x52
+    00145 F009      BEQ	0x0147
+    00146 C157      RJMP	0x029E
+    00147 9180 00F4 LDS	R24,GPSDATA_cmd+3
+    00149 348D      CPI	R24,0x4D
+    0014A F009      BEQ	0x014C
+    0014B C152      RJMP	0x029E
+    0014C 9180 00F5 LDS	R24,GPSDATA_cmd+4
+    0014E 3483      CPI	R24,0x43
+    0014F F009      BEQ	0x0151
+    00150 C14D      RJMP	0x029E
+(0127) 									&&
+(0128) 							(GPSDATA_cmd[1]=='P' ||GPSDATA_cmd[1]=='D' ||GPSDATA_cmd[1]=='N')
+(0129) 									&&
+(0130) 							GPSDATA_cmd[2]=='R'
+(0131) 									&&
+(0132) 							GPSDATA_cmd[3]=='M'
+(0133) 									&&
+(0134) 							GPSDATA_cmd[4]=='C'
+(0135) 						)
+(0136) 						{
+(0137) 							GPSDATA_number=3;
+    00151 E083      LDI	R24,3
+    00152 9380 00F9 STS	GPSDATA_number,R24
+(0138) 							GPSDATA_mode=2;					
+    00154 E082      LDI	R24,2
+    00155 9380 00F8 STS	GPSDATA_mode,R24
+(0139) 							GPSDOT_count=0;
+    00157 2422      CLR	R2
+    00158 9220 00F7 STS	GPSDOT_count,R2
+(0140) 							GPSDATA_count=0;
+    0015A 9220 00F6 STS	GPSDATA_count,R2
+(0141) 						}
+(0142) 						
+(0143) 					}
+(0144) 				}
+    0015C C141      RJMP	0x029E
+(0145) 				else if(GPSDATA_mode==2)					//接收数据处理
+    0015D 9180 00F8 LDS	R24,GPSDATA_mode
+    0015F 3082      CPI	R24,2
+    00160 F009      BEQ	0x0162
+    00161 C13C      RJMP	0x029E
+(0146) 				{
+(0147) 					switch (GPSDATA_number)
+    00162 9120 00F9 LDS	R18,GPSDATA_number
+    00164 2733      CLR	R19
+    00165 3021      CPI	R18,1
+    00166 E0E0      LDI	R30,0
+    00167 073E      CPC	R19,R30
+    00168 F059      BEQ	0x0174
+    00169 3022      CPI	R18,2
+    0016A E0E0      LDI	R30,0
+    0016B 073E      CPC	R19,R30
+    0016C F409      BNE	0x016E
+    0016D C07A      RJMP	0x01E8
+    0016E 3023      CPI	R18,3
+    0016F E0E0      LDI	R30,0
+    00170 073E      CPC	R19,R30
+    00171 F409      BNE	0x0173
+    00172 C08B      RJMP	0x01FE
+    00173 C12A      RJMP	0x029E
+(0148) 					{
+(0149) 						case 1:												//类型1数据接收。GPGGA
+(0150) 							switch(GPSDOT_count)
+    00174 9120 00F7 LDS	R18,GPSDOT_count
+    00176 2733      CLR	R19
+    00177 3022      CPI	R18,2
+    00178 E0E0      LDI	R30,0
+    00179 073E      CPC	R19,R30
+    0017A F0E9      BEQ	0x0198
+    0017B 3023      CPI	R18,3
+    0017C E0E0      LDI	R30,0
+    0017D 073E      CPC	R19,R30
+    0017E F139      BEQ	0x01A6
+    0017F 3024      CPI	R18,4
+    00180 E0E0      LDI	R30,0
+    00181 073E      CPC	R19,R30
+    00182 F159      BEQ	0x01AE
+    00183 3025      CPI	R18,5
+    00184 E0E0      LDI	R30,0
+    00185 073E      CPC	R19,R30
+    00186 F409      BNE	0x0188
+    00187 C034      RJMP	0x01BC
+    00188 3026      CPI	R18,6
+    00189 E0E0      LDI	R30,0
+    0018A 073E      CPC	R19,R30
+    0018B F409      BNE	0x018D
+    0018C C037      RJMP	0x01C4
+    0018D 3027      CPI	R18,7
+    0018E E0E0      LDI	R30,0
+    0018F 073E      CPC	R19,R30
+    00190 F409      BNE	0x0192
+    00191 C03A      RJMP	0x01CC
+    00192 3029      CPI	R18,0x9
+    00193 E0E0      LDI	R30,0
+    00194 073E      CPC	R19,R30
+    00195 F409      BNE	0x0197
+    00196 C043      RJMP	0x01DA
+    00197 C106      RJMP	0x029E
+(0151) 							{
+(0152) 								case 2:										//纬度处理
+(0153) 									if(GPSDATA_count<9)
+    00198 9180 00F6 LDS	R24,GPSDATA_count
+    0019A 3089      CPI	R24,0x9
+    0019B F008      BCS	0x019D
+    0019C C101      RJMP	0x029E
+(0154) 										GPS_latitude[GPSDATA_count]=UART_data;
+    0019D EE88      LDI	R24,0xE8
+    0019E E090      LDI	R25,0
+    0019F 91E0 00F6 LDS	R30,GPSDATA_count
+    001A1 27FF      CLR	R31
+    001A2 0FE8      ADD	R30,R24
+    001A3 1FF9      ADC	R31,R25
+    001A4 8300      ST	Z,R16
+(0155) 									break;
+    001A5 C0F8      RJMP	0x029E
+(0156) 								case 3:										//纬度方向处理
+(0157) 									if(GPSDATA_count<1)
+    001A6 9180 00F6 LDS	R24,GPSDATA_count
+    001A8 3081      CPI	R24,1
+    001A9 F008      BCS	0x01AB
+    001AA C0F3      RJMP	0x029E
+(0158) 										GPS_latitude_dir=UART_data;
+    001AB 9300 00E7 STS	GPS_latitude_dir,R16
+(0159) 									break;
+    001AD C0F0      RJMP	0x029E
+(0160) 								case 4:										//经度处理
+(0161) 									if(GPSDATA_count<10)
+    001AE 9180 00F6 LDS	R24,GPSDATA_count
+    001B0 308A      CPI	R24,0xA
+    001B1 F008      BCS	0x01B3
+    001B2 C0EB      RJMP	0x029E
+(0162) 										GPS_longitude[GPSDATA_count]=UART_data;
+    001B3 ED8D      LDI	R24,0xDD
+    001B4 E090      LDI	R25,0
+    001B5 91E0 00F6 LDS	R30,GPSDATA_count
+    001B7 27FF      CLR	R31
+    001B8 0FE8      ADD	R30,R24
+    001B9 1FF9      ADC	R31,R25
+    001BA 8300      ST	Z,R16
+(0163) 									break;
+    001BB C0E2      RJMP	0x029E
+(0164) 								case 5:										//经度方向处理
+(0165) 									if(GPSDATA_count<1)
+    001BC 9180 00F6 LDS	R24,GPSDATA_count
+    001BE 3081      CPI	R24,1
+    001BF F008      BCS	0x01C1
+    001C0 C0DD      RJMP	0x029E
+(0166) 										GPS_longitude_dir=UART_data;
+    001C1 9300 00DC STS	GPS_longitude_dir,R16
+(0167) 									break;
+    001C3 C0DA      RJMP	0x029E
+(0168) 								case 6:										//定位判断
+(0169) 									if(GPSDATA_count<1)
+    001C4 9180 00F6 LDS	R24,GPSDATA_count
+    001C6 3081      CPI	R24,1
+    001C7 F008      BCS	0x01C9
+    001C8 C0D5      RJMP	0x029E
+(0170) 										GPS_lock=UART_data;
+    001C9 9300 00FE STS	GPS_lock,R16
+(0171) 									break;
+    001CB C0D2      RJMP	0x029E
+(0172) 								case 7:										//GPS使用卫星个数
+(0173) 									if(GPSDATA_count<2)
+    001CC 9180 00F6 LDS	R24,GPSDATA_count
+    001CE 3082      CPI	R24,2
+    001CF F008      BCS	0x01D1
+    001D0 C0CD      RJMP	0x029E
+(0174) 										GPSUSE_satellite[GPSDATA_count]=UART_data;
+    001D1 EF8C      LDI	R24,0xFC
+    001D2 E090      LDI	R25,0
+    001D3 91E0 00F6 LDS	R30,GPSDATA_count
+    001D5 27FF      CLR	R31
+    001D6 0FE8      ADD	R30,R24
+    001D7 1FF9      ADC	R31,R25
+    001D8 8300      ST	Z,R16
+(0175) 									break;
+    001D9 C0C4      RJMP	0x029E
+(0176) 								case 9:										//海拔高度处理
+(0177) 									if(GPSDATA_count<6)
+    001DA 9180 00F6 LDS	R24,GPSDATA_count
+    001DC 3086      CPI	R24,6
+    001DD F008      BCS	0x01DF
+    001DE C0BF      RJMP	0x029E
+(0178) 										GPS_altitude[GPSDATA_count]=UART_data;
+    001DF ED86      LDI	R24,0xD6
+    001E0 E090      LDI	R25,0
+    001E1 91E0 00F6 LDS	R30,GPSDATA_count
+    001E3 27FF      CLR	R31
+    001E4 0FE8      ADD	R30,R24
+    001E5 1FF9      ADC	R31,R25
+    001E6 8300      ST	Z,R16
+(0179) 									break;
+(0180) 							}
+(0181) 							break;
+    001E7 C0B6      RJMP	0x029E
+(0182) 							
+(0183) 						case 2:												//类型2数据接收。GPGSV
+(0184) 							switch(GPSDOT_count)
+    001E8 9120 00F7 LDS	R18,GPSDOT_count
+    001EA 2733      CLR	R19
+    001EB 3023      CPI	R18,3
+    001EC E0E0      LDI	R30,0
+    001ED 073E      CPC	R19,R30
+    001EE F009      BEQ	0x01F0
+    001EF C0AE      RJMP	0x029E
+(0185) 							{
+(0186) 								case 3:										//GPS可见卫星个数
+(0187) 									if(GPSDATA_count<2)
+    001F0 9180 00F6 LDS	R24,GPSDATA_count
+    001F2 3082      CPI	R24,2
+    001F3 F008      BCS	0x01F5
+    001F4 C0A9      RJMP	0x029E
+(0188) 										GPSVISIBLE_satellite[GPSDATA_count]=UART_data;
+    001F5 EF8A      LDI	R24,0xFA
+    001F6 E090      LDI	R25,0
+    001F7 91E0 00F6 LDS	R30,GPSDATA_count
+    001F9 27FF      CLR	R31
+    001FA 0FE8      ADD	R30,R24
+    001FB 1FF9      ADC	R31,R25
+    001FC 8300      ST	Z,R16
+(0189) 									break;
+(0190) 							}
+(0191) 						break;
+    001FD C0A0      RJMP	0x029E
+(0192) 							
+(0193) 						case 3:												//类型3数据接收。GPRMC
+(0194) 							switch(GPSDOT_count)
+    001FE 9120 00F7 LDS	R18,GPSDOT_count
+    00200 2733      CLR	R19
+    00201 3021      CPI	R18,1
+    00202 E0E0      LDI	R30,0
+    00203 073E      CPC	R19,R30
+    00204 F149      BEQ	0x022E
+    00205 3022      CPI	R18,2
+    00206 E0E0      LDI	R30,0
+    00207 073E      CPC	R19,R30
+    00208 F409      BNE	0x020A
+    00209 C032      RJMP	0x023C
+    0020A 3023      CPI	R18,3
+    0020B E0E0      LDI	R30,0
+    0020C 073E      CPC	R19,R30
+    0020D F409      BNE	0x020F
+    0020E C03E      RJMP	0x024D
+    0020F 3024      CPI	R18,4
+    00210 E0E0      LDI	R30,0
+    00211 073E      CPC	R19,R30
+    00212 F409      BNE	0x0214
+    00213 C047      RJMP	0x025B
+    00214 3025      CPI	R18,5
+    00215 E0E0      LDI	R30,0
+    00216 073E      CPC	R19,R30
+    00217 F409      BNE	0x0219
+    00218 C04A      RJMP	0x0263
+    00219 3026      CPI	R18,6
+    0021A E0E0      LDI	R30,0
+    0021B 073E      CPC	R19,R30
+    0021C F409      BNE	0x021E
+    0021D C053      RJMP	0x0271
+    0021E 3027      CPI	R18,7
+    0021F E0E0      LDI	R30,0
+    00220 073E      CPC	R19,R30
+    00221 F409      BNE	0x0223
+    00222 C055      RJMP	0x0278
+    00223 3028      CPI	R18,0x8
+    00224 E0E0      LDI	R30,0
+    00225 073E      CPC	R19,R30
+    00226 F409      BNE	0x0228
+    00227 C05D      RJMP	0x0285
+    00228 3029      CPI	R18,0x9
+    00229 E0E0      LDI	R30,0
+    0022A 073E      CPC	R19,R30
+    0022B F409      BNE	0x022D
+    0022C C065      RJMP	0x0292
+    0022D C070      RJMP	0x029E
+(0195) 							{
+(0196) 								case 1:										//时间处理
+(0197) 									if(GPSDATA_count<6)		
+    0022E 9180 00F6 LDS	R24,GPSDATA_count
+    00230 3086      CPI	R24,6
+    00231 F008      BCS	0x0233
+    00232 C06B      RJMP	0x029E
+(0198) 										GPS_time[GPSDATA_count]=UART_data;	
+    00233 EC8A      LDI	R24,0xCA
+    00234 E090      LDI	R25,0
+    00235 91E0 00F6 LDS	R30,GPSDATA_count
+    00237 27FF      CLR	R31
+    00238 0FE8      ADD	R30,R24
+    00239 1FF9      ADC	R31,R25
+    0023A 8300      ST	Z,R16
+(0199) 									break;
+    0023B C062      RJMP	0x029E
+(0200) 								case 2:										//定位判断						
+(0201) 									if(GPSDATA_count<1)
+    0023C 9180 00F6 LDS	R24,GPSDATA_count
+    0023E 3081      CPI	R24,1
+    0023F F008      BCS	0x0241
+    00240 C05D      RJMP	0x029E
+(0202) 									{
+(0203) 									  if(UART_data=='A')
+    00241 3401      CPI	R16,0x41
+    00242 F419      BNE	0x0246
+(0204) 											GPS_lock=1;
+    00243 E081      LDI	R24,1
+    00244 9380 00FE STS	GPS_lock,R24
+(0205) 									  if(UART_data=='V')
+    00246 3506      CPI	R16,0x56
+    00247 F009      BEQ	0x0249
+    00248 C055      RJMP	0x029E
+(0206) 									    GPS_lock=0;
+    00249 2422      CLR	R2
+    0024A 9220 00FE STS	GPS_lock,R2
+(0207) 									}
+(0208) 									break;
+    0024C C051      RJMP	0x029E
+(0209) 								case 3:										//纬度处理						
+(0210) 									if(GPSDATA_count<9)
+    0024D 9180 00F6 LDS	R24,GPSDATA_count
+    0024F 3089      CPI	R24,0x9
+    00250 F008      BCS	0x0252
+    00251 C04C      RJMP	0x029E
+(0211) 									{
+(0212) 										GPS_latitude[GPSDATA_count]=UART_data;
+    00252 EE88      LDI	R24,0xE8
+    00253 E090      LDI	R25,0
+    00254 91E0 00F6 LDS	R30,GPSDATA_count
+    00256 27FF      CLR	R31
+    00257 0FE8      ADD	R30,R24
+    00258 1FF9      ADC	R31,R25
+    00259 8300      ST	Z,R16
+(0213) 									}
+(0214) 									break;
+    0025A C043      RJMP	0x029E
+(0215) 								case 4:										//纬度方向处理						
+(0216) 									if(GPSDATA_count<1)
+    0025B 9180 00F6 LDS	R24,GPSDATA_count
+    0025D 3081      CPI	R24,1
+    0025E F008      BCS	0x0260
+    0025F C03E      RJMP	0x029E
+(0217) 									{
+(0218) 										GPS_latitude_dir=UART_data;
+    00260 9300 00E7 STS	GPS_latitude_dir,R16
+(0219) 									}
+(0220) 									break;
+    00262 C03B      RJMP	0x029E
+(0221) 								case 5:										//经度处理						
+(0222) 									if(GPSDATA_count<10)
+    00263 9180 00F6 LDS	R24,GPSDATA_count
+    00265 308A      CPI	R24,0xA
+    00266 F008      BCS	0x0268
+    00267 C036      RJMP	0x029E
+(0223) 									{
+(0224) 										GPS_longitude[GPSDATA_count]=UART_data;
+    00268 ED8D      LDI	R24,0xDD
+    00269 E090      LDI	R25,0
+    0026A 91E0 00F6 LDS	R30,GPSDATA_count
+    0026C 27FF      CLR	R31
+    0026D 0FE8      ADD	R30,R24
+    0026E 1FF9      ADC	R31,R25
+    0026F 8300      ST	Z,R16
+(0225) 									}
+(0226) 									break;
+    00270 C02D      RJMP	0x029E
+(0227) 								case 6:										//经度方向处理						
+(0228) 									if(GPSDATA_count<1)
+    00271 9180 00F6 LDS	R24,GPSDATA_count
+    00273 3081      CPI	R24,1
+    00274 F548      BCC	0x029E
+(0229) 									{
+(0230) 										GPS_longitude_dir=UART_data;
+    00275 9300 00DC STS	GPS_longitude_dir,R16
+(0231) 									}
+(0232) 									break;
+    00277 C026      RJMP	0x029E
+(0233) 								case 7:										//速度处理						
+(0234) 									if(GPSDATA_count<5)
+    00278 9180 00F6 LDS	R24,GPSDATA_count
+    0027A 3085      CPI	R24,5
+    0027B F510      BCC	0x029E
+(0235) 									{
+(0236) 										GPS_speed[GPSDATA_count]=UART_data;
+    0027C E681      LDI	R24,0x61
+    0027D E090      LDI	R25,0
+    0027E 91E0 00F6 LDS	R30,GPSDATA_count
+    00280 27FF      CLR	R31
+    00281 0FE8      ADD	R30,R24
+    00282 1FF9      ADC	R31,R25
+    00283 8300      ST	Z,R16
+(0237) 									}
+(0238) 									break;
+    00284 C019      RJMP	0x029E
+(0239) 								case 8:										//方位角处理						
+(0240) 									if(GPSDATA_count<5)
+    00285 9180 00F6 LDS	R24,GPSDATA_count
+    00287 3085      CPI	R24,5
+    00288 F4A8      BCC	0x029E
+(0241) 									{
+(0242) 										GPS_Angle[GPSDATA_count]=UART_data;
+    00289 E686      LDI	R24,0x66
+    0028A E090      LDI	R25,0
+    0028B 91E0 00F6 LDS	R30,GPSDATA_count
+    0028D 27FF      CLR	R31
+    0028E 0FE8      ADD	R30,R24
+    0028F 1FF9      ADC	R31,R25
+    00290 8300      ST	Z,R16
+(0243) 									}
+(0244) 									break;
+    00291 C00C      RJMP	0x029E
+(0245) 								case 9:										//日期				
+(0246) 									if(GPSDATA_count<6)
+    00292 9180 00F6 LDS	R24,GPSDATA_count
+    00294 3086      CPI	R24,6
+    00295 F440      BCC	0x029E
+(0247) 									{
+(0248) 										GPS_date[GPSDATA_count]=UART_data;
+    00296 ED80      LDI	R24,0xD0
+    00297 E090      LDI	R25,0
+    00298 91E0 00F6 LDS	R30,GPSDATA_count
+    0029A 27FF      CLR	R31
+    0029B 0FE8      ADD	R30,R24
+    0029C 1FF9      ADC	R31,R25
+    0029D 8300      ST	Z,R16
+(0249) 									}
+(0250) 									break;
+(0251) 							}
+(0252) 							break;
+(0253) 					}
+(0254) 				}
+(0255) 				GPSDATA_count++;		//接收数位加1
+    0029E 9180 00F6 LDS	R24,GPSDATA_count
+    002A0 5F8F      SUBI	R24,0xFF
+    002A1 9380 00F6 STS	GPSDATA_count,R24
+(0256) 				break;
+    002A3 9029      LD	R2,Y+
+    002A4 BE2F      OUT	0x3F,R2
+    002A5 91F9      LD	R31,Y+
+    002A6 91E9      LD	R30,Y+
+    002A7 91A9      LD	R26,Y+
+    002A8 9199      LD	R25,Y+
+    002A9 9189      LD	R24,Y+
+    002AA 9139      LD	R19,Y+
+    002AB 9129      LD	R18,Y+
+    002AC 9109      LD	R16,Y+
+    002AD 9029      LD	R2,Y+
+    002AE 9518      RETI
+_delay:
+  i                    --> R20
+  j                    --> R22
+  ms                   --> R16
+    002AF 940E 0463 CALL	push_xgsetF000
+(0257) 		}
+(0258) }
+(0259) 
+(0260) void delay(uint ms) 
+(0261) {    
+(0262) 	uint i,j;  
+(0263)     for (i=0;i<ms;i++) 
+    002B1 2744      CLR	R20
+    002B2 2755      CLR	R21
+    002B3 C00B      RJMP	0x02BF
+(0264) 	{   
+(0265) 		for(j=0;j<1140;j++); 
+    002B4 2766      CLR	R22
+    002B5 2777      CLR	R23
+    002B6 C002      RJMP	0x02B9
+    002B7 5F6F      SUBI	R22,0xFF
+    002B8 4F7F      SBCI	R23,0xFF
+    002B9 3764      CPI	R22,0x74
+    002BA E0E4      LDI	R30,4
+    002BB 077E      CPC	R23,R30
+    002BC F3D0      BCS	0x02B7
+    002BD 5F4F      SUBI	R20,0xFF
+    002BE 4F5F      SBCI	R21,0xFF
+    002BF 1740      CP	R20,R16
+    002C0 0751      CPC	R21,R17
+    002C1 F390      BCS	0x02B4
+    002C2 940C 0468 JMP	pop_xgsetF000
+(0266) 	}
+(0267) }
+(0268) 
+(0269) void main(void) 
+(0270) {     
+(0271) 	DDRC=0XFF;
+_main:
+    002C4 EF8F      LDI	R24,0xFF
+    002C5 BB84      OUT	0x14,R24
+(0272) 	DDRD|=0XF0 ;
+    002C6 B381      IN	R24,0x11
+    002C7 6F80      ORI	R24,0xF0
+    002C8 BB81      OUT	0x11,R24
+(0273) 	DDRB=(1<<PB3)|(1<<PB4)|(1<<PB5)|(1<<PB7);  //24L01端口初始化 //把MISO设置为输入和IRQ设置为输入既可 
+    002C9 EB88      LDI	R24,0xB8
+    002CA BB87      OUT	0x17,R24
+(0274) 	PORTB = 0xff;
+    002CB EF8F      LDI	R24,0xFF
+    002CC BB88      OUT	0x18,R24
+(0275) 	DDRA&=0x3f;								//电池检测脚初始化
+    002CD B38A      IN	R24,0x1A
+    002CE 738F      ANDI	R24,0x3F
+    002CF BB8A      OUT	0x1A,R24
+(0276) 	PORTA|=0XC0;
+    002D0 B38B      IN	R24,0x1B
+    002D1 6C80      ORI	R24,0xC0
+    002D2 BB8B      OUT	0x1B,R24
+(0277) 	init_NRF24L01();        
+    002D3 940E 0425 CALL	_init_NRF24L01
+(0278) 	uart_init();      
+    002D5 DD9A      RCALL	_uart_init
+    002D6 C010      RJMP	0x02E7
+(0279) 	while(1)  
+(0280) 	{                   
+(0281) 		if(Flag_GPSEnd)
+    002D7 9020 006B LDS	R2,Flag_GPSEnd
+    002D9 2022      TST	R2
+    002DA F061      BEQ	0x02E7
+(0282) 		{
+(0283) 			Mode1_TXbufSet();
+    002DB D00D      RCALL	_Mode1_TXbufSet
+(0284) 			nRF24L01_TxPacket(TXbuf);
+    002DC EA05      LDI	R16,0xA5
+    002DD E010      LDI	R17,0
+    002DE 940E 040A CALL	_nRF24L01_TxPacket
+(0285) 			SPI_RW_Reg(WRITE_REG+STATUS,0XFF);   //将24L01的状态标志位置“1
+    002E0 EF2F      LDI	R18,0xFF
+    002E1 E207      LDI	R16,0x27
+    002E2 940E 03C7 CALL	_SPI_RW_Reg
+(0286) 			Flag_GPSEnd=0;
+    002E4 2422      CLR	R2
+    002E5 9220 006B STS	Flag_GPSEnd,R2
+    002E7 CFEF      RJMP	0x02D7
+    002E8 9508      RET
+_Mode1_TXbufSet:
+  sum                  --> R10
+  i                    --> R20
+    002E9 940E 046D CALL	push_xgsetF00C
+(0287) 		}
+(0288) 		//delay(5);
+(0289) 	} 
+(0290) }
+(0291) 
+(0292) /****************************************************************
+(0293)  //广播模式下发送的数据处理函数 
+(0294)        详情见项目目录下通信协议
+(0295)  ***************************************************************/
+(0296) void Mode1_TXbufSet(void)					
+(0297) {
+(0298) 	uchar i,sum; 
+(0299) 	TXbuf[0]=0x43;							//起始位
+    002EB E483      LDI	R24,0x43
+    002EC 9380 00A5 STS	TXbuf,R24
+(0300) 	TXbuf[1]=0x01;							//工作模式
+    002EE E081      LDI	R24,1
+    002EF 9380 00A6 STS	TXbuf+1,R24
+(0301) 	for(i=2;i<8;i++)						//时间日期
+    002F1 E042      LDI	R20,2
+    002F2 C01D      RJMP	0x0310
+(0302) 	{
+(0303) 		TXbuf[i]=GPS_time[i-2];
+    002F3 EC88      LDI	R24,0xC8
+    002F4 E090      LDI	R25,0
+    002F5 2FE4      MOV	R30,R20
+    002F6 27FF      CLR	R31
+    002F7 0FE8      ADD	R30,R24
+    002F8 1FF9      ADC	R31,R25
+    002F9 8020      LD	R2,Z
+    002FA EA85      LDI	R24,0xA5
+    002FB E090      LDI	R25,0
+    002FC 2FE4      MOV	R30,R20
+    002FD 27FF      CLR	R31
+    002FE 0FE8      ADD	R30,R24
+    002FF 1FF9      ADC	R31,R25
+    00300 8220      ST	Z,R2
+(0304) 		TXbuf[i+6]=GPS_date[i-2];
+    00301 EC8E      LDI	R24,0xCE
+    00302 E090      LDI	R25,0
+    00303 2FE4      MOV	R30,R20
+    00304 27FF      CLR	R31
+    00305 0FE8      ADD	R30,R24
+    00306 1FF9      ADC	R31,R25
+    00307 8020      LD	R2,Z
+    00308 EA8B      LDI	R24,0xAB
+    00309 E090      LDI	R25,0
+    0030A 2FE4      MOV	R30,R20
+    0030B 27FF      CLR	R31
+    0030C 0FE8      ADD	R30,R24
+    0030D 1FF9      ADC	R31,R25
+    0030E 8220      ST	Z,R2
+    0030F 9543      INC	R20
+    00310 3048      CPI	R20,0x8
+    00311 F308      BCS	0x02F3
+(0305) 	} 
+(0306) 	switch(PINA&0xc0)						//电池充电状态
+    00312 B369      IN	R22,0x19
+    00313 2777      CLR	R23
+    00314 7C60      ANDI	R22,0xC0
+    00315 7070      ANDI	R23,0
+    00316 3460      CPI	R22,0x40
+    00317 E0E0      LDI	R30,0
+    00318 077E      CPC	R23,R30
+    00319 F049      BEQ	0x0323
+    0031A 3460      CPI	R22,0x40
+    0031B E0E0      LDI	R30,0
+    0031C 077E      CPC	R23,R30
+    0031D F06C      BLT	0x032B
+    0031E 3860      CPI	R22,0x80
+    0031F E0E0      LDI	R30,0
+    00320 077E      CPC	R23,R30
+    00321 F029      BEQ	0x0327
+    00322 C008      RJMP	0x032B
+(0307) 	{
+(0308) 		case 0x40:TXbuf[14]=0x10;break;
+    00323 E180      LDI	R24,0x10
+    00324 9380 00B3 STS	TXbuf+14,R24
+    00326 C007      RJMP	0x032E
+(0309) 		case 0x80:TXbuf[14]=0x01;break;
+    00327 E081      LDI	R24,1
+    00328 9380 00B3 STS	TXbuf+14,R24
+    0032A C003      RJMP	0x032E
+(0310) 		default :TXbuf[14]=0x11;
+    0032B E181      LDI	R24,0x11
+    0032C 9380 00B3 STS	TXbuf+14,R24
+(0311) 	}
+(0312) 	for(i=0;i<14;i++)						//从机工作状态
+    0032E 2744      CLR	R20
+    0032F C01B      RJMP	0x034B
+(0313) 	{
+(0314) 		if(Flag_S[i])
+    00330 E68C      LDI	R24,0x6C
+    00331 E090      LDI	R25,0
+    00332 2FE4      MOV	R30,R20
+    00333 27FF      CLR	R31
+    00334 0FE8      ADD	R30,R24
+    00335 1FF9      ADC	R31,R25
+    00336 8020      LD	R2,Z
+    00337 2022      TST	R2
+    00338 F049      BEQ	0x0342
+(0315) 		TXbuf[i+14]=1;
+    00339 EB83      LDI	R24,0xB3
+    0033A E090      LDI	R25,0
+    0033B 2FE4      MOV	R30,R20
+    0033C 27FF      CLR	R31
+    0033D 0FE8      ADD	R30,R24
+    0033E 1FF9      ADC	R31,R25
+    0033F E081      LDI	R24,1
+    00340 8380      ST	Z,R24
+    00341 C008      RJMP	0x034A
+(0316) 		else
+(0317) 		TXbuf[i+14]=0;
+    00342 EB83      LDI	R24,0xB3
+    00343 E090      LDI	R25,0
+    00344 2FE4      MOV	R30,R20
+    00345 27FF      CLR	R31
+    00346 0FE8      ADD	R30,R24
+    00347 1FF9      ADC	R31,R25
+    00348 2422      CLR	R2
+    00349 8220      ST	Z,R2
+    0034A 9543      INC	R20
+    0034B 304E      CPI	R20,0xE
+    0034C F318      BCS	0x0330
+(0318) 	}
+(0319) 	if((GPS_time[5]>=0x30)&&(GPS_time[5]<=0x30+60))		//判断GPS是否收到时间
+    0034D 9180 00CF LDS	R24,GPS_time+5
+    0034F 3380      CPI	R24,0x30
+    00350 F048      BCS	0x035A
+    00351 E68C      LDI	R24,0x6C
+    00352 9020 00CF LDS	R2,GPS_time+5
+    00354 1582      CP	R24,R2
+    00355 F020      BCS	0x035A
+(0320) 	{
+(0321) 		TXbuf[29]=1;									
+    00356 E081      LDI	R24,1
+    00357 9380 00C2 STS	TXbuf+29,R24
+(0322) 	}
+    00359 C003      RJMP	0x035D
+(0323) 	else
+(0324) 		TXbuf[29]=0;
+    0035A 2422      CLR	R2
+    0035B 9220 00C2 STS	TXbuf+29,R2
+(0325) 	for(i=1;i<29;i++)						//求校验和
+    0035D E041      LDI	R20,1
+    0035E C009      RJMP	0x0368
+(0326) 		 sum=sum+TXbuf[i];
+    0035F EA85      LDI	R24,0xA5
+    00360 E090      LDI	R25,0
+    00361 2FE4      MOV	R30,R20
+    00362 27FF      CLR	R31
+    00363 0FE8      ADD	R30,R24
+    00364 1FF9      ADC	R31,R25
+    00365 8020      LD	R2,Z
+    00366 0CA2      ADD	R10,R2
+    00367 9543      INC	R20
+    00368 314D      CPI	R20,0x1D
+    00369 F3A8      BCS	0x035F
+(0327) 	if(parity_check(sum))					//奇偶校验位
+    0036A 2D0A      MOV	R16,R10
+    0036B 2711      CLR	R17
+    0036C D010      RCALL	_parity_check
+    0036D 3000      CPI	R16,0
+    0036E 0701      CPC	R16,R17
+    0036F F021      BEQ	0x0374
+(0328) 		TXbuf[30]=1;
+    00370 E081      LDI	R24,1
+    00371 9380 00C3 STS	TXbuf+30,R24
+    00373 C003      RJMP	0x0377
+(0329) 	else
+(0330) 		TXbuf[30]=0;
+    00374 2422      CLR	R2
+    00375 9220 00C3 STS	TXbuf+30,R2
+(0331) 	sum=0;
+    00377 24AA      CLR	R10
+(0332) 	TXbuf[31]=0x34;							//停止位
+    00378 E384      LDI	R24,0x34
+    00379 9380 00C4 STS	TXbuf+31,R24
+    0037B 940C 0474 JMP	pop_xgsetF00C
+_parity_check:
+  val                  --> R20
+  x                    --> R16
+    0037D 934A      ST	-Y,R20
+    0037E 935A      ST	-Y,R21
+(0333) }
+(0334) 
+(0335) 
+(0336) /*函数功能：如果1的个数为奇数个，则返回1，如果1的个数为偶数个，则返回0。*/
+(0337) parity_check(unsigned int x)
+(0338) {
+(0339)     unsigned int val=0;
+    0037F 2744      CLR	R20
+    00380 2755      CLR	R21
+    00381 C004      RJMP	0x0386
+(0340)     while(x)
+(0341)     {
+(0342)         val^=x;//val 和x进行异或运算
+    00382 2740      EOR	R20,R16
+    00383 2751      EOR	R21,R17
+(0343)         x>>=1;//x右移一位
+    00384 9516      LSR	R17
+    00385 9507      ROR	R16
+    00386 3000      CPI	R16,0
+    00387 0701      CPC	R16,R17
+    00388 F7C9      BNE	0x0382
+(0344)     }
+(0345)     return val&0x1;//取末位运算. val的二进制形式最后一位位1则返回1，为0则返回0.
+    00389 018A      MOVW	R16,R20
+    0038A 7001      ANDI	R16,1
+    0038B 7010      ANDI	R17,0
+    0038C 9159      LD	R21,Y+
+    0038D 9149      LD	R20,Y+
+    0038E 9508      RET
+_Delay:
+  i                    --> R20
+  s                    --> R16
+    0038F 934A      ST	-Y,R20
+    00390 935A      ST	-Y,R21
+FILE: F:\AVRtest\双模\fs\nrf2401.c
+(0001)   #include "nrf2401.h"
+(0002)  
+(0003)  
+(0004) char TxBuf[32]= {  0x01,0x02,0x03,0x4,0x05,0x06,0x07,0x08, 0x09,0x10,0x11,0x12,
+(0005)  					0x13,0x14,0x15,0x16, 0x17,0x18,0x19,0x20,0x21,0x22,0x23,0x24,
+(0006) 					 0x25,0x26,0x27,0x28,0x29,0x30,0x31,0x32, }; 
+(0007) char sta,count,tf; 
+(0008)  
+(0009) char  TX_ADDRESS[TX_ADR_WIDTH]= {0x34,0x43,0x10,0x10,0x01}; 
+(0010) //本地地址 
+(0011) char  RX_ADDRESS[RX_ADR_WIDTH]= {0x34,0x43,0x10,0x10,0x01}; 
+(0012) //接收地址
+(0013) //*****************************************长延时***************************************** 
+(0014) 
+(0015) void Delay(int s) 
+(0016) {
+(0017) 	unsigned int i; 
+(0018) 	for(i=0; i<s; i++); 
+    00391 2744      CLR	R20
+    00392 2755      CLR	R21
+    00393 C002      RJMP	0x0396
+    00394 5F4F      SUBI	R20,0xFF
+    00395 4F5F      SBCI	R21,0xFF
+    00396 1740      CP	R20,R16
+    00397 0751      CPC	R21,R17
+    00398 F3D8      BCS	0x0394
+(0019) 	for(i=0; i<s; i++);
+    00399 2744      CLR	R20
+    0039A 2755      CLR	R21
+    0039B C002      RJMP	0x039E
+    0039C 5F4F      SUBI	R20,0xFF
+    0039D 4F5F      SBCI	R21,0xFF
+    0039E 1740      CP	R20,R16
+    0039F 0751      CPC	R21,R17
+    003A0 F3D8      BCS	0x039C
+    003A1 9159      LD	R21,Y+
+    003A2 9149      LD	R20,Y+
+    003A3 9508      RET
+_SPI_RW:
+  temp                 --> R10
+  i                    --> R20
+  data                 --> R16
+    003A4 92AA      ST	-Y,R10
+    003A5 934A      ST	-Y,R20
+(0020) 	
+(0021) } 
+(0022) 
+(0023) //读写spi函数
+(0024)  char SPI_RW(char data) 
+(0025)  {  
+(0026)  	char i,temp=0;   
+    003A6 24AA      CLR	R10
+(0027)     for(i=0;i<8;i++) 					//  八个数据 
+    003A7 2744      CLR	R20
+    003A8 C00D      RJMP	0x03B6
+(0028) 	   {
+(0029) 	      if(data & 0x80)
+    003A9 FF07      SBRS	R16,7
+    003AA C002      RJMP	0x03AD
+(0030) 		     {  
+(0031) 			   Hign_24L01_MOSI;          
+    003AB 9AC5      SBI	0x18,5
+(0032) 			 }   
+    003AC C001      RJMP	0x03AE
+(0033) 		  else  
+(0034) 		    {  
+(0035) 			  Low_24L01_MOSI;  
+    003AD 98C5      CBI	0x18,5
+(0036) 			}    
+(0037) 			 data = (data << 1);           // 取最高有效位
+    003AE 0F00      LSL	R16
+(0038) 			  temp<<=1;  
+    003AF 0CAA      LSL	R10
+(0039) 			  Hign_24L01_SCK;               // 时钟线拉高
+    003B0 9AC7      SBI	0x18,7
+(0040) 			  if(PINB&0x10)					// 获取MISO的数据 
+    003B1 9BB4      SBIS	0x16,4
+    003B2 C001      RJMP	0x03B4
+(0041) 			  {temp++;}     			  
+    003B3 94A3      INC	R10
+(0042) 			  Low_24L01_SCK;              // 时钟线拉低       
+    003B4 98C7      CBI	0x18,7
+    003B5 9543      INC	R20
+    003B6 3048      CPI	R20,0x8
+    003B7 F388      BCS	0x03A9
+(0043) 		}  
+(0044) 		return(temp);               	// 返回读到的数
+    003B8 2D0A      MOV	R16,R10
+    003B9 9149      LD	R20,Y+
+    003BA 90A9      LD	R10,Y+
+    003BB 9508      RET
+_SPI_Read:
+  reg_val              --> R10
+  reg                  --> R10
+    003BC 92AA      ST	-Y,R10
+    003BD 2EA0      MOV	R10,R16
+(0045) }
+(0046) 
+(0047) 
+(0048)  
+(0049)  //读寄存器值函数
+(0050)  char SPI_Read(char reg) 
+(0051)  {  	
+(0052)  		char reg_val;   
+(0053) 		Low_24L01_CSN;           // 初始化spi通讯  
+    003BE 98C4      CBI	0x18,4
+(0054)  		SPI_RW(reg);            // 选择寄存器来读取 
+    003BF 2D0A      MOV	R16,R10
+    003C0 DFE3      RCALL	_SPI_RW
+(0055) 		reg_val = SPI_RW(0);    // 然后读取寄存器的值
+    003C1 2700      CLR	R16
+    003C2 DFE1      RCALL	_SPI_RW
+    003C3 2EA0      MOV	R10,R16
+(0056) 		Hign_24L01_CSN;     	// CSN拉高结束SPI通讯    
+    003C4 9AC4      SBI	0x18,4
+(0057) 		return(reg_val);        // 返回读到的值 
+    003C5 90A9      LD	R10,Y+
+    003C6 9508      RET
+_SPI_RW_Reg:
+  status               --> R10
+  value                --> R12
+  reg                  --> R10
+    003C7 92AA      ST	-Y,R10
+    003C8 92CA      ST	-Y,R12
+    003C9 2EC2      MOV	R12,R18
+    003CA 2EA0      MOV	R10,R16
+(0058) }
+(0059) 
+(0060) 
+(0061) //reg是寄存器 value是想写进去的数值返回读到寄存器的值
+(0062) char SPI_RW_Reg(char reg, char value)
+(0063)  {  
+(0064)  	char status;  
+(0065)     Low_24L01_CSN; 		  	// 初始化SPI通讯  
+    003CB 98C4      CBI	0x18,4
+(0066) 	status = SPI_RW(reg);	// 选择缓存器  
+    003CC 2D0A      MOV	R16,R10
+    003CD DFD6      RCALL	_SPI_RW
+    003CE 2EA0      MOV	R10,R16
+(0067) 	SPI_RW(value);    		// .写数据进去.. 
+    003CF 2D0C      MOV	R16,R12
+    003D0 DFD3      RCALL	_SPI_RW
+(0068) 	Hign_24L01_CSN;         // 拉高    
+    003D1 9AC4      SBI	0x18,4
+(0069) 	return(status);         // 返回读到的值
+    003D2 2D0A      MOV	R16,R10
+    003D3 90C9      LD	R12,Y+
+    003D4 90A9      LD	R10,Y+
+    003D5 9508      RET
+_SPI_Read_Buf:
+  status1              --> R10
+  uchar_ctr            --> R20
+  uchars               --> R12
+  pBuf                 --> R14
+  reg                  --> R10
+    003D6 940E 045A CALL	push_xgset30FC
+    003D8 0179      MOVW	R14,R18
+    003D9 2EA0      MOV	R10,R16
+    003DA 84C8      LDD	R12,Y+8
+(0070) }
+(0071) 
+(0072) //函数uint SPI_Read_Buf(uchar reg, uchar *pBuf, uchar uchars)  
+(0073) 
+(0074) //功能: 用于读数据，reg：为寄存器地址，pBuf：为待读出数据地址，uchars：读出数据的个数 
+(0075) 
+(0076) char SPI_Read_Buf(char reg, char *pBuf, char uchars)
+(0077) {  
+(0078) 	int status1,uchar_ctr;
+(0079)     Low_24L01_CSN;                      
+    003DB 98C4      CBI	0x18,4
+(0080) 	status1 = SPI_RW(reg);         		// 选择寄存器 去写入和读取状态 
+    003DC 2D0A      MOV	R16,R10
+    003DD DFC6      RCALL	_SPI_RW
+    003DE 2EA0      MOV	R10,R16
+    003DF 24BB      CLR	R11
+(0081) 	for(uchar_ctr=0;uchar_ctr<uchars;uchar_ctr++) 
+    003E0 2744      CLR	R20
+    003E1 2755      CLR	R21
+    003E2 C008      RJMP	0x03EB
+(0082) 	{pBuf[uchar_ctr] = SPI_RW(0);}   		//     
+    003E3 2700      CLR	R16
+    003E4 DFBF      RCALL	_SPI_RW
+    003E5 01FA      MOVW	R30,R20
+    003E6 0DEE      ADD	R30,R14
+    003E7 1DFF      ADC	R31,R15
+    003E8 8300      ST	Z,R16
+    003E9 5F4F      SUBI	R20,0xFF
+    003EA 4F5F      SBCI	R21,0xFF
+    003EB 2C2C      MOV	R2,R12
+    003EC 2433      CLR	R3
+    003ED 1542      CP	R20,R2
+    003EE 0553      CPC	R21,R3
+    003EF F39C      BLT	0x03E3
+(0083) 	Hign_24L01_CSN;                             
+    003F0 9AC4      SBI	0x18,4
+(0084) 	return(status1);                    // 返回读取的状态 
+    003F1 2D0A      MOV	R16,R10
+    003F2 940C 044F JMP	pop_xgset30FC
+_SPI_Write_Buf:
+  status1              --> R10
+  uchar_ctr            --> R12
+  uchars               --> R20
+  pBuf                 --> R14
+  reg                  --> R10
+    003F4 940E 045A CALL	push_xgset30FC
+    003F6 0179      MOVW	R14,R18
+    003F7 2EA0      MOV	R10,R16
+    003F8 8548      LDD	R20,Y+8
+(0085) }
+(0086) //函数：uint SPI_Write_Buf(uchar reg, uchar *pBuf, uchar uchars) 
+(0087) //功能: 用于写数据：为寄存器地址，pBuf：为待写入数据地址，uchars：写入数据的个数?**************/?
+(0088) char SPI_Write_Buf(char reg, char *pBuf, char uchars)
+(0089) { 
+(0090) 	 char status1,uchar_ctr;
+(0091) 	 Low_24L01_CSN;             //SPI使能
+    003F9 98C4      CBI	0x18,4
+(0092) 	 status1 = SPI_RW(reg);    
+    003FA 2D0A      MOV	R16,R10
+    003FB DFA8      RCALL	_SPI_RW
+    003FC 2EA0      MOV	R10,R16
+(0093) 	 for(uchar_ctr=0; uchar_ctr<uchars; uchar_ctr++) // 
+    003FD 24CC      CLR	R12
+    003FE C005      RJMP	0x0404
+(0094)      {SPI_RW(*pBuf++);}  
+    003FF 01F7      MOVW	R30,R14
+    00400 9101      LD	R16,Z+
+    00401 017F      MOVW	R14,R30
+    00402 DFA1      RCALL	_SPI_RW
+    00403 94C3      INC	R12
+    00404 16C4      CP	R12,R20
+    00405 F3C8      BCS	0x03FF
+(0095) 	 Hign_24L01_CSN; //关闭SPI 
+    00406 9AC4      SBI	0x18,4
+(0096) 	 return(status1); 
+    00407 2D0A      MOV	R16,R10
+    00408 940C 044F JMP	pop_xgset30FC
+_nRF24L01_TxPacket:
+  tx_buf               --> R10
+    0040A 92AA      ST	-Y,R10
+    0040B 92BA      ST	-Y,R11
+    0040C 0158      MOVW	R10,R16
+    0040D 9721      SBIW	R28,1
+(0097)  }
+(0098) /* 
+(0099)  //功能：数据接收配置
+(0100) void SetRX_Mode(void) 
+(0101) {  
+(0102) Low_24L01_CE;  
+(0103) SPI_RW_Reg(WRITE_REG + CONFIG, 0x0f); // IRQ收发完成中断响应，16位CRC ，主接收 
+(0104) Hign_24L01_CE; 
+(0105) Delay(1000);			//注意不能太小 
+(0106) }
+(0107) 
+(0108) //功能：数据读取后放如rx_buf接收缓冲区中
+(0109) char nRF24L01_RxPacket(char* rx_buf)
+(0110) {     
+(0111)  char revale=0;  
+(0112)  sta=SPI_Read(STATUS); 
+(0113)       				   // 读取状态寄存其来判断数据接收状况  
+(0114) if(sta&0x40)          // 判断是否接收到数据        
+(0115) {     
+(0116) 	Low_24L01_CE;   
+(0117) 	//SPI使能  
+(0118) 	SPI_Read_Buf(RD_RX_PLOAD,rx_buf,TX_PLOAD_WIDTH);
+(0119) 	// 读接受到的数据从RX_FIFO buffer  
+(0120) 	revale =1;   //读取数据完成标志 
+(0121) }
+(0122) SPI_RW_Reg(WRITE_REG+STATUS,sta);   //接收到数据后RX_DR,TX_DS,MAX_PT都置高为1，通过写1来清除中断标志 
+(0123) return revale;
+(0124) }*/
+(0125) 				 
+(0126) //功能：发送 tx_buf中数据
+(0127) void nRF24L01_TxPacket(char * tx_buf) 
+(0128) { 
+(0129) 	Low_24L01_CE; 	//StandBy I模式  
+    0040E 98C3      CBI	0x18,3
+(0130) 	SPI_Write_Buf(WRITE_REG + RX_ADDR_P0, TX_ADDRESS, TX_ADR_WIDTH); // 装载接收端地址 																		
+    0040F E085      LDI	R24,5
+    00410 8388      ST	Y,R24
+    00411 E92B      LDI	R18,0x9B
+    00412 E030      LDI	R19,0
+    00413 E20A      LDI	R16,0x2A
+    00414 DFDF      RCALL	_SPI_Write_Buf
+(0131) 	SPI_Write_Buf(WR_TX_PLOAD, tx_buf, TX_PLOAD_WIDTH);   // 装载数据														
+    00415 E280      LDI	R24,0x20
+    00416 8388      ST	Y,R24
+    00417 0195      MOVW	R18,R10
+    00418 EA00      LDI	R16,0xA0
+    00419 DFDA      RCALL	_SPI_Write_Buf
+(0132) 	SPI_RW_Reg(WRITE_REG + CONFIG, 0x0e); // IRQ收发完成中断响应，16位CRC，主发送										 
+    0041A E02E      LDI	R18,0xE
+    0041B E200      LDI	R16,0x20
+    0041C DFAA      RCALL	_SPI_RW_Reg
+(0133) 	Hign_24L01_CE; 	//置高CE，激发数据发送  								
+    0041D 9AC3      SBI	0x18,3
+(0134) 	Delay(600); 			
+    0041E E508      LDI	R16,0x58
+    0041F E012      LDI	R17,2
+    00420 DF6E      RCALL	_Delay
+    00421 9621      ADIW	R28,1
+    00422 90B9      LD	R11,Y+
+    00423 90A9      LD	R10,Y+
+    00424 9508      RET
+_init_NRF24L01:
+    00425 9721      SBIW	R28,1
+(0135) }
+(0136) //NRF24L01初始化
+(0137) void init_NRF24L01(void)
+(0138) {   
+(0139) 	Low_24L01_CE;   
+    00426 98C3      CBI	0x18,3
+(0140) 	// chip enable 
+(0141)     Hign_24L01_CSN; 
+    00427 9AC4      SBI	0x18,4
+(0142) 	// Spi disable    
+(0143) 	Low_24L01_SCK; 
+    00428 98C7      CBI	0x18,7
+(0144) 	 
+(0145) 	// Spi clock line init high 
+(0146) 	SPI_Write_Buf(WRITE_REG + TX_ADDR, TX_ADDRESS, TX_ADR_WIDTH); 
+    00429 E085      LDI	R24,5
+    0042A 8388      ST	Y,R24
+    0042B E92B      LDI	R18,0x9B
+    0042C E030      LDI	R19,0
+    0042D E300      LDI	R16,0x30
+    0042E DFC5      RCALL	_SPI_Write_Buf
+(0147) 	// 写本地地址  
+(0148) 	SPI_Write_Buf(WRITE_REG +  RX_ADDR_P0, RX_ADDRESS, RX_ADR_WIDTH);
+    0042F E085      LDI	R24,5
+    00430 8388      ST	Y,R24
+    00431 EA20      LDI	R18,0xA0
+    00432 E030      LDI	R19,0
+    00433 E20A      LDI	R16,0x2A
+    00434 DFBF      RCALL	_SPI_Write_Buf
+(0149) 	// 写接收端地址  
+(0150) 	
+(0151) 	//SPI_Write_Buf(WR_TX_PLOAD, TxBuf, TX_PLOAD_WIDTH);/*******/
+(0152) 	
+(0153) 	SPI_RW_Reg(WRITE_REG + EN_AA,0x01); // 0
+    00435 E021      LDI	R18,1
+    00436 E201      LDI	R16,0x21
+    00437 DF8F      RCALL	_SPI_RW_Reg
+(0154) 	//  频道0自动 ACK应答允许 （使能）  
+(0155) 	SPI_RW_Reg(WRITE_REG + EN_RXADDR,0x01); // 0
+    00438 E021      LDI	R18,1
+    00439 E202      LDI	R16,0x22
+    0043A DF8C      RCALL	_SPI_RW_Reg
+(0156) 	//  允许接收地址只有频道0，如果需要多频道可以参考Page21 （使能）
+(0157) 	// SPI_RW_Reg(WRITE_REG + EN_AA, 0x00);          // 关闭通道0自动应答
+(0158)    // SPI_RW_Reg(WRITE_REG + EN_RXADDR, 0x00);     // 关闭接收通道0
+(0159) 	//SPI_RW_Reg(WRITE_REG + SETUP_RETR, 0x00); 
+(0160) 	SPI_RW_Reg(WRITE_REG + SETUP_RETR, 0x1a);//自动重发
+    0043B E12A      LDI	R18,0x1A
+    0043C E204      LDI	R16,0x24
+    0043D DF89      RCALL	_SPI_RW_Reg
+(0161) 	
+(0162) 	SPI_RW_Reg(WRITE_REG + RF_CH, 3);   //   设置信道工作为2.4GHZ，收发必须一致 
+    0043E E023      LDI	R18,3
+    0043F E205      LDI	R16,0x25
+    00440 DF86      RCALL	_SPI_RW_Reg
+(0163) 	     
+(0164) 	SPI_RW_Reg(WRITE_REG + RF_SETUP, 0x07);  // 0//设置发射速率为1MHZ，发射功率为最大值0dB 
+    00441 E027      LDI	R18,7
+    00442 E206      LDI	R16,0x26
+    00443 DF83      RCALL	_SPI_RW_Reg
+(0165) 	
+(0166) 	SPI_RW_Reg(WRITE_REG + RX_PW_P0, RX_PLOAD_WIDTH); //设置接收数据长度，本次设置为32字节 
+    00444 E220      LDI	R18,0x20
+    00445 E301      LDI	R16,0x31
+    00446 DF80      RCALL	_SPI_RW_Reg
+(0167) 	
+(0168) 	
+(0169) 	 
+(0170) 	SPI_RW_Reg(WRITE_REG + CONFIG, 0x0E);  // IRQ收发完成中断响应，16位CRC ，主发送   
+    00447 E02E      LDI	R18,0xE
+    00448 E200      LDI	R16,0x20
+    00449 DF7D      RCALL	_SPI_RW_Reg
+(0171) 	//Hign_24L01_CE;
+(0172) 	Delay(6000); 
+FILE: <library>
+    0044A E700      LDI	R16,0x70
+    0044B E117      LDI	R17,0x17
+    0044C DF42      RCALL	_Delay
+    0044D 9621      ADIW	R28,1
+    0044E 9508      RET
+pop_xgset30FC:
+    0044F 90A9      LD	R10,Y+
+    00450 90B9      LD	R11,Y+
+    00451 90C9      LD	R12,Y+
+    00452 90D9      LD	R13,Y+
+    00453 90E9      LD	R14,Y+
+    00454 90F9      LD	R15,Y+
+    00455 9149      LD	R20,Y+
+    00456 9159      LD	R21,Y+
+    00457 9508      RET
+push_xgsetF0FC:
+    00458 937A      ST	-Y,R23
+    00459 936A      ST	-Y,R22
+push_xgset30FC:
+    0045A 935A      ST	-Y,R21
+    0045B 934A      ST	-Y,R20
+push_xgset00FC:
+    0045C 92FA      ST	-Y,R15
+    0045D 92EA      ST	-Y,R14
+push_xgset003C:
+    0045E 92DA      ST	-Y,R13
+    0045F 92CA      ST	-Y,R12
+    00460 92BA      ST	-Y,R11
+    00461 92AA      ST	-Y,R10
+    00462 9508      RET
+push_xgsetF000:
+    00463 937A      ST	-Y,R23
+    00464 936A      ST	-Y,R22
+    00465 935A      ST	-Y,R21
+    00466 934A      ST	-Y,R20
+    00467 9508      RET
+pop_xgsetF000:
+    00468 9149      LD	R20,Y+
+    00469 9159      LD	R21,Y+
+    0046A 9169      LD	R22,Y+
+    0046B 9179      LD	R23,Y+
+    0046C 9508      RET
+push_xgsetF00C:
+    0046D 937A      ST	-Y,R23
+    0046E 936A      ST	-Y,R22
+    0046F 935A      ST	-Y,R21
+    00470 934A      ST	-Y,R20
+    00471 92BA      ST	-Y,R11
+    00472 92AA      ST	-Y,R10
+    00473 9508      RET
+pop_xgsetF00C:
+    00474 90A9      LD	R10,Y+
+    00475 90B9      LD	R11,Y+
+    00476 9149      LD	R20,Y+
+    00477 9159      LD	R21,Y+
+    00478 9169      LD	R22,Y+
+    00479 9179      LD	R23,Y+
+    0047A 9508      RET

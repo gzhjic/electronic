@@ -1,0 +1,64 @@
+#include"iom16v.h"
+#include "shounrf24l01.h"
+#include "12864.h"
+
+#define uchar unsigned char 
+#define uint unsigned int
+
+uchar KK[32];
+
+void P_init(void)
+{
+	DDRA=0XFF;
+	PORTA=0XFF;
+	PORTB=0XFF;
+	PORTB=0;
+	DDRC=0XFF;
+	PORTC=0XFF;
+	DDRD=0XFF;
+	PORTD=0XFF;  
+}
+
+
+/********************************************/
+void main(void) 
+{  
+/*无线初始化*/
+P_init();
+init_NRF24L01();
+SetRX_Mode();
+SPI_RW_Reg(FLUSH_RX,0xFF);  
+/*液晶初始化*/
+lcd_port_init();
+lcd_init();
+lcd_clr();   
+/*液晶显示界面*/
+lcd_write_char(0,0,"时间：");    
+lcd_write_char(0,2,"20  年  月  日");
+lcd_write_char(0,3,"    时  分  秒");
+while(1)  
+{
+	if(nRF24L01_RxPacket(KK)==1)
+    SetRX_Mode();
+	lcd_xy(3,1);
+	lcd_write_data(KK[0]);
+	lcd_write_data(KK[1]);
+	lcd_xy(3,3);
+	lcd_write_data(KK[2]);
+	lcd_write_data(KK[3]);
+	lcd_xy(3,5);
+	lcd_write_data(KK[4]);
+	lcd_write_data(KK[5]);
+	lcd_xy(2,1);
+	lcd_write_data(KK[6]);
+	lcd_write_data(KK[7]);
+	lcd_xy(2,3);
+	lcd_write_data(KK[8]);
+	lcd_write_data(KK[9]);
+	lcd_xy(2,5);
+	lcd_write_data(KK[10]);
+	lcd_write_data(KK[11]);
+}   
+}
+
+

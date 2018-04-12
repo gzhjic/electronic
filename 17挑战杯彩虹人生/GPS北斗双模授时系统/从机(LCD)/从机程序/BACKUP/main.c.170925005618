@@ -1,0 +1,83 @@
+#include"iom16v.h"
+#include "macros.h"
+
+#include "smg.h"
+#include "shounrf24l01.h"
+
+
+#define uchar unsigned char 
+#define uint unsigned int
+uchar KK[32];
+char RxBuf[32];
+int a,b,c,d,e,f,g,h;
+
+uint num1;
+
+void delay(uint t)
+{
+	uint i,j;
+	for(i=0;i<t;i++)
+	for(j=0;j<1141;j++);
+}
+void time0(void)
+{
+	SREG|=BIT(7);
+	TIMSK|=BIT(6);
+	TCCR2|=0X03;
+	TCNT2|=0X83;	
+}
+
+void P_init(void)
+{
+	DDRA=0XFF;
+	PORTA=0XFF; 
+	DDRB  = 0x6C;  
+	PORTB = 0x93; 
+	DDRC=0XFF;
+	PORTC=0XFF;
+	DDRD=0XFF;
+	PORTD=0XFF;  
+}
+
+
+
+#pragma interrupt_handler timer_0:5	
+
+void timer_0(void)
+{
+
+	static uint flag_d;
+	TCNT2=0X83;
+	
+	if(++flag_d>=1)
+	{
+		flag_d=0;
+	}
+	 smg(KK[0]);
+}
+/********************************************/
+void main(void) 
+{  
+time0();
+P_init();
+     
+init_NRF24L01();
+SetRX_Mode();
+//SPI_RW_Reg(WRITE_REG+FLUSH_RX ,0);
+ //delay(100);                               
+while(1)  
+{
+             
+	if(( nRF24L01_RxPacket(KK))==1)  
+	 
+	{  
+       SetRX_Mode();
+	
+	SPI_RW_Reg(FLUSH_RX,0xFF);
+    } 
+	
+	
+}   
+}
+
+

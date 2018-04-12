@@ -1,0 +1,20 @@
+XL
+H 1 areas 1 global symbols
+M main.c
+A text size 10 flags 0
+dbfile C:\Users\Kong\Desktop\ns\main.c
+dbfunc e main 0 fV
+dbline FFFFFFFF 0
+dbline 4 0
+dbline 5 0
+dbline 7 4
+dbline 8 4
+dbline 9 C
+dbline 6 C
+dbline FFFFFFFE E
+dbline 0 E
+S _main Def0000
+T 00 00 53 9A 04 C0 88 E0 2B B0 28 26 2B B8 FB CF
+R 00 00 00 00
+T 0E 00 08 95
+R 00 00 00 00

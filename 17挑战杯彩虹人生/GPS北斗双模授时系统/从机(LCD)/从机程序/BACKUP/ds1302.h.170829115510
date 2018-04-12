@@ -1,0 +1,32 @@
+  
+ 
+ 
+ #ifndef _ds1302_h_
+ #define _ds1302_h_
+ 
+ #include "delay.h"
+ 
+ #define RST_0 PORTA &=~(1<<PA6)
+ #define RST_1 PORTA |= (1<<PA6)
+ #define RST_IN  DDRA &=~(1<<PA6)
+ #define RST_OUT DDRA |=(1<<PA6)
+
+ #define IO_0 PORTA &=~(1<<PA7)
+ #define IO_1 PORTA |=(1<<PA7)
+ #define IO_R   PINA &(1<<PA7)
+ #define IO_IN  DDRA &=~(1<<PA7)
+ #define IO_OUT DDRA |=(1<<PA7)
+
+ #define SCK_0 PORTA &=~(1<<PA5)
+ #define SCK_1 PORTA |= (1<<PA5)
+ #define SCK_IN  DDRA &=~(1<<PA5)
+ #define SCK_OUT DDRA |=(1<<PA5)
+ 
+ 
+ extern uchar flag_ds1302_start;
+ extern uchar read_ds1302(uchar addr);
+ extern void write_ds1302(uchar addr, uchar data);
+ extern void ds1302_port_init(void);
+ 
+ 
+ #endif

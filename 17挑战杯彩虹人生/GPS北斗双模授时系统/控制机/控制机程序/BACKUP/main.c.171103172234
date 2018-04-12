@@ -1,0 +1,25 @@
+#include "uart.h"
+#include "delay.h"
+
+void main(void)
+{
+	uchar data;
+	//UART1_Init();
+	UART0_Init();
+	while(1)
+	{
+		//UART1_Send_Char("ASDGFHFSAD");
+		UART0_Send_Char("ASDGFHFSAD");
+		data=UART0_Receive();
+		UART0_Send(data);
+		//delay_ms(2000);
+	}
+}
+
+#pragma interrupt_handler UART0:21
+void UART0(void)
+{
+	uchar data;
+	if(UDR0!=0)
+	UART0_Send_Char("·ë½¨Ã÷SB");
+}

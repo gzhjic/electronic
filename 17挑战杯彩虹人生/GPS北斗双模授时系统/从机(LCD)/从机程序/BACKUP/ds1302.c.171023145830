@@ -1,0 +1,109 @@
+  
+ 
+ 
+ #include "ds1302.h"
+ 
+ uchar flag_ds1302_start = 0;
+
+ /*************向DS1302读一个字节数据****************/
+ uchar read_byte(void)
+ {
+    uchar i,dat=0;
+  	IO_IN;
+  	IO_0;
+  	for(i=0;i<7;i++)
+  	{
+    	SCK_1;
+		delay_us(10);
+		SCK_0;
+		delay_us(10);
+		if(IO_R)
+		{
+	  		dat=dat | 0x80;
+		}
+		else
+	 	{
+	        dat=dat & 0x7f;
+		}
+		SCK_1;
+		dat=dat>>1;
+    }
+  	IO_OUT;
+  	return dat;
+ }
+ /*************向DS1302写一个字节数据****************/
+ void write_byte(uchar dat)
+ {
+    uchar i;
+	IO_OUT;
+  	for(i=0;i<8;i++)
+  	{
+        SCK_0;
+		if(dat & 0x01)
+		{
+	  	    IO_1;
+		}
+		else
+		{
+	  	    IO_0;
+		}
+		delay_us(10);
+		SCK_1;
+		dat>>=1;
+    }
+ }
+ /*************向DS1302读数据****************/
+ uchar read_ds1302(uchar addr)
+ {
+    uchar data;
+  	RST_0;
+   	SCK_0;
+  	delay_us(10);
+  	RST_1;
+  	delay_us(10);
+  	write_byte(addr);
+  	delay_us(10);
+  	data=read_byte();
+  	delay_us(10);
+  	SCK_0;
+  	RST_0;
+  	data = data/16*10 + data%16;
+  	return data;
+ } 
+ /*************向DS1302写数据****************/
+ void write_ds1302(uchar addr, uchar data)
+ {
+    RST_0;
+  	SCK_0;
+  	delay_us(10);
+  	RST_1;
+  	delay_us(10);
+  	write_byte(addr);
+  	delay_us(10);
+  	SCK_0;
+  	delay_us(10);
+  	data = data/10*16 + data%10;
+  	write_byte(data);
+  	SCK_0;
+  	delay_us(10);
+  	RST_0;
+ }
+
+ /*************DS1302初始化**************/
+ void ds1302_port_init(void)
+ {
+    RST_0;
+	SCK_0;
+	RST_OUT;
+	SCK_OUT;
+	write_ds1302(0x8e,0x00);   //关闭写保护
+	write_ds1302(0x90,0xab);
+	write_ds1302(0x8c,1);
+    write_ds1302(0x88,1);
+  	write_ds1302(0x86,1);
+  	write_ds1302(0x8a,1);
+  	write_ds1302(0x84,1);
+  	write_ds1302(0x82,1);
+  	write_ds1302(0x80,1);
+	write_ds1302(0x8e,0x80);   //打开写保护
+ }

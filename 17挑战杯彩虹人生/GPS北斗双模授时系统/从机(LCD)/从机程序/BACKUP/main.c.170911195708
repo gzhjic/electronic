@@ -1,0 +1,62 @@
+#include"iom16v.h"
+#include "macros.h"
+
+#include "smg.h"
+//#include "nrf2401.h"
+
+
+#define uchar unsigned char 
+#define uint unsigned int
+
+
+uint num1;
+
+void time0(void)
+{
+	SREG|=BIT(7);
+	TIMSK|=BIT(6);
+	TCCR2|=0X03;
+	TCNT2|=0X83;	
+}
+
+void P_init(void)
+{
+	DDRA=0XFF;
+	PORTA=0XFF; 
+	DDRB=0XFF;
+	PORTB=0XFF; 	
+	DDRC=0XFF;
+	PORTC=0XFF;
+	DDRD=0XFF;
+	PORTD=0XFF;  
+}
+
+
+void main(void)
+{
+	time0();
+	P_init();
+	while(1)
+	{
+		
+	}
+}
+
+
+#pragma interrupt_handler timer_0:5	
+
+void timer_0(void)
+{
+
+	static uint flag_d;
+	TCNT2=0X83;
+	
+	if(++flag_d>=1)
+	{
+		flag_d=0;
+	}
+	smg(123);
+}
+/********************************************/
+
+

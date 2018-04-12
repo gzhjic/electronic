@@ -1,0 +1,147 @@
+XL
+H 1 areas B global symbols
+M uart.c
+S push_xgsetF000 Ref0000
+S pop_xgsetF000 Ref0000
+A text size E6 flags 0
+dbfile uart.c
+dbfile F:\AVRtest\˫ģ\control\uart.c
+dbfunc e UART1_Init 0 fV
+dbline FFFFFFFF 0
+dbline 7 0
+dbline 8 0
+dbline 9 6
+dbline A 10
+dbline B 1A
+dbline C 20
+dbline D 24
+dbline FFFFFFFE 26
+dbline 0 26
+dbfunc e UART1_Send 28 fV
+dbsym r i 10 c
+dbline FFFFFFFF 28
+dbline 11 28
+dbline 12 28
+dbline 12 28
+dbline 13 30
+dbline FFFFFFFE 34
+dbline 0 34
+dbfunc e UART1_Receive 36 fc
+dbline FFFFFFFF 36
+dbline 17 36
+dbline 18 36
+dbline 18 36
+dbline 19 3E
+dbline FFFFFFFE 42
+dbline 0 42
+dbfunc e UART1_Send_Char 44 fV
+dbsym r p 14 pc
+dbline FFFFFFFF 4A
+dbline 1E 4A
+dbline 20 4C
+dbline 21 4C
+dbline 22 52
+dbline 23 56
+dbline 1F 56
+dbline FFFFFFFE 5E
+dbline 0 5E
+dbfunc e UART0_Init 64 fV
+dbline FFFFFFFF 64
+dbline 27 64
+dbline 28 64
+dbline 29 6A
+dbline 2A 74
+dbline 2B 7E
+dbline 2C 84
+dbline 2D 88
+dbline FFFFFFFE 8A
+dbline 0 8A
+dbfunc e UART0_Send 8C fV
+dbsym r i 10 c
+dbline FFFFFFFF 8C
+dbline 31 8C
+dbline 32 8C
+dbline 32 8C
+dbline 33 94
+dbline FFFFFFFE 98
+dbline 0 98
+dbfunc e UART0_Receive 9A fc
+dbline FFFFFFFF 9A
+dbline 37 9A
+dbline 38 9A
+dbline 38 9A
+dbline 39 A2
+dbline FFFFFFFE A6
+dbline 0 A6
+dbfunc e UART0_Send_Char A8 fV
+dbsym r p 14 pc
+dbline FFFFFFFF AE
+dbline 3E AE
+dbline 40 B0
+dbline 41 B0
+dbline 42 B6
+dbline 43 BA
+dbline 3F BA
+dbline FFFFFFFE C2
+dbline 0 C2
+dbfunc e UART1_Send_RX C8 fV
+dbsym r i 14 c
+dbsym r p 16 pc
+dbline FFFFFFFF CE
+dbline 47 CE
+dbline 49 CE
+dbline 4A D2
+dbline 4B D2
+dbline 4C D8
+dbline 4D DC
+dbline 49 DC
+dbline 49 DE
+dbline FFFFFFFE E2
+dbline 0 E2
+S _UART0_Send_Char Def00A8
+S _UART1_Send_Char Def0044
+S _UART0_Send Def008C
+S _UART1_Send Def0028
+S _UART1_Send_RX Def00C8
+S _UART0_Init Def0064
+S _UART1_Init Def0000
+S _UART0_Receive Def009A
+S _UART1_Receive Def0036
+T 00 00 22 24 20 92 C8 00 80 91 C9 00 88 69 80 93
+R 00 00 00 00
+T 0E 00 C9 00 80 91 CA 00 86 60 80 93 CA 00 84 E3
+R 00 00 00 00
+T 1C 00 80 93 CC 00 20 92 CD 00 78 94 08 95
+R 00 00 00 00
+T 28 00 20 90 C8 00 25 FE FC CF 00 93 CE 00 08 95
+R 00 00 00 00
+T 36 00 20 90 C8 00 27 FE FC CF 00 91 CE 00 08 95
+R 00 00 00 00
+T 44 00 4A 93 5A 93 A8 01 05 C0 FA 01 00 81 EB DF
+R 00 00 00 00
+T 52 00 4F 5F 5F 4F FA 01 20 80 22 20 B9 F7 59 91
+R 00 00 00 00
+T 60 00 49 91 08 95
+R 00 00 00 00
+T 64 00 22 24 20 92 C0 00 80 91 C1 00 88 69 80 93
+R 00 00 00 00
+T 72 00 C1 00 80 91 C2 00 86 60 80 93 C2 00 84 E3
+R 00 00 00 00
+T 80 00 80 93 C4 00 20 92 C5 00 78 94 08 95
+R 00 00 00 00
+T 8C 00 20 90 C0 00 25 FE FC CF 00 93 C6 00 08 95
+R 00 00 00 00
+T 9A 00 20 90 C0 00 27 FE FC CF 00 91 C6 00 08 95
+R 00 00 00 00
+T A8 00 4A 93 5A 93 A8 01 05 C0 FA 01 00 81 EB DF
+R 00 00 00 00
+T B6 00 4F 5F 5F 4F FA 01 20 80 22 20 B9 F7 59 91
+R 00 00 00 00
+T C4 00 49 91 08 95
+R 00 00 00 00
+T C8 00 0E 94 00 00 B8 01 44 27 06 C0 FB 01 00 81
+R 00 00 00 00 12 04 00 00
+T D6 00 A8 DF 6F 5F 7F 4F 43 95 40 32 C0 F3
+R 00 00 00 00
+T E2 00 0C 94 00 00
+R 00 00 00 00 12 04 01 00

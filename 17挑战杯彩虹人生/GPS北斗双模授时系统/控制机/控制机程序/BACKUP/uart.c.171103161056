@@ -1,0 +1,69 @@
+
+		#include "UART.h"		
+		#define fosc 8000000
+		#define baud 9600
+		
+		void UART1_Init(void)
+		{
+		    UCSR1A = 0X00;
+			UCSR1B |=(1<<RXCIE1)|(1<<RXEN1)|(1<<TXEN1) ;
+			UCSR1C |=(1 << UCSZ11) | (1 << UCSZ10);
+			UBRR1L = (fosc / 16 / (baud + 1))%256;
+			UBRR1H = (fosc / 16 / (baud + 1))/256;
+			SREG|=BIT(7);
+		}
+		
+		void UART1_Send(uchar i)
+		{
+		     while(!(UCSR1A & (1 << UDRE1)));
+			UDR1 = i;
+		}
+		
+		uchar UART1_Receive(void)
+		{
+		    while(!(UCSR1A & (1 << RXC1)));
+			return UDR1;
+		}
+		
+		
+		void UART1_Send_Char(uchar *p)
+		{
+			while((uchar)(*p)!='\0')
+			{
+				UART1_Send(*p);
+				p++;
+			}
+		}
+	
+		void UART0_Init(void)
+		{
+		    UCSR0A = 0X00;
+			UCSR0B |=(1<<RXCIE0)|(1<<RXEN0)|(1<<TXEN0) ;
+			UCSR0C |=(1 << UCSZ01) | (1 << UCSZ00);
+			UBRR0L = (fosc / 16 / (baud + 1))%256;
+			UBRR0H = (fosc / 16 / (baud + 1))/256;
+			SREG|=BIT(7);
+		}
+		
+		void UART0_Send(uchar i)
+		{
+		     while(!(UCSR0A & (1 << UDRE0)));
+			UDR0 = i;
+		}
+		
+		uchar UART0_Receive(void)
+		{
+		    while(!(UCSR0A & (1 << RXC0)));
+			return UDR0;
+		}
+		
+		
+		void UART0_Send_Char(uchar *p)
+		{
+			while((uchar)(*p)!='\0')
+			{
+				UART0_Send(*p);
+				p++;
+			}
+		}
+			

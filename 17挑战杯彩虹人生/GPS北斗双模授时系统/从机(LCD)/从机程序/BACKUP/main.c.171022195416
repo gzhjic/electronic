@@ -1,0 +1,190 @@
+#include"iom16v.h"
+#include "shounrf24l01.h"
+#include "12864.h"
+
+#define uchar unsigned char 
+#define uint unsigned int
+
+uchar RXbuf[32];
+
+uchar Day,Day_High,Day_Low,Month,Month_High,Month_Low,Year_High,Year_Low,MaxDay;
+uint Year;
+
+void P_init(void)
+{
+	DDRA=0XFF;
+	PORTA=0XFF;
+	DDRB=(1<<PB3)|(1<<PB4)|(1<<PB5)|(1<<PB7);
+	//DDRB=0XBF;
+	PORTB=0Xff;;
+	DDRC=0XFF;
+	PORTC=0XFF;
+	DDRD=0XFF;
+	PORTD=0XFF;  
+}
+
+
+//****************************************************
+//UTC日期与当地日期转换
+//****************************************************
+void UTCDate2LocalDate(void)
+{
+	Day = (Day_High - 0x30) * 10 + (Day_Low-0x30) + 1;		//日  加一
+	Month = (Month_High - 0x30) * 10 + (Month_Low - 0x30);
+	Year = 2000 + (Year_High - 0x30) * 10 + (Year_Low - 0x30);
+	
+	MaxDay = GetMaxDay(Month,Year);				//获取当月 天数 最大值
+	if(Day > MaxDay)		//溢出
+	{
+		Day = 1;
+		Month += 1;
+		if(Month > 12)
+		{
+			Year+=1;
+		}
+	}
+
+	Day_High = Day/10 + 0x30;				//转换日期值为ASCII
+	Day_Low = Day%10 + 0x30;
+
+	Month_High = Month/10 + 0x30;			//转换月份值为ASCII
+	Month_Low = Month%10 + 0x30;
+
+	Year_High = Year%100/10 + 0x30;			//转换年份值为ASCII
+	Year_Low = Year%10 + 0x30;			
+}
+
+//****************************************************
+//获取当月日期最大值
+//****************************************************
+unsigned char GetMaxDay(unsigned char Month_Value,unsigned int Year_Value)
+{
+	unsigned char iDays;
+	switch(Month_Value)
+	{
+		case 1:
+		case 3:
+		case 5:
+		case 7:
+		case 8:
+		case 10:
+		case 12:
+			{
+				iDays = 31;
+			}
+			break;
+		case 2:
+			{
+				//2月份比较特殊，需要根据是不是闰年来判断当月是28天还29天
+				iDays = IsLeapYear(Year_Value)?29:28;
+			}
+			break;
+		case 4:
+		case 6:
+		case 9:
+		case 11:
+			{
+				iDays = 30;
+			}
+			break;
+		default : break;
+	}
+	return(iDays);						
+}
+
+//****************************************************
+//闰年检测
+//****************************************************
+bit IsLeapYear(unsigned int uiYear)
+{
+	return (((uiYear%4)==0)&&((uiYear%100)!=0))||((uiYear%400)==0);
+}
+
+
+/********************************************/
+void main(void) 
+{  
+/*无线初始化*/
+P_init();
+init_NRF24L01();
+SetRX_Mode();
+/*液晶初始化*/
+lcd_port_init();
+lcd_init();
+lcd_clr();   
+/*液晶显示界面*/
+lcd_write_char(0,0,"时间：");    
+lcd_write_char(0,2,"20  年  月  日");
+lcd_write_char(0,3,"    时  分  秒");
+while(1)  
+{
+	if(nRF24L01_RxPacket(RXbuf)==1)
+    SetRX_Mode();
+	
+	lcd_xy(3,1);
+	lcd_write_data(KK[0]);   
+	lcd_write_data(KK[1]);
+	lcd_xy(3,3);
+	lcd_write_data(KK[2]);
+	lcd_write_data(KK[3]);
+	lcd_xy(3,5);
+	lcd_write_data(KK[4]);
+	lcd_write_data(KK[5]);
+	lcd_xy(2,1);
+	lcd_write_data(KK[10]);
+	lcd_write_data(KK[11]);
+	lcd_xy(2,3);
+	lcd_write_data(KK[8]);
+	lcd_write_data(KK[9]);
+	lcd_xy(2,5);
+	lcd_write_data(KK[6]);
+	lcd_write_data(KK[7]);
+}   
+}
+
+//****************************************************
+//获取当月日期最大值
+//****************************************************
+unsigned char GetMaxDay(unsigned char Month_Value,unsigned int Year_Value)
+{
+	unsigned char iDays;
+	switch(Month_Value)
+	{
+		case 1:
+		case 3:
+		case 5:
+		case 7:
+		case 8:
+		case 10:
+		case 12:
+			{
+				iDays = 31;
+			}
+			break;
+		case 2:
+			{
+				//2月份比较特殊，需要根据是不是闰年来判断当月是28天还29天
+				iDays = IsLeapYear(Year_Value)?29:28;
+			}
+			break;
+		case 4:
+		case 6:
+		case 9:
+		case 11:
+			{
+				iDays = 30;
+			}
+			break;
+		default : break;
+	}
+	return(iDays);						
+}
+
+//****************************************************
+//闰年检测
+//****************************************************
+bit IsLeapYear(unsigned int uiYear)
+{
+	return (((uiYear%4)==0)&&((uiYear%100)!=0))||((uiYear%400)==0);
+}
+

@@ -1,0 +1,49 @@
+ #include"iom16v.h"
+#include "macros.h"
+
+#include "shounrf24l01.h"
+
+
+#define uchar unsigned char 
+#define uint unsigned int
+uchar KK[32];
+
+
+void delay(uint t)
+{
+	uint i,j;
+	for(i=0;i<t;i++)
+	for(j=0;j<1141;j++);
+}
+
+
+void P_init(void)
+{
+	DDRA=0XFF;
+	PORTA=0XFF;
+	DDRB=(1<<PB3)|(1<<PB4)|(1<<PB5)|(1<<PB7); 
+	PORTB=0XFF;
+	DDRC=0XFF;
+	PORTC=0XFF;
+	DDRD=0XFF;
+	PORTD=0XFF;  
+}
+
+
+/********************************************/
+void main(void) 
+{  
+time0();
+P_init();
+init_NRF24L01();
+SetRX_Mode();
+SPI_RW_Reg(FLUSH_RX,0xFF);         
+while(1)  
+{
+             
+	if(nRF24L01_RxPacket(KK)==1)
+    SetRX_Mode();
+}   
+}
+
+

@@ -1,0 +1,11 @@
+#include "uart.h"
+#include "delay.h"
+
+void main(void)
+{
+	UART1_Init();
+	while(1)
+	{
+		UART1_Send_Char("°¢·É¸Ï½ô»»¸öµØ·½");
+	}
+}

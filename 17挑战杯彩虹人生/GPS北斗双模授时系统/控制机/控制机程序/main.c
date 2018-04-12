@@ -1,0 +1,44 @@
+#include "uart.h"
+#include "delay.h"
+#include "shounrf24l01.h"
+
+uchar ddd;
+uchar RXbuf[32];
+
+void nrf24l01_Port_init(void)
+{
+	DDRB=(1<<PB3)|(1<<PB4)|(1<<PB5)|(1<<PB7);
+}
+
+void main(void)
+{
+	nrf24l01_Port_init();
+	init_NRF24L01();
+	UART1_Init();
+	UART0_Init();
+	while(1)
+	{
+		nRF24L01_RxPacket(RXbuf); 
+		UART1_Send_RX(RXbuf);
+		delay_ms(1000);
+	}
+}
+
+#pragma interrupt_handler UART0:21
+void UART0(void)
+{
+	ddd=UDR0;
+	UART0_Send(ddd);
+	UART0_Send('6');
+	SREG|=(1<<7);
+}
+
+#pragma interrupt_handler UART1:29
+void UART1(void)
+{
+	ddd=UDR1;
+	UART1_Send(ddd);
+	UART1_Send('6');
+	SREG|=(1<<7);
+}
+

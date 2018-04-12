@@ -1,0 +1,33 @@
+
+ #ifndef _12864_h_
+ #define _12864_h_
+ 
+ #include "delay.h"
+ 
+ #define RS_0 PORTA &= ~(1<<PA5)
+ #define RS_1 PORTA |= (1<<PA5)
+ 
+ #define RW_0 PORTA &= ~(1<<PA6)
+ #define RW_1 PORTA |= (1<<PA6)
+ 
+ #define SCLK_0 PORTA &= ~(1<<PA7)
+ #define SCLK_1 PORTA |= (1<<PA7)
+ 
+ #define PSB_0 PORTA &= ~(1<<PA4)
+ #define PSB_1 PORTA |= (1<<PA4)
+ 
+ #define RES_0 PORTA &= ~(1<<PA3)
+ #define RES_1 PORTA |= (1<<PA3)
+ 
+ #define DATA_PORT	PORTC 
+ 
+ extern uchar flag_lcd_start;
+ extern void lcd_port_init(void);
+ extern void lcd_xy(uchar y, uchar x);
+ extern void lcd_write_com(uchar com);
+ extern void lcd_write_data(uchar data);
+ extern void lcd_init(void);
+ extern void lcd_clr(void);
+ void lcd_write_char(uchar *c);
+ 
+ #endif 

@@ -1,0 +1,60 @@
+Net Status Report
+Filename     : H:\PCB3\PCB1.PcbDoc
+Date         : 2017/10/8 ÐÇÆÚÈÕ
+Time         : 13:46:27
+Time Elapsed : 00:00:00
+
+Nets, Layer, Length
+    3.3V, Signal Layers Only, 8706.233mils
+    CE, Signal Layers Only, 876.985mils
+    CSN, Signal Layers Only, 1487.904mils
+    GND, Signal Layers Only, 15970.179mils
+    IRQ, Signal Layers Only, 293.137mils
+    MISO, Signal Layers Only, 2043.112mils
+    MOSI, Signal Layers Only, 3263.919mils
+    Net100uf_1, Signal Layers Only, 1095.269mils
+    Net100uf_2, Signal Layers Only, 447.782mils
+    NetC10_1, Signal Layers Only, 561.421mils
+    NetC20_1, Signal Layers Only, 413.137mils
+    NetC20_2, Signal Layers Only, 269.706mils
+    NetC21_2, Signal Layers Only, 551.924mils
+    NetC7_2, Signal Layers Only, 629.203mils
+    NetC8_2, Signal Layers Only, 547.99mils
+    NetJ3_6, Signal Layers Only, 1065.772mils
+    NetLM386_3, Signal Layers Only, 397.99mils
+    NetPW_1, Signal Layers Only, 303.137mils
+    NetR?_2, Signal Layers Only, 168.995mils
+    Net_1, Signal Layers Only, 537.782mils
+    PA0, Signal Layers Only, 0mils
+    PA1, Signal Layers Only, 0mils
+    PA2, Signal Layers Only, 0mils
+    PA3, Signal Layers Only, 2030.122mils
+    PA4, Signal Layers Only, 2588.112mils
+    PA5, Signal Layers Only, 2356.188mils
+    PA6, Signal Layers Only, 2157.609mils
+    PA7, Signal Layers Only, 1961.838mils
+    PB0, Signal Layers Only, 0mils
+    PB1, Signal Layers Only, 0mils
+    PB7, Signal Layers Only, 2071.751mils
+    PC0, Signal Layers Only, 1007.279mils
+    PC1, Signal Layers Only, 1063.848mils
+    PC2, Signal Layers Only, 1117.279mils
+    PC3, Signal Layers Only, 440mils
+    PC4, Signal Layers Only, 440mils
+    PC5, Signal Layers Only, 440mils
+    PC6, Signal Layers Only, 440mils
+    PC7, Signal Layers Only, 2699.325mils
+    PD0, Signal Layers Only, 0mils
+    PD1, Signal Layers Only, 0mils
+    PD2, Signal Layers Only, 0mils
+    PD3, Signal Layers Only, 0mils
+    PD4, Signal Layers Only, 0mils
+    PD5, Signal Layers Only, 0mils
+    PD6, Signal Layers Only, 0mils
+    PD7, Signal Layers Only, 0mils
+    RES, Signal Layers Only, 8648.011mils
+    VCC, Signal Layers Only, 4598.546mils
+    VO, Signal Layers Only, 1820.625mils
+    XTAL1, Signal Layers Only, 358.492mils
+    XTAL2, Signal Layers Only, 326.569mils
+count : 52

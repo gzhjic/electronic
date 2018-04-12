@@ -1,0 +1,119 @@
+#include"iom16v.h"
+#include "macros.h"
+
+#include "smg.h"
+#include "shounrf24l01.h"
+
+
+#define uchar unsigned char 
+#define uint unsigned int
+uchar KK;
+char RxBuf[32] = {0};
+int a,b,c,d,e,f,g,h;
+
+uint num1;
+
+void delay(uint t)
+{
+	uint i,j;
+	for(i=0;i<t;i++)
+	for(j=0;j<1141;j++);
+}
+void time0(void)
+{
+	SREG|=BIT(7);
+	TIMSK|=BIT(6);
+	TCCR2|=0X03;
+	TCNT2|=0X83;	
+}
+
+void P_init(void)
+{
+	DDRA=0XFF;
+	PORTA=0XFF; 
+	DDRB  = 0x6C;  
+	PORTB = 0x93; 
+	DDRC=0XFF;
+	PORTC=0XFF;
+	DDRD=0XFF;
+	PORTD=0XFF;  
+}
+
+/*
+void main(void)
+{
+	time0();
+	P_init();
+	while(1)
+	{
+		
+	}
+}
+*/
+
+#pragma interrupt_handler timer_0:5	
+
+void timer_0(void)
+{
+
+	static uint flag_d;
+	TCNT2=0X83;
+	
+	if(++flag_d>=1)
+	{
+		flag_d=0;
+	}
+	 smg(b);
+}
+/********************************************/
+void main(void) 
+{  
+	
+
+time0();
+P_init();
+//port_init();  
+ 
+//DDRB  = 0x2E;  
+//PORTB = 0x11;      
+init_NRF24L01();                                 
+SetRX_Mode();//接收模式                                   
+while(1)  
+{  // KK=SPI_RW(FIFO_STATUS);
+a=0;
+if(nRF24L01_RxPacket(RxBuf)==1)    
+{  
+a = RxBuf[0];    
+b = RxBuf[1];    
+c = RxBuf[2];    
+d = RxBuf[3];    
+e= RxBuf[4]; 
+f= RxBuf[5];    
+//g= RxBuf[6];    
+//h= RxBuf[7];    
+/*PORTA=a;    
+delay(500);    
+PORTA=b;    
+delay(500);    
+PORTA=c;    
+delay(500);    
+PORTA=d;    
+delay(500);    
+delay(2);    
+PORTA=e;    
+delay(500);    
+PORTA=f;    
+delay(500);*/              
+SetRX_Mode();    
+/*RxBuf[0] = 0;    
+RxBuf[1] = 0;    
+RxBuf[2] = 0;    
+RxBuf[3] = 0;    
+RxBuf[4] = 0;    
+RxBuf[5] = 0; */        
+}  
+} 
+
+}
+
+

@@ -1,0 +1,181 @@
+Interrupt Vectors
+    00000 940C 004A JMP	__text_start|__start
+
+Program Code (text area)
+__text_start|__start:
+    0004A E5CF      LDI	R28,0x5F
+    0004B E0D4      LDI	R29,4
+    0004C BFCD      OUT	0x3D,R28
+    0004D BFDE      OUT	0x3E,R29
+    0004E 51CE      SUBI	R28,0x1E
+    0004F 40D0      SBCI	R29,0
+    00050 EA0A      LDI	R16,0xAA
+    00051 8308      ST	Y,R16
+    00052 2400      CLR	R0
+    00053 EAE0      LDI	R30,0xA0
+    00054 E0F0      LDI	R31,0
+    00055 E010      LDI	R17,0
+    00056 3AE0      CPI	R30,0xA0
+    00057 07F1      CPC	R31,R17
+    00058 F011      BEQ	0x005B
+    00059 9201      ST	Z+,R0
+    0005A CFFB      RJMP	0x0056
+    0005B 8300      ST	Z,R16
+    0005C E5E4      LDI	R30,0x54
+    0005D E0F0      LDI	R31,0
+    0005E E6A0      LDI	R26,0x60
+    0005F E0B0      LDI	R27,0
+    00060 E010      LDI	R17,0
+    00061 E000      LDI	R16,0
+    00062 BF0B      OUT	0x3B,R16
+    00063 39E4      CPI	R30,0x94
+    00064 07F1      CPC	R31,R17
+    00065 F021      BEQ	0x006A
+    00066 95C8      LPM
+    00067 9631      ADIW	R30,1
+    00068 920D      ST	X+,R0
+    00069 CFF9      RJMP	0x0063
+    0006A 940E 007F CALL	_main
+_exit:
+    0006C CFFF      RJMP	_exit
+_delay:
+  j                    --> R10
+  i                    --> R20
+  ms                   --> R16
+    0006D 92AA      ST	-Y,R10
+    0006E 934A      ST	-Y,R20
+FILE: C:\Users\Kong\Desktop\≤‚ ‘≥Ã–Ú\main.c
+(0001) #include "BlueTooth.h"
+(0002) 
+(0003) uchar data[]={64,01,49,53,51,48,51,48,51,48,49,48,49,55,17,01,01,01,01,01,01,01,00,00,01,01,01,01,01,01,01,52};
+(0004) uchar data1[]={64,02,30,12,30,12,30,12,30,12,30,12,30,12,30,12,30,12,30,12,30,12,30,12,30,12,30,12,30,12,30,52};
+(0005) 
+(0006) void delay(uint ms)
+(0007) {
+(0008) 	uchar i,j;
+(0009) 	for(j=0;j<ms;j++)
+    0006F 24AA      CLR	R10
+    00070 C006      RJMP	0x0077
+(0010) 	for(i=0;i<1141;i++);
+    00071 2744      CLR	R20
+    00072 C001      RJMP	0x0074
+    00073 9543      INC	R20
+    00074 3745      CPI	R20,0x75
+    00075 F3E8      BCS	0x0073
+    00076 94A3      INC	R10
+    00077 2C2A      MOV	R2,R10
+    00078 2433      CLR	R3
+    00079 1620      CP	R2,R16
+    0007A 0631      CPC	R3,R17
+    0007B F3A8      BCS	0x0071
+    0007C 9149      LD	R20,Y+
+    0007D 90A9      LD	R10,Y+
+    0007E 9508      RET
+(0011) }
+(0012) 
+(0013) void main(void)
+(0014) {
+_main:
+    0007F C00E      RJMP	0x008E
+(0015) 	while(1)
+(0016) 	{
+(0017) 		UART_Send_Char(data);
+    00080 E600      LDI	R16,0x60
+    00081 E010      LDI	R17,0
+    00082 940E 00A5 CALL	_UART_Send_Char
+(0018) 		delay(500);
+    00084 EF04      LDI	R16,0xF4
+    00085 E011      LDI	R17,1
+    00086 DFE6      RCALL	_delay
+(0019) 		UART_Send_Char(data1);
+    00087 E800      LDI	R16,0x80
+    00088 E010      LDI	R17,0
+    00089 940E 00A5 CALL	_UART_Send_Char
+(0020) 		delay(500);
+    0008B EF04      LDI	R16,0xF4
+    0008C E011      LDI	R17,1
+    0008D DFDF      RCALL	_delay
+    0008E CFF1      RJMP	0x0080
+    0008F 9508      RET
+FILE: C:\Users\Kong\Desktop\≤‚ ‘≥Ã–Ú\BlueTooth.c
+(0001)     
+(0002) 		
+(0003) 		
+(0004) 		#include "BlueTooth.h"
+(0005) 		
+(0006) 		#define fosc 8000000
+(0007) 		#define baud 9600
+(0008) 		
+(0009) 		void UART_Init(void)
+(0010) 		{
+(0011) 		     UCSRB = 0X00;
+_UART_Init:
+    00090 2422      CLR	R2
+    00091 B82A      OUT	0x0A,R2
+(0012) 							UCSRA = 0X00;
+    00092 B82B      OUT	0x0B,R2
+(0013) 							UCSRC |= (1 << URSEL) | (1 << UCSZ1) | (1 << UCSZ0);
+    00093 B580      IN	R24,0x20
+    00094 6886      ORI	R24,0x86
+    00095 BD80      OUT	0x20,R24
+(0014) 							UBRRL = (fosc / 16 / (baud + 1))%256;
+    00096 E384      LDI	R24,0x34
+    00097 B989      OUT	0x09,R24
+(0015) 							UBRRH = (fosc / 16 / (baud + 1))/256;
+    00098 BC20      OUT	0x20,R2
+(0016) 							UCSRB |= (1 << TXEN) | (1 << RXEN);
+    00099 B18A      IN	R24,0x0A
+    0009A 6188      ORI	R24,0x18
+    0009B B98A      OUT	0x0A,R24
+    0009C 9508      RET
+(0017) 		}
+(0018) 		
+(0019) 		void UART_Send(uchar i)
+(0020) 		{
+(0021) 		     while(!(UCSRA & (1 << UDRE)));
+_UART_Send:
+  i                    --> R16
+    0009D 9B5D      SBIS	0x0B,5
+    0009E CFFE      RJMP	_UART_Send
+(0022) 							UDR = i;
+    0009F B90C      OUT	0x0C,R16
+    000A0 9508      RET
+(0023) 		}
+(0024) 		
+(0025) 		uchar UART_Receive(void)
+(0026) 		{
+(0027) 		    while(!(UCSRA & (1 << RXC)));
+_UART_Receive:
+    000A1 9B5F      SBIS	0x0B,7
+    000A2 CFFE      RJMP	_UART_Receive
+(0028) 						return UDR;
+    000A3 B10C      IN	R16,0x0C
+    000A4 9508      RET
+_UART_Send_Char:
+  p                    --> R20
+    000A5 934A      ST	-Y,R20
+    000A6 935A      ST	-Y,R21
+    000A7 01A8      MOVW	R20,R16
+(0029) 		}
+(0030) 		
+(0031) 		
+(0032) 		void UART_Send_Char(uchar *p)
+(0033) 		{
+    000A8 C005      RJMP	0x00AE
+(0034) 			while((uchar)(*p)!='\0')
+(0035) 			{
+(0036) 				UART_Send(*p);
+    000A9 01FA      MOVW	R30,R20
+    000AA 8100      LD	R16,Z
+    000AB DFF1      RCALL	_UART_Send
+(0037) 				p++;
+FILE: <library>
+    000AC 5F4F      SUBI	R20,0xFF
+    000AD 4F5F      SBCI	R21,0xFF
+    000AE 01FA      MOVW	R30,R20
+    000AF 8020      LD	R2,Z
+    000B0 2022      TST	R2
+    000B1 F7B9      BNE	0x00A9
+    000B2 9159      LD	R21,Y+
+    000B3 9149      LD	R20,Y+
+    000B4 9508      RET

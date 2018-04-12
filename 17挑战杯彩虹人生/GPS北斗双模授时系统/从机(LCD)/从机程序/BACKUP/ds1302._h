@@ -1,0 +1,34 @@
+#ifndef _ds1302_h
+#define _ds1302_h
+
+#include <iom16v.h>
+#include <macros.h>
+#include "delay.h"
+
+#define uint  unsigned int
+#define uchar unsigned char
+
+
+/*复位引脚*/
+#define RST_CLR PORTC &= ~(1 << PC0) //置低电平
+#define RST_SET PORTC |=  (1 << PC0) //置高电平
+#define RST_IN  PORTC &= ~(1 << PC0) //设输入
+#define RST_OUT PORTC |=  (1 << PC0) //设输出
+
+/*双向数据*/
+#define IO_CLR  PORTC &= ~(1 << PC1) //置低电平
+#define IO_SET  PORTC |=  (1 << PC1) //置高电平 
+#define IO_R    PINC & (1 << PC1)    //电平读取
+#define IO_IN   DDRC &= ~(1 << PC1)  //设输入
+#define IO_OUT  DDRC |=  (1 << PC1)  //设输出
+
+/*时钟信号*/
+#define SCK_CLR  PORTC &= ~(1 << PC2) //时钟信号
+#define SCK_SET  PORTC |=  (1 << PC2) //置高电平
+#define SCK_IN   DDRC  &= ~(1 << PC2) //设输入
+#define SCK_OUT  DDRC  |=  (1 << PC2) //设输出
+
+extern uchar Read_ds1302(uchar addr);
+extern void Write_ds1302(uchar addr,uchar data);
+extern void Init_ds1302(void);
+#endif

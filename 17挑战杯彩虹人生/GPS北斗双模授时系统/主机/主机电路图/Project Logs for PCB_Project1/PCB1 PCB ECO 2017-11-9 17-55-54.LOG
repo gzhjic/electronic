@@ -1,0 +1,28 @@
+Removed Pin From Net: NetName=GND Pin=C15-1
+Removed Pin From Net: NetName=GND Pin=C16-2
+Removed Pin From Net: NetName=GND Pin=USB-2
+Added Component: Designator=P3(无线模块)
+Added Pin To Net: NetName=NetBAT_1 Pin=1117_3.3V-3
+Added Pin To Net: NetName=NetBAT_1 Pin=C3-1
+Added Pin To Net: NetName=GND Pin=P3-1
+Added Pin To Net: NetName=3.3V Pin=P3-2
+Added Pin To Net: NetName=CE Pin=P3-3
+Added Pin To Net: NetName=CSN Pin=P3-4
+Added Pin To Net: NetName=SCK Pin=P3-5
+Added Pin To Net: NetName=MOSI Pin=P3-6
+Added Pin To Net: NetName=MISO Pin=P3-7
+Added Pin To Net: NetName=IRQ Pin=P3-8
+Added Pin To Net: NetName=NetBAT_1 Pin=Z2-3
+Change Net Name : Old Net Name=NetBAT_1 New Net Name=VCC
+Added Pin To Net: NetName=NetC6_2 Pin=C6-2
+Added Pin To Net: NetName=NetC6_2 Pin=C12-2
+Added Pin To Net: NetName=NetC6_2 Pin=M1-3
+Added Pin To Net: NetName=NetC6_2 Pin=P5-1
+Added Pin To Net: NetName=NetC6_2 Pin=U2-15
+Added Net: Name=NetC6_2
+Added Pin To Net: NetName=PA6 Pin=U2-5
+Added Net: Name=PA6
+Added Pin To Net: NetName=PA7 Pin=U2-4
+Added Net: Name=PA7
+Added Member To Class: ClassName=Sheet2 Member=Component P3 无线
+Added Room: Name=Sheet2
