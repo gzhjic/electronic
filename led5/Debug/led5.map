@@ -1,0 +1,837 @@
+Archive member included to satisfy reference by file (symbol)
+
+e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(divsf3.o)
+                              Driver_Source/TIM.o (__divsf3)
+e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(divsf3x.o)
+                              e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(divsf3.o) (__divsf3x)
+e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(fixunssfsi.o)
+                              Driver_Source/TIM.o (__fixunssfsi)
+e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(floatsisf.o)
+                              Driver_Source/TIM.o (__floatunsisf)
+e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(fp_inf.o)
+                              e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(divsf3x.o) (__fp_inf)
+e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(fp_nan.o)
+                              e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(divsf3x.o) (__fp_nan)
+e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(fp_pscA.o)
+                              e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(divsf3x.o) (__fp_pscA)
+e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(fp_pscB.o)
+                              e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(divsf3x.o) (__fp_pscB)
+e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(fp_round.o)
+                              e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(divsf3.o) (__fp_round)
+e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(fp_split3.o)
+                              e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(divsf3x.o) (__fp_split3)
+e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(fp_zero.o)
+                              e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(fixunssfsi.o) (__fp_zero)
+e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(mulsf3.o)
+                              Driver_Source/TIM.o (__mulsf3)
+e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(mulsf3x.o)
+                              e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(mulsf3.o) (__mulsf3x)
+e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_divmodsi4.o)
+                              Driver_Source/TIM.o (__divmodsi4)
+e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_negsi2.o)
+                              e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_divmodsi4.o) (__negsi2)
+e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_exit.o)
+                              E:/AVR Stdio/7.0/Packs/atmel/ATmega_DFP/1.2.150/gcc/dev/atmega16a/avr5/crtatmega16a.o (exit)
+e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_copy_data.o)
+                              Driver_Source/display.o (__do_copy_data)
+e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_clear_bss.o)
+                              Driver_Source/display.o (__do_clear_bss)
+e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_udivmodsi4.o)
+                              e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_divmodsi4.o) (__udivmodsi4)
+
+Allocating common symbols
+Common symbol       size              file
+
+month               0x1               main.o
+RXbuf               0x20              main.o
+adc_value           0x2               main.o
+TXbuf               0x20              main.o
+i                   0x1               Driver_Source/display.o
+hour                0x1               main.o
+min                 0x1               main.o
+count               0x1               Driver_Source/nrf24l01.o
+year                0x1               main.o
+sec                 0x1               main.o
+tf                  0x1               Driver_Source/nrf24l01.o
+date                0x1               main.o
+sta                 0x1               Driver_Source/nrf24l01.o
+
+Discarded input sections
+
+ .data          0x00000000        0x0 E:/AVR Stdio/7.0/Packs/atmel/ATmega_DFP/1.2.150/gcc/dev/atmega16a/avr5/crtatmega16a.o
+ .bss           0x00000000        0x0 E:/AVR Stdio/7.0/Packs/atmel/ATmega_DFP/1.2.150/gcc/dev/atmega16a/avr5/crtatmega16a.o
+ .text          0x00000000        0x0 Driver_Source/ADC.o
+ .data          0x00000000        0x0 Driver_Source/ADC.o
+ .bss           0x00000000        0x0 Driver_Source/ADC.o
+ .text          0x00000000        0x0 Driver_Source/display.o
+ .data          0x00000000        0x0 Driver_Source/display.o
+ .bss           0x00000000        0x0 Driver_Source/display.o
+ .text          0x00000000        0x0 Driver_Source/ds1302.o
+ .data          0x00000000        0x0 Driver_Source/ds1302.o
+ .bss           0x00000000        0x0 Driver_Source/ds1302.o
+ .text.Read_Byte
+                0x00000000       0x32 Driver_Source/ds1302.o
+ .text.Read_ds1302
+                0x00000000       0x48 Driver_Source/ds1302.o
+ .text          0x00000000        0x0 Driver_Source/JQ8400.o
+ .data          0x00000000        0x0 Driver_Source/JQ8400.o
+ .bss           0x00000000        0x0 Driver_Source/JQ8400.o
+ .text.UART_Send
+                0x00000000        0x8 Driver_Source/JQ8400.o
+ .text.Play_Function
+                0x00000000       0x1a Driver_Source/JQ8400.o
+ .text.Pause_Function
+                0x00000000       0x1a Driver_Source/JQ8400.o
+ .text.Add_Volume_Function
+                0x00000000       0x1a Driver_Source/JQ8400.o
+ .text.Decrease_Volume_Function
+                0x00000000       0x1a Driver_Source/JQ8400.o
+ .rodata.Decrease_Volume_Location
+                0x00000000        0x4 Driver_Source/JQ8400.o
+ .rodata.Add_Volume_Location
+                0x00000000        0x4 Driver_Source/JQ8400.o
+ .rodata.Pause_Location
+                0x00000000        0x4 Driver_Source/JQ8400.o
+ .rodata.Play_Location
+                0x00000000        0x4 Driver_Source/JQ8400.o
+ .text          0x00000000        0x0 Driver_Source/nrf24l01.o
+ .data          0x00000000        0x0 Driver_Source/nrf24l01.o
+ .bss           0x00000000        0x0 Driver_Source/nrf24l01.o
+ .text.Delay    0x00000000       0x22 Driver_Source/nrf24l01.o
+ .text.SPI_Read
+                0x00000000       0x10 Driver_Source/nrf24l01.o
+ .text.SPI_Read_Buf
+                0x00000000       0x42 Driver_Source/nrf24l01.o
+ .text.nRF24L01_RxPacket
+                0x00000000       0x3c Driver_Source/nrf24l01.o
+ .text.nRF24L01_TxPacket
+                0x00000000       0x2e Driver_Source/nrf24l01.o
+ COMMON         0x00000000        0x3 Driver_Source/nrf24l01.o
+ .text          0x00000000        0x0 Driver_Source/TIM.o
+ .data          0x00000000        0x0 Driver_Source/TIM.o
+ .bss           0x00000000        0x0 Driver_Source/TIM.o
+ .text          0x00000000        0x0 main.o
+ .data          0x00000000        0x0 main.o
+ .bss           0x00000000        0x0 main.o
+ .text.Get_Time
+                0x00000000       0x4e main.o
+ .text          0x00000000        0x0 e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(divsf3.o)
+ .data          0x00000000        0x0 e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(divsf3.o)
+ .bss           0x00000000        0x0 e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(divsf3.o)
+ .text          0x00000000        0x0 e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(divsf3x.o)
+ .data          0x00000000        0x0 e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(divsf3x.o)
+ .bss           0x00000000        0x0 e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(divsf3x.o)
+ .text          0x00000000        0x0 e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(fixunssfsi.o)
+ .data          0x00000000        0x0 e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(fixunssfsi.o)
+ .bss           0x00000000        0x0 e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(fixunssfsi.o)
+ .text          0x00000000        0x0 e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(floatsisf.o)
+ .data          0x00000000        0x0 e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(floatsisf.o)
+ .bss           0x00000000        0x0 e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(floatsisf.o)
+ .text          0x00000000        0x0 e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(fp_inf.o)
+ .data          0x00000000        0x0 e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(fp_inf.o)
+ .bss           0x00000000        0x0 e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(fp_inf.o)
+ .text          0x00000000        0x0 e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(fp_nan.o)
+ .data          0x00000000        0x0 e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(fp_nan.o)
+ .bss           0x00000000        0x0 e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(fp_nan.o)
+ .text          0x00000000        0x0 e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(fp_pscA.o)
+ .data          0x00000000        0x0 e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(fp_pscA.o)
+ .bss           0x00000000        0x0 e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(fp_pscA.o)
+ .text          0x00000000        0x0 e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(fp_pscB.o)
+ .data          0x00000000        0x0 e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(fp_pscB.o)
+ .bss           0x00000000        0x0 e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(fp_pscB.o)
+ .text          0x00000000        0x0 e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(fp_round.o)
+ .data          0x00000000        0x0 e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(fp_round.o)
+ .bss           0x00000000        0x0 e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(fp_round.o)
+ .text          0x00000000        0x0 e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(fp_split3.o)
+ .data          0x00000000        0x0 e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(fp_split3.o)
+ .bss           0x00000000        0x0 e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(fp_split3.o)
+ .text          0x00000000        0x0 e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(fp_zero.o)
+ .data          0x00000000        0x0 e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(fp_zero.o)
+ .bss           0x00000000        0x0 e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(fp_zero.o)
+ .text          0x00000000        0x0 e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(mulsf3.o)
+ .data          0x00000000        0x0 e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(mulsf3.o)
+ .bss           0x00000000        0x0 e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(mulsf3.o)
+ .text          0x00000000        0x0 e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(mulsf3x.o)
+ .data          0x00000000        0x0 e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(mulsf3x.o)
+ .bss           0x00000000        0x0 e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(mulsf3x.o)
+ .text          0x00000000        0x0 e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_divmodsi4.o)
+ .data          0x00000000        0x0 e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_divmodsi4.o)
+ .bss           0x00000000        0x0 e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_divmodsi4.o)
+ .text.libgcc.mul
+                0x00000000        0x0 e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_divmodsi4.o)
+ .text.libgcc   0x00000000        0x0 e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_divmodsi4.o)
+ .text.libgcc.prologue
+                0x00000000        0x0 e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_divmodsi4.o)
+ .text.libgcc.builtins
+                0x00000000        0x0 e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_divmodsi4.o)
+ .text.libgcc.fmul
+                0x00000000        0x0 e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_divmodsi4.o)
+ .text.libgcc.fixed
+                0x00000000        0x0 e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_divmodsi4.o)
+ .text          0x00000000        0x0 e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_negsi2.o)
+ .data          0x00000000        0x0 e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_negsi2.o)
+ .bss           0x00000000        0x0 e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_negsi2.o)
+ .text.libgcc.mul
+                0x00000000        0x0 e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_negsi2.o)
+ .text.libgcc   0x00000000        0x0 e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_negsi2.o)
+ .text.libgcc.prologue
+                0x00000000        0x0 e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_negsi2.o)
+ .text.libgcc.builtins
+                0x00000000        0x0 e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_negsi2.o)
+ .text.libgcc.fmul
+                0x00000000        0x0 e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_negsi2.o)
+ .text.libgcc.fixed
+                0x00000000        0x0 e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_negsi2.o)
+ .text          0x00000000        0x0 e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_exit.o)
+ .data          0x00000000        0x0 e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_exit.o)
+ .bss           0x00000000        0x0 e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_exit.o)
+ .text.libgcc.mul
+                0x00000000        0x0 e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_exit.o)
+ .text.libgcc.div
+                0x00000000        0x0 e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_exit.o)
+ .text.libgcc   0x00000000        0x0 e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_exit.o)
+ .text.libgcc.prologue
+                0x00000000        0x0 e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_exit.o)
+ .text.libgcc.builtins
+                0x00000000        0x0 e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_exit.o)
+ .text.libgcc.fmul
+                0x00000000        0x0 e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_exit.o)
+ .text.libgcc.fixed
+                0x00000000        0x0 e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_exit.o)
+ .text          0x00000000        0x0 e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_copy_data.o)
+ .data          0x00000000        0x0 e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_copy_data.o)
+ .bss           0x00000000        0x0 e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_copy_data.o)
+ .text.libgcc.mul
+                0x00000000        0x0 e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_copy_data.o)
+ .text.libgcc.div
+                0x00000000        0x0 e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_copy_data.o)
+ .text.libgcc   0x00000000        0x0 e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_copy_data.o)
+ .text.libgcc.prologue
+                0x00000000        0x0 e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_copy_data.o)
+ .text.libgcc.builtins
+                0x00000000        0x0 e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_copy_data.o)
+ .text.libgcc.fmul
+                0x00000000        0x0 e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_copy_data.o)
+ .text.libgcc.fixed
+                0x00000000        0x0 e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_copy_data.o)
+ .text          0x00000000        0x0 e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_clear_bss.o)
+ .data          0x00000000        0x0 e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_clear_bss.o)
+ .bss           0x00000000        0x0 e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_clear_bss.o)
+ .text.libgcc.mul
+                0x00000000        0x0 e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_clear_bss.o)
+ .text.libgcc.div
+                0x00000000        0x0 e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_clear_bss.o)
+ .text.libgcc   0x00000000        0x0 e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_clear_bss.o)
+ .text.libgcc.prologue
+                0x00000000        0x0 e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_clear_bss.o)
+ .text.libgcc.builtins
+                0x00000000        0x0 e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_clear_bss.o)
+ .text.libgcc.fmul
+                0x00000000        0x0 e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_clear_bss.o)
+ .text.libgcc.fixed
+                0x00000000        0x0 e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_clear_bss.o)
+ .text          0x00000000        0x0 e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_udivmodsi4.o)
+ .data          0x00000000        0x0 e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_udivmodsi4.o)
+ .bss           0x00000000        0x0 e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_udivmodsi4.o)
+ .text.libgcc.mul
+                0x00000000        0x0 e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_udivmodsi4.o)
+ .text.libgcc   0x00000000        0x0 e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_udivmodsi4.o)
+ .text.libgcc.prologue
+                0x00000000        0x0 e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_udivmodsi4.o)
+ .text.libgcc.builtins
+                0x00000000        0x0 e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_udivmodsi4.o)
+ .text.libgcc.fmul
+                0x00000000        0x0 e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_udivmodsi4.o)
+ .text.libgcc.fixed
+                0x00000000        0x0 e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_udivmodsi4.o)
+
+Memory Configuration
+
+Name             Origin             Length             Attributes
+text             0x00000000         0x00020000         xr
+data             0x00800060         0x0000ffa0         rw !x
+eeprom           0x00810000         0x00010000         rw !x
+fuse             0x00820000         0x00000002         rw !x
+lock             0x00830000         0x00000400         rw !x
+signature        0x00840000         0x00000400         rw !x
+user_signatures  0x00850000         0x00000400         rw !x
+*default*        0x00000000         0xffffffff
+
+Linker script and memory map
+
+LOAD E:/AVR Stdio/7.0/Packs/atmel/ATmega_DFP/1.2.150/gcc/dev/atmega16a/avr5/crtatmega16a.o
+LOAD Driver_Source/ADC.o
+LOAD Driver_Source/display.o
+LOAD Driver_Source/ds1302.o
+LOAD Driver_Source/JQ8400.o
+LOAD Driver_Source/nrf24l01.o
+LOAD Driver_Source/TIM.o
+LOAD main.o
+START GROUP
+LOAD e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a
+END GROUP
+START GROUP
+LOAD e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a
+LOAD e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a
+LOAD e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libc.a
+LOAD E:/AVR Stdio/7.0/Packs/atmel/ATmega_DFP/1.2.150/gcc/dev/atmega16a/avr5\libatmega16a.a
+END GROUP
+                0x00020000                __TEXT_REGION_LENGTH__ = DEFINED (__TEXT_REGION_LENGTH__)?__TEXT_REGION_LENGTH__:0x20000
+                0x0000ffa0                __DATA_REGION_LENGTH__ = DEFINED (__DATA_REGION_LENGTH__)?__DATA_REGION_LENGTH__:0xffa0
+                0x00010000                __EEPROM_REGION_LENGTH__ = DEFINED (__EEPROM_REGION_LENGTH__)?__EEPROM_REGION_LENGTH__:0x10000
+                [0x00000002]                __FUSE_REGION_LENGTH__ = DEFINED (__FUSE_REGION_LENGTH__)?__FUSE_REGION_LENGTH__:0x400
+                0x00000400                __LOCK_REGION_LENGTH__ = DEFINED (__LOCK_REGION_LENGTH__)?__LOCK_REGION_LENGTH__:0x400
+                0x00000400                __SIGNATURE_REGION_LENGTH__ = DEFINED (__SIGNATURE_REGION_LENGTH__)?__SIGNATURE_REGION_LENGTH__:0x400
+                0x00000400                __USER_SIGNATURE_REGION_LENGTH__ = DEFINED (__USER_SIGNATURE_REGION_LENGTH__)?__USER_SIGNATURE_REGION_LENGTH__:0x400
+
+.hash
+ *(.hash)
+
+.dynsym
+ *(.dynsym)
+
+.dynstr
+ *(.dynstr)
+
+.gnu.version
+ *(.gnu.version)
+
+.gnu.version_d
+ *(.gnu.version_d)
+
+.gnu.version_r
+ *(.gnu.version_r)
+
+.rel.init
+ *(.rel.init)
+
+.rela.init
+ *(.rela.init)
+
+.rel.text
+ *(.rel.text)
+ *(.rel.text.*)
+ *(.rel.gnu.linkonce.t*)
+
+.rela.text
+ *(.rela.text)
+ *(.rela.text.*)
+ *(.rela.gnu.linkonce.t*)
+
+.rel.fini
+ *(.rel.fini)
+
+.rela.fini
+ *(.rela.fini)
+
+.rel.rodata
+ *(.rel.rodata)
+ *(.rel.rodata.*)
+ *(.rel.gnu.linkonce.r*)
+
+.rela.rodata
+ *(.rela.rodata)
+ *(.rela.rodata.*)
+ *(.rela.gnu.linkonce.r*)
+
+.rel.data
+ *(.rel.data)
+ *(.rel.data.*)
+ *(.rel.gnu.linkonce.d*)
+
+.rela.data
+ *(.rela.data)
+ *(.rela.data.*)
+ *(.rela.gnu.linkonce.d*)
+
+.rel.ctors
+ *(.rel.ctors)
+
+.rela.ctors
+ *(.rela.ctors)
+
+.rel.dtors
+ *(.rel.dtors)
+
+.rela.dtors
+ *(.rela.dtors)
+
+.rel.got
+ *(.rel.got)
+
+.rela.got
+ *(.rela.got)
+
+.rel.bss
+ *(.rel.bss)
+
+.rela.bss
+ *(.rela.bss)
+
+.rel.plt
+ *(.rel.plt)
+
+.rela.plt
+ *(.rela.plt)
+
+.text           0x00000000      0x918
+ *(.vectors)
+ .vectors       0x00000000       0x54 E:/AVR Stdio/7.0/Packs/atmel/ATmega_DFP/1.2.150/gcc/dev/atmega16a/avr5/crtatmega16a.o
+                0x00000000                __vector_default
+                0x00000000                __vectors
+ *(.vectors)
+ *(.progmem.gcc*)
+                0x00000054                . = ALIGN (0x2)
+                0x00000054                __trampolines_start = .
+ *(.trampolines)
+ .trampolines   0x00000054        0x0 linker stubs
+ *(.trampolines*)
+                0x00000054                __trampolines_end = .
+ *libprintf_flt.a:*(.progmem.data)
+ *libc.a:*(.progmem.data)
+ *(.progmem*)
+                0x00000054                . = ALIGN (0x2)
+ *(.jumptables)
+ *(.jumptables*)
+ *(.lowtext)
+ *(.lowtext*)
+                0x00000054                __ctors_start = .
+ *(.ctors)
+                0x00000054                __ctors_end = .
+                0x00000054                __dtors_start = .
+ *(.dtors)
+                0x00000054                __dtors_end = .
+ SORT(*)(.ctors)
+ SORT(*)(.dtors)
+ *(.init0)
+ .init0         0x00000054        0x0 E:/AVR Stdio/7.0/Packs/atmel/ATmega_DFP/1.2.150/gcc/dev/atmega16a/avr5/crtatmega16a.o
+                0x00000054                __init
+ *(.init0)
+ *(.init1)
+ *(.init1)
+ *(.init2)
+ .init2         0x00000054        0xc E:/AVR Stdio/7.0/Packs/atmel/ATmega_DFP/1.2.150/gcc/dev/atmega16a/avr5/crtatmega16a.o
+ *(.init2)
+ *(.init3)
+ *(.init3)
+ *(.init4)
+ .init4         0x00000060       0x16 e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_copy_data.o)
+                0x00000060                __do_copy_data
+ .init4         0x00000076       0x10 e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_clear_bss.o)
+                0x00000076                __do_clear_bss
+ *(.init4)
+ *(.init5)
+ *(.init5)
+ *(.init6)
+ *(.init6)
+ *(.init7)
+ *(.init7)
+ *(.init8)
+ *(.init8)
+ *(.init9)
+ .init9         0x00000086        0x8 E:/AVR Stdio/7.0/Packs/atmel/ATmega_DFP/1.2.150/gcc/dev/atmega16a/avr5/crtatmega16a.o
+ *(.init9)
+ *(.text)
+ .text          0x0000008e        0x4 E:/AVR Stdio/7.0/Packs/atmel/ATmega_DFP/1.2.150/gcc/dev/atmega16a/avr5/crtatmega16a.o
+                0x0000008e                __vector_1
+                0x0000008e                __vector_12
+                0x0000008e                __bad_interrupt
+                0x0000008e                __vector_6
+                0x0000008e                __vector_3
+                0x0000008e                __vector_11
+                0x0000008e                __vector_13
+                0x0000008e                __vector_17
+                0x0000008e                __vector_19
+                0x0000008e                __vector_7
+                0x0000008e                __vector_5
+                0x0000008e                __vector_2
+                0x0000008e                __vector_15
+                0x0000008e                __vector_8
+                0x0000008e                __vector_10
+                0x0000008e                __vector_16
+                0x0000008e                __vector_18
+                0x0000008e                __vector_20
+                0x00000092                . = ALIGN (0x2)
+ *(.text.*)
+ .text.ADC_Init
+                0x00000092       0x10 Driver_Source/ADC.o
+                0x00000092                ADC_Init
+ .text.ADC_Read
+                0x000000a2       0x12 Driver_Source/ADC.o
+                0x000000a2                ADC_Read
+ .text.display  0x000000b4       0xcc Driver_Source/display.o
+                0x000000b4                display
+ .text.Write_Byte
+                0x00000180       0x20 Driver_Source/ds1302.o
+                0x00000180                Write_Byte
+ .text.Write_ds1302
+                0x000001a0       0x74 Driver_Source/ds1302.o
+                0x000001a0                Write_ds1302
+ .text.Init_ds1302
+                0x00000214       0x52 Driver_Source/ds1302.o
+                0x00000214                Init_ds1302
+ .text.UART_Init
+                0x00000266       0x24 Driver_Source/JQ8400.o
+                0x00000266                UART_Init
+ .text.SPI_RW   0x0000028a       0x22 Driver_Source/nrf24l01.o
+                0x0000028a                SPI_RW
+ .text.SPI_RW_Reg
+                0x000002ac       0x1e Driver_Source/nrf24l01.o
+                0x000002ac                SPI_RW_Reg
+ .text.SPI_Write_Buf
+                0x000002ca       0x4e Driver_Source/nrf24l01.o
+                0x000002ca                SPI_Write_Buf
+ .text.SetRX_Mode
+                0x00000318        0xe Driver_Source/nrf24l01.o
+                0x00000318                SetRX_Mode
+ .text.init_NRF24L01
+                0x00000326       0x5a Driver_Source/nrf24l01.o
+                0x00000326                init_NRF24L01
+ .text.TIM0_Init
+                0x00000380       0x10 Driver_Source/TIM.o
+                0x00000380                TIM0_Init
+ .text.TIM2_Init
+                0x00000390       0x10 Driver_Source/TIM.o
+                0x00000390                TIM2_Init
+ .text.TIM1_PWM_Init
+                0x000003a0       0x1c Driver_Source/TIM.o
+                0x000003a0                TIM1_PWM_Init
+ .text.PWM_Set  0x000003bc       0x74 Driver_Source/TIM.o
+                0x000003bc                PWM_Set
+ .text.__vector_9
+                0x00000430       0x40 main.o
+                0x00000430                __vector_9
+ .text.__vector_4
+                0x00000470       0x4c main.o
+                0x00000470                __vector_4
+ .text.__vector_14
+                0x000004bc       0x50 main.o
+                0x000004bc                __vector_14
+ .text.init     0x0000050c       0x30 main.o
+                0x0000050c                init
+ .text.main     0x0000053c       0x1e main.o
+                0x0000053c                main
+ .text.avr-libc.fplib
+                0x0000055a        0x8 e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(divsf3.o)
+                0x0000055a                __divsf3
+ .text.avr-libc.fplib
+                0x00000562       0xdc e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(divsf3x.o)
+                0x00000582                __divsf3x
+                0x00000588                __divsf3_pse
+ .text.avr-libc.fplib
+                0x0000063e       0x5e e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(fixunssfsi.o)
+                0x0000063e                __fixunssfsi
+ .text.avr-libc.fplib
+                0x0000069c       0x7a e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(floatsisf.o)
+                0x0000069c                __floatunsisf
+                0x000006a0                __floatsisf
+ .text.avr-libc.fplib
+                0x00000716        0xc e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(fp_inf.o)
+                0x00000716                __fp_inf
+ .text.avr-libc.fplib
+                0x00000722        0x6 e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(fp_nan.o)
+                0x00000722                __fp_nan
+ .text.avr-libc.fplib
+                0x00000728        0xe e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(fp_pscA.o)
+                0x00000728                __fp_pscA
+ .text.avr-libc.fplib
+                0x00000736        0xe e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(fp_pscB.o)
+                0x00000736                __fp_pscB
+ .text.avr-libc.fplib
+                0x00000744       0x22 e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(fp_round.o)
+                0x00000744                __fp_round
+ .text.avr-libc.fplib
+                0x00000766       0x44 e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(fp_split3.o)
+                0x00000766                __fp_split3
+                0x00000776                __fp_splitA
+ .text.avr-libc.fplib
+                0x000007aa        0xe e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(fp_zero.o)
+                0x000007aa                __fp_zero
+                0x000007ac                __fp_szero
+ .text.avr-libc.fplib
+                0x000007b8        0x8 e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(mulsf3.o)
+                0x000007b8                __mulsf3
+ .text.avr-libc.fplib
+                0x000007c0       0xd2 e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(mulsf3x.o)
+                0x000007de                __mulsf3x
+                0x000007e4                __mulsf3_pse
+ .text.libgcc.div
+                0x00000892       0x2e e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_divmodsi4.o)
+                0x00000892                __divmodsi4
+ .text.libgcc.div
+                0x000008c0       0x10 e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_negsi2.o)
+                0x000008c0                __negsi2
+ .text.libgcc.div
+                0x000008d0       0x44 e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_udivmodsi4.o)
+                0x000008d0                __udivmodsi4
+                0x00000914                . = ALIGN (0x2)
+ *(.fini9)
+ .fini9         0x00000914        0x0 e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_exit.o)
+                0x00000914                _exit
+                0x00000914                exit
+ *(.fini9)
+ *(.fini8)
+ *(.fini8)
+ *(.fini7)
+ *(.fini7)
+ *(.fini6)
+ *(.fini6)
+ *(.fini5)
+ *(.fini5)
+ *(.fini4)
+ *(.fini4)
+ *(.fini3)
+ *(.fini3)
+ *(.fini2)
+ *(.fini2)
+ *(.fini1)
+ *(.fini1)
+ *(.fini0)
+ .fini0         0x00000914        0x4 e:/avr stdio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_exit.o)
+ *(.fini0)
+                0x00000918                _etext = .
+
+.data           0x00800060       0x16 load address 0x00000918
+                0x00800060                PROVIDE (__data_start, .)
+ *(.data)
+ *(.data*)
+ .data.smg_buf  0x00800060        0xb Driver_Source/display.o
+                0x00800060                smg_buf
+ .data.RX_ADDRESS
+                0x0080006b        0x5 Driver_Source/nrf24l01.o
+                0x0080006b                RX_ADDRESS
+ .data.TX_ADDRESS
+                0x00800070        0x5 Driver_Source/nrf24l01.o
+                0x00800070                TX_ADDRESS
+ *(.gnu.linkonce.d*)
+ *(.rodata)
+ *(.rodata*)
+ *(.gnu.linkonce.r*)
+                0x00800076                . = ALIGN (0x2)
+ *fill*         0x00800075        0x1 
+                0x00800076                _edata = .
+                0x00800076                PROVIDE (__data_end, .)
+
+.bss            0x00800076       0x4b
+                0x00800076                PROVIDE (__bss_start, .)
+ *(.bss)
+ *(.bss*)
+ .bss.cd        0x00800076        0x1 main.o
+                0x00800076                cd
+ .bss.aa        0x00800077        0x1 main.o
+                0x00800077                aa
+ *(COMMON)
+ COMMON         0x00800078        0x1 Driver_Source/display.o
+                0x00800078                i
+ COMMON         0x00800079       0x48 main.o
+                0x00800079                month
+                0x0080007a                RXbuf
+                0x0080009a                adc_value
+                0x0080009c                TXbuf
+                0x008000bc                hour
+                0x008000bd                min
+                0x008000be                year
+                0x008000bf                sec
+                0x008000c0                date
+                0x008000c1                PROVIDE (__bss_end, .)
+                0x00000918                __data_load_start = LOADADDR (.data)
+                0x0000092e                __data_load_end = (__data_load_start + SIZEOF (.data))
+
+.noinit         0x008000c1        0x0
+                [!provide]                PROVIDE (__noinit_start, .)
+ *(.noinit*)
+                [!provide]                PROVIDE (__noinit_end, .)
+                0x008000c1                _end = .
+                [!provide]                PROVIDE (__heap_start, .)
+
+.eeprom         0x00810000        0x0
+ *(.eeprom*)
+                0x00810000                __eeprom_end = .
+
+.fuse
+ *(.fuse)
+ *(.lfuse)
+ *(.hfuse)
+ *(.efuse)
+
+.lock
+ *(.lock*)
+
+.signature
+ *(.signature*)
+
+.user_signatures
+ *(.user_signatures*)
+
+.stab
+ *(.stab)
+
+.stabstr
+ *(.stabstr)
+
+.stab.excl
+ *(.stab.excl)
+
+.stab.exclstr
+ *(.stab.exclstr)
+
+.stab.index
+ *(.stab.index)
+
+.stab.indexstr
+ *(.stab.indexstr)
+
+.comment        0x00000000       0x30
+ *(.comment)
+ .comment       0x00000000       0x30 Driver_Source/ADC.o
+                                 0x31 (size before relaxing)
+ .comment       0x00000030       0x31 Driver_Source/display.o
+ .comment       0x00000030       0x31 Driver_Source/ds1302.o
+ .comment       0x00000030       0x31 Driver_Source/JQ8400.o
+ .comment       0x00000030       0x31 Driver_Source/nrf24l01.o
+ .comment       0x00000030       0x31 Driver_Source/TIM.o
+ .comment       0x00000030       0x31 main.o
+
+.note.gnu.avr.deviceinfo
+                0x00000000       0x3c
+ .note.gnu.avr.deviceinfo
+                0x00000000       0x3c E:/AVR Stdio/7.0/Packs/atmel/ATmega_DFP/1.2.150/gcc/dev/atmega16a/avr5/crtatmega16a.o
+
+.note.gnu.build-id
+ *(.note.gnu.build-id)
+
+.debug
+ *(.debug)
+
+.line
+ *(.line)
+
+.debug_srcinfo
+ *(.debug_srcinfo)
+
+.debug_sfnames
+ *(.debug_sfnames)
+
+.debug_aranges  0x00000000      0x1b8
+ *(.debug_aranges)
+ .debug_aranges
+                0x00000000       0x28 Driver_Source/ADC.o
+ .debug_aranges
+                0x00000028       0x20 Driver_Source/display.o
+ .debug_aranges
+                0x00000048       0x40 Driver_Source/ds1302.o
+ .debug_aranges
+                0x00000088       0x48 Driver_Source/JQ8400.o
+ .debug_aranges
+                0x000000d0       0x68 Driver_Source/nrf24l01.o
+ .debug_aranges
+                0x00000138       0x38 Driver_Source/TIM.o
+ .debug_aranges
+                0x00000170       0x48 main.o
+
+.debug_pubnames
+ *(.debug_pubnames)
+
+.debug_info     0x00000000     0x198b
+ *(.debug_info .gnu.linkonce.wi.*)
+ .debug_info    0x00000000      0x52e E:/AVR Stdio/7.0/Packs/atmel/ATmega_DFP/1.2.150/gcc/dev/atmega16a/avr5/crtatmega16a.o
+ .debug_info    0x0000052e       0xb6 Driver_Source/ADC.o
+ .debug_info    0x000005e4      0x14b Driver_Source/display.o
+ .debug_info    0x0000072f      0x5d0 Driver_Source/ds1302.o
+ .debug_info    0x00000cff      0x2e8 Driver_Source/JQ8400.o
+ .debug_info    0x00000fe7      0x5b0 Driver_Source/nrf24l01.o
+ .debug_info    0x00001597       0xef Driver_Source/TIM.o
+ .debug_info    0x00001686      0x305 main.o
+
+.debug_abbrev   0x00000000      0xbf2
+ *(.debug_abbrev)
+ .debug_abbrev  0x00000000      0x4e7 E:/AVR Stdio/7.0/Packs/atmel/ATmega_DFP/1.2.150/gcc/dev/atmega16a/avr5/crtatmega16a.o
+ .debug_abbrev  0x000004e7       0x89 Driver_Source/ADC.o
+ .debug_abbrev  0x00000570      0x109 Driver_Source/display.o
+ .debug_abbrev  0x00000679      0x183 Driver_Source/ds1302.o
+ .debug_abbrev  0x000007fc       0xef Driver_Source/JQ8400.o
+ .debug_abbrev  0x000008eb      0x16b Driver_Source/nrf24l01.o
+ .debug_abbrev  0x00000a56       0x78 Driver_Source/TIM.o
+ .debug_abbrev  0x00000ace      0x124 main.o
+
+.debug_line     0x00000000      0xd2b
+ *(.debug_line .debug_line.* .debug_line_end)
+ .debug_line    0x00000000      0x115 E:/AVR Stdio/7.0/Packs/atmel/ATmega_DFP/1.2.150/gcc/dev/atmega16a/avr5/crtatmega16a.o
+ .debug_line    0x00000115       0xc7 Driver_Source/ADC.o
+ .debug_line    0x000001dc      0x105 Driver_Source/display.o
+ .debug_line    0x000002e1      0x326 Driver_Source/ds1302.o
+ .debug_line    0x00000607      0x13c Driver_Source/JQ8400.o
+ .debug_line    0x00000743      0x2f9 Driver_Source/nrf24l01.o
+ .debug_line    0x00000a3c      0x111 Driver_Source/TIM.o
+ .debug_line    0x00000b4d      0x1de main.o
+
+.debug_frame    0x00000000      0x3f0
+ *(.debug_frame)
+ .debug_frame   0x00000000       0x34 Driver_Source/ADC.o
+ .debug_frame   0x00000034       0x34 Driver_Source/display.o
+ .debug_frame   0x00000068       0x6c Driver_Source/ds1302.o
+ .debug_frame   0x000000d4       0x74 Driver_Source/JQ8400.o
+ .debug_frame   0x00000148      0x11c Driver_Source/nrf24l01.o
+ .debug_frame   0x00000264       0x78 Driver_Source/TIM.o
+ .debug_frame   0x000002dc      0x114 main.o
+
+.debug_str      0x00000000      0x640
+ *(.debug_str)
+ .debug_str     0x00000000      0x1af E:/AVR Stdio/7.0/Packs/atmel/ATmega_DFP/1.2.150/gcc/dev/atmega16a/avr5/crtatmega16a.o
+ .debug_str     0x000001af      0x130 Driver_Source/ADC.o
+                                0x164 (size before relaxing)
+ .debug_str     0x000002df       0x44 Driver_Source/display.o
+                                0x17f (size before relaxing)
+ .debug_str     0x00000323       0xa9 Driver_Source/ds1302.o
+                                0x1e9 (size before relaxing)
+ .debug_str     0x000003cc       0xc2 Driver_Source/JQ8400.o
+                                0x206 (size before relaxing)
+ .debug_str     0x0000048e       0xf3 Driver_Source/nrf24l01.o
+                                0x24c (size before relaxing)
+ .debug_str     0x00000581       0x58 Driver_Source/TIM.o
+                                0x193 (size before relaxing)
+ .debug_str     0x000005d9       0x67 main.o
+                                0x228 (size before relaxing)
+
+.debug_loc      0x00000000      0xf67
+ *(.debug_loc)
+ .debug_loc     0x00000000       0x22 Driver_Source/ADC.o
+ .debug_loc     0x00000022       0xde Driver_Source/display.o
+ .debug_loc     0x00000100      0x56f Driver_Source/ds1302.o
+ .debug_loc     0x0000066f      0x110 Driver_Source/JQ8400.o
+ .debug_loc     0x0000077f      0x544 Driver_Source/nrf24l01.o
+ .debug_loc     0x00000cc3       0xd2 Driver_Source/TIM.o
+ .debug_loc     0x00000d95      0x1d2 main.o
+
+.debug_macinfo
+ *(.debug_macinfo)
+
+.debug_weaknames
+ *(.debug_weaknames)
+
+.debug_funcnames
+ *(.debug_funcnames)
+
+.debug_typenames
+ *(.debug_typenames)
+
+.debug_varnames
+ *(.debug_varnames)
+
+.debug_pubtypes
+ *(.debug_pubtypes)
+
+.debug_ranges   0x00000000      0x148
+ *(.debug_ranges)
+ .debug_ranges  0x00000000       0x18 Driver_Source/ADC.o
+ .debug_ranges  0x00000018       0x10 Driver_Source/display.o
+ .debug_ranges  0x00000028       0x30 Driver_Source/ds1302.o
+ .debug_ranges  0x00000058       0x38 Driver_Source/JQ8400.o
+ .debug_ranges  0x00000090       0x58 Driver_Source/nrf24l01.o
+ .debug_ranges  0x000000e8       0x28 Driver_Source/TIM.o
+ .debug_ranges  0x00000110       0x38 main.o
+
+.debug_macro
+ *(.debug_macro)
+OUTPUT(led5.elf elf32-avr)
+LOAD linker stubs
