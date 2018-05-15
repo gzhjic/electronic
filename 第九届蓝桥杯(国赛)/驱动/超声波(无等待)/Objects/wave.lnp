@@ -1,0 +1,7 @@
+".\Objects\STARTUP.obj",
+".\Objects\main.obj",
+".\Objects\display.obj",
+".\Objects\tim.obj",
+".\Objects\sonic.obj" 
+TO ".\Objects\wave" 
+PRINT(".\Listings\wave.m51") RAMSIZE(256) 
