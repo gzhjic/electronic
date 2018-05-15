@@ -1,8 +1,0 @@
-".\Objects\STARTUP.obj",
-".\Objects\display.obj",
-".\Objects\key.obj",
-".\Objects\uart.obj",
-".\Objects\tim.obj",
-".\Objects\main.obj" 
-TO ".\Objects\day4" 
-PRINT(".\Listings\day4.m51") RAMSIZE(256) 
