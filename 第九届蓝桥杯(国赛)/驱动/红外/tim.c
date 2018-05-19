@@ -5,7 +5,7 @@ void timer0_init(void)
 {
     TH0 = (65536-2000)/256;
     TL0 = (65536-2000)%256;
-    TMOD &= ~0x0f;
+    TMOD |= 0x03;
     ET0 = 1;
     TR0 = 1;
 }
