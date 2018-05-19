@@ -1,0 +1,6 @@
+".\Objects\display.obj",
+".\Objects\main.obj",
+".\Objects\tim.obj",
+".\Objects\irda.obj" 
+TO ".\Objects\infra" 
+PRINT(".\Listings\infra.m51") RAMSIZE(256) 

@@ -1,0 +1,79 @@
+C51 COMPILER V9.54   IRDA                                                                  05/19/2018 14:23:07 PAGE 1   
+
+
+C51 COMPILER V9.54, COMPILATION OF MODULE IRDA
+OBJECT MODULE PLACED IN .\Objects\irda.obj
+COMPILER INVOKED BY: E:\Keil\Keil_v5\C51\BIN\C51.EXE irda.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\Listings
+                    -\irda.lst) OBJECT(.\Objects\irda.obj)
+
+line level    source
+
+   1          #include "irda.h"
+   2          
+   3          long frame_data;
+   4          bit frame_flag;
+   5          
+   6          void Delay20us()                //@11.0592MHz
+   7          {
+   8   1              unsigned char i;
+   9   1      
+  10   1              _nop_();
+  11   1              _nop_();
+  12   1              _nop_();
+  13   1              i = 52;
+  14   1              while (--i);
+  15   1      }
+  16          
+  17          
+  18          /* 获取高电平时间 */
+  19          uchar get_pluse_time(void)
+  20          {
+  21   1          uchar time = 0;
+  22   1          while(ir)
+  23   1          {
+  24   2              time++;
+  25   2              Delay20us();
+  26   2              if(time == 250)     //5ms
+  27   2                  return time;    //超时溢出
+  28   2          }
+  29   1          return time;
+  30   1      }
+  31          
+  32          
+  33          /* 一帧数据有4个字节
+  34           * 第一个字节是遥控id
+  35           * 第二个字节是第一个字节的反码
+  36           * 第三个数据是遥控的真正的键值
+  37           * 第四个字节是第三个字节的反码
+  38          */
+  39          uchar irda_process(void)
+  40          {
+  41   1          uchar first_byte,sec_byte,tir_byte,fou_byte;
+  42   1          first_byte = frame_data >> 24;
+  43   1          sec_byte = (frame_data>>16) & 0xff;
+  44   1          tir_byte = frame_data >> 8;
+  45   1          fou_byte = frame_data;
+  46   1          
+  47   1          frame_flag = 0;
+  48   1          //校验 成功返回键值 失败返回0
+  49   1          if( (first_byte==(uchar)~sec_byte) && (first_byte==IRDA_ID) && tir_byte == (uchar)~fou_byte)
+  50   1              return tir_byte;
+  51   1          else
+  52   1              return 0;
+  53   1      }
+
+C51 COMPILER V9.54   IRDA                                                                  05/19/2018 14:23:07 PAGE 2   
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     91    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      4    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =      1    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
