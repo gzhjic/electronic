@@ -1,0 +1,1 @@
+"..\Drivers\key.c" OPTIMIZE (8,SPEED) BROWSE INCDIR(..\App;..\Drivers) DEBUG OBJECTEXTEND PRINT(..\Listing\key.lst) OBJECT(..\Output\key.obj)

@@ -1,0 +1,9 @@
+"..\Output\main.obj",
+"..\Output\tool.obj",
+"..\Output\display.obj",
+"..\Output\iic.obj",
+"..\Output\key.obj",
+"..\Output\sonic.obj",
+"..\Output\tim.obj" 
+TO "..\Output\d1" 
+PRINT("..\Listing\d1.m51") RAMSIZE(256) 

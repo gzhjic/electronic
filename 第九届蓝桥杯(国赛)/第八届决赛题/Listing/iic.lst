@@ -1,0 +1,169 @@
+C51 COMPILER V9.54   IIC                                                                   05/19/2018 21:12:31 PAGE 1   
+
+
+C51 COMPILER V9.54, COMPILATION OF MODULE IIC
+OBJECT MODULE PLACED IN ..\Output\iic.obj
+COMPILER INVOKED BY: E:\Keil\Keil_v5\C51\BIN\C51.EXE ..\Drivers\iic.c OPTIMIZE(8,SPEED) BROWSE INCDIR(..\App;..\Drivers)
+                    - DEBUG OBJECTEXTEND PRINT(..\Listing\iic.lst) OBJECT(..\Output\iic.obj)
+
+line level    source
+
+   1          #include "iic.h"
+   2          
+   3          sbit scl = P2^0;
+   4          sbit sda = P2^1;
+   5          
+   6          
+   7          void Delay5us()         //@12.000MHz
+   8          {
+   9   1              unsigned char i;
+  10   1      
+  11   1              _nop_();
+  12   1              _nop_();
+  13   1              i = 12;
+  14   1              while (--i);
+  15   1      }
+  16          
+  17          
+  18          void iic_start(void)
+  19          {
+  20   1          sda = 1;
+  21   1          Delay5us();
+  22   1          scl = 1;
+  23   1          Delay5us();
+  24   1          sda = 0;
+  25   1          Delay5us();
+  26   1      }
+  27          
+  28          
+  29          void iic_stop(void)
+  30          {
+  31   1          sda = 0;
+  32   1          Delay5us();
+  33   1          scl = 1;
+  34   1          Delay5us();
+  35   1          sda = 1;
+  36   1          Delay5us();
+  37   1      }
+  38          
+  39          
+  40          void iic_ack(void)
+  41          {
+  42   1          uchar i = 200;
+  43   1          scl = 1;
+  44   1          Delay5us();
+  45   1          while(sda&&i--);
+  46   1          Delay5us();
+  47   1          scl = 0;
+  48   1      }
+  49          
+  50          
+  51          void iic_nack(void)
+  52          {
+  53   1          scl = 1;
+  54   1          Delay5us();
+C51 COMPILER V9.54   IIC                                                                   05/19/2018 21:12:31 PAGE 2   
+
+  55   1          sda = 1;
+  56   1          Delay5us();
+  57   1          scl = 0;
+  58   1          Delay5us();
+  59   1      }
+  60          
+  61          
+  62          void iic_write(uchar dat)
+  63          {
+  64   1          uchar i;
+  65   1          for(i = 0; i < 8; i++)
+  66   1          {
+  67   2              scl = 0;
+  68   2              Delay5us();
+  69   2              if(dat&0x80)
+  70   2                  sda = 1;
+  71   2              else
+  72   2                  sda = 0;
+  73   2              Delay5us();
+  74   2              scl = 1;
+  75   2              dat<<=1;
+  76   2          }
+  77   1          scl = 0;
+  78   1      }
+  79          
+  80          
+  81          uchar iic_read(void)
+  82          {
+  83   1          uchar i,dat;
+  84   1          sda = 1;
+  85   1          for(i = 0; i < 8 ; i++)
+  86   1          {
+  87   2              dat<<=1;
+  88   2              scl = 1;
+  89   2              Delay5us();
+  90   2              if(sda)
+  91   2                  dat |= 1;
+  92   2              Delay5us();
+  93   2              scl = 0;
+  94   2              Delay5us();
+  95   2          }
+  96   1          return dat;
+  97   1      }
+  98          
+  99          
+ 100          void at24c02_write(uchar add, uchar dat)
+ 101          {
+ 102   1          iic_start();
+ 103   1          iic_write(0xa0);
+ 104   1          iic_ack();
+ 105   1          iic_write(add);
+ 106   1          iic_ack();
+ 107   1          iic_write(dat);
+ 108   1          iic_ack();
+ 109   1          iic_stop();
+ 110   1      }
+ 111          
+ 112          
+ 113          uchar at24c02_read(uchar add)
+ 114          {
+ 115   1          uchar dat;
+ 116   1          iic_start();
+C51 COMPILER V9.54   IIC                                                                   05/19/2018 21:12:31 PAGE 3   
+
+ 117   1          iic_write(0xa0);
+ 118   1          iic_ack();
+ 119   1          iic_write(add);
+ 120   1          iic_ack();
+ 121   1          iic_start();
+ 122   1          iic_write(0xa1);
+ 123   1          iic_ack();
+ 124   1          dat = iic_read();
+ 125   1          iic_nack();
+ 126   1          iic_stop();
+ 127   1          return dat;
+ 128   1      }
+ 129          
+ 130          
+ 131          void dac_write(uchar dat)
+ 132          {
+ 133   1          iic_start();
+ 134   1          iic_write(0x90);
+ 135   1          iic_ack();
+ 136   1          iic_write(0x40);
+ 137   1          iic_ack();
+ 138   1          iic_write(dat);
+ 139   1          iic_ack();
+ 140   1          iic_stop();
+ 141   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    233    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

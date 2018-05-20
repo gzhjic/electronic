@@ -1,0 +1,60 @@
+C51 COMPILER V9.54   MAIN                                                                  05/20/2018 12:06:41 PAGE 1   
+
+
+C51 COMPILER V9.54, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN ..\Output\main.obj
+COMPILER INVOKED BY: E:\Keil\Keil_v5\C51\BIN\C51.EXE ..\App\main.c OPTIMIZE(8,SPEED) BROWSE INCDIR(..\App;..\Drivers) DE
+                    -BUG OBJECTEXTEND PRINT(..\Listing\main.lst) OBJECT(..\Output\main.obj)
+
+line level    source
+
+   1          #include "tool.h"
+   2          
+   3          
+   4          void main(void)
+   5          {
+   6   1          
+   7   1          Task_Init();            //初始化
+   8   1          while(1)
+   9   1          {
+  10   2              
+  11   2          at24c02_write(0,11);
+  12   2              Task_Write();       //数据写进EEPROM
+  13   2              Task_Work();        //工作模式
+  14   2              Task_LED();         //LED显示
+  15   2              Task_DAC();         //电压输出
+  16   2          }
+  17   1      }
+  18          
+  19          
+  20          void timer0_isr(void) interrupt 1
+  21          {
+  22   1          Task_Read();
+  23   1          Task_Display();         //数码管显示
+  24   1                      //读出EEPROM的数据
+  25   1      }
+  26          
+  27          
+  28          void timer2_isr(void) interrupt 12
+  29          {
+  30   1          sonic_sent();           //发送超声波
+  31   1          key_on();               //按键消痘
+  32   1          Task_Time();            //获取时间
+  33   1      }
+  34          
+  35          
+  36          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    151    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
