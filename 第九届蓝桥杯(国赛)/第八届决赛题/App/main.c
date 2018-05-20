@@ -3,9 +3,8 @@
 
 void main(void)
 {
-    
-    Task_Init();            //初始化
     Task_Read();            //读出EEPROM的数据
+    Task_Init();            //初始化
     while(1)
     {
         Task_Work();        //工作模式
