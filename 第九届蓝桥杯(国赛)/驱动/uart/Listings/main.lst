@@ -1,0 +1,57 @@
+C51 COMPILER V9.54   MAIN                                                                  05/21/2018 17:15:10 PAGE 1   
+
+
+C51 COMPILER V9.54, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN .\Objects\main.obj
+COMPILER INVOKED BY: E:\Keil\Keil_v5\C51\BIN\C51.EXE main.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\Listings
+                    -\main.lst) OBJECT(.\Objects\main.obj)
+
+line level    source
+
+   1          #include <stc15f2k60s2.h>
+   2          #include <absacc.h>
+   3          #include "uart.h"
+   4          #include "stdio.h"
+   5          #include "iic.h"
+   6          
+   7          unsigned char dat;
+   8          unsigned char wbuf[]={1,2,3,4,5,6,7};
+   9          unsigned char rbuf[7];
+  10          
+  11          void main(void)
+  12          {
+  13   1          unsigned char i;
+  14   1          unsigned int j=10000;
+  15   1          UartInit();
+  16   1          XBYTE[0XA000]=0;
+  17   1          iic_write_buffer(0,wbuf, 7);
+  18   1          while(j--);
+  19   1          iic_read_buffer(0,rbuf,7);
+  20   1          
+  21   1          for(i=0;i<7;i++)
+  22   1          {
+  23   2              TI = 1;
+  24   2              printf("%d:%d   \n",(int)i,(int)rbuf[i]);
+  25   2          }
+  26   1          while(1);
+  27   1      }
+  28          
+  29          
+  30          void uart(void) interrupt 4
+  31          {
+  32   1          dat = Uart_Receive_Byte();
+  33   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    156    ----
+   CONSTANT SIZE    =     10    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =     15       3
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
