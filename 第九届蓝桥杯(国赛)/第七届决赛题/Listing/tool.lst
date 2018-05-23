@@ -1,0 +1,65 @@
+C51 COMPILER V9.54   TOOL                                                                  05/23/2018 11:10:08 PAGE 1   
+
+
+C51 COMPILER V9.54, COMPILATION OF MODULE TOOL
+OBJECT MODULE PLACED IN ..\Output\tool.obj
+COMPILER INVOKED BY: E:\Keil\Keil_v5\C51\BIN\C51.EXE ..\App\tool.c OPTIMIZE(8,SPEED) BROWSE INCDIR(..\Drivers;..\App) DE
+                    -BUG OBJECTEXTEND PRINT(..\Listing\tool.lst) OBJECT(..\Output\tool.obj)
+
+line level    source
+
+   1          #include "tool.h"
+   2          
+   3          
+   4          Status InitQueue(SqQueue *Q)
+   5          /* 构造一个空循环队列 */
+   6          {
+   7   1              Q->base = (QElemType*)malloc(MAXQSIZE * sizeof(QElemType));
+   8   1              if (!Q->base) return(OVERFLOW); //存储分配失败
+   9   1              Q->front = Q->rear = 0;
+  10   1              return OK;
+  11   1      }
+  12          
+  13          
+  14          int QueueLength(SqQueue Q)
+  15          /* 返回Q的元素个数，即队列长度 */
+  16          {
+  17   1              return (Q.rear - Q.front + MAXQSIZE) % MAXQSIZE;
+  18   1      }
+  19          
+  20          
+  21          Status EnQueue(SqQueue *Q, QElemType e)
+  22          /* 插入元素e为Q的新的队尾元素 */
+  23          {
+  24   1              if ((Q->rear + 1) % MAXQSIZE == Q->front)
+  25   1                      return ERROR;           //队列满
+  26   1              Q->base[Q->rear] = e;
+  27   1              Q->rear = (Q->rear + 1) % MAXQSIZE;
+  28   1              return OK;
+  29   1      }
+  30          
+  31          
+  32          Status DeQueue(SqQueue *Q, QElemType *e)
+  33          /* 若队列非空，则删除Q的队头元素，用e返回其值
+  34                  若成功 返回OK，否则返回ERROR */
+  35          {
+  36   1              if (Q->front == Q->rear)
+  37   1                      return ERROR;
+  38   1              *e = Q->base[Q->front];
+  39   1              Q->front = (Q->front + 1) % MAXQSIZE;
+  40   1              return OK;
+  41   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    307    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----      20
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

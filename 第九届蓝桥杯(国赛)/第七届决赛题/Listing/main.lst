@@ -1,0 +1,498 @@
+C51 COMPILER V9.54   MAIN                                                                  05/23/2018 12:14:55 PAGE 1   
+
+
+C51 COMPILER V9.54, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN ..\Output\main.obj
+COMPILER INVOKED BY: E:\Keil\Keil_v5\C51\BIN\C51.EXE ..\App\main.c OPTIMIZE(8,SPEED) BROWSE INCDIR(..\Drivers;..\App) DE
+                    -BUG OBJECTEXTEND PRINT(..\Listing\main.lst) OBJECT(..\Output\main.obj)
+
+line level    source
+
+   1          #include "tim.h"
+   2          #include "display.h"
+   3          #include "key.h"
+   4          #include "iic.h"
+   5          #include "ds1302.h"
+   6          #include "tool.h"
+   7          
+   8          
+   9          /* 宏定义 */
+  10          #define r_type  0
+  11          #define r_hour  1
+  12          #define r_min   2
+  13          #define r_sec   3
+  14          #define r_max   4
+  15          #define r_m     5
+  16          /* 变量声明 */
+  17          enum{mod_time,mod_time_set,mod_v,mod_f,mod_set,mod_check} mode;
+  18          struct{
+  19              uchar hour;
+  20              uchar min;
+  21              uchar sec;
+  22              uchar select;
+  23          }time;
+  24          
+  25          struct{
+  26              uint mea;
+  27              uint max;
+  28              uint min;
+  29              uchar select;
+  30              uchar type;
+  31          }v;
+  32          
+  33          SqQueue eeprom;
+  34          
+  35          bit check_f;
+  36          bit f_f;
+  37          uchar dis_flash;
+  38          uchar r_buf[6];
+  39          uint f;
+  40          uint f_dis;
+  41          
+  42          /* 函数声明 */
+  43          void Init(void);
+  44          void Board_Init(void);
+  45          void Task_Time(void);
+  46          void Task_Time_Set(void);
+  47          void Time_Add(void);
+  48          void Time_Sub(void);
+  49          void Task_V(void);
+  50          void Task_F(void);
+  51          void Task_Set(void);
+  52          void Task_Check(void);
+  53          void Task_Mark(void);
+  54          void Task_Write(void);
+C51 COMPILER V9.54   MAIN                                                                  05/23/2018 12:14:55 PAGE 2   
+
+  55          void Task_Read(void);
+  56          
+  57          
+  58          void main(void)
+  59          {
+  60   1          
+  61   1          Init();
+  62   1          while(1)
+  63   1          {
+  64   2              switch(mode)
+  65   2              {
+  66   3                  case mod_time:Task_Time();break;
+  67   3                  case mod_time_set:Task_Time_Set();break;
+  68   3                  case mod_v:Task_V();break;
+  69   3                  case mod_f:Task_F();break;
+  70   3                  case mod_set:Task_Set();break;
+  71   3                  case mod_check:Task_Check();break;
+  72   3              }
+  73   2              Task_Mark();
+  74   2              
+  75   2          }
+  76   1      }
+  77          
+  78          
+  79          void timer1_isr(void) interrupt 3
+  80          {
+  81   1          static uint ms,s;
+  82   1          if(mode == mod_f)
+  83   1          {
+  84   2              TR0 = 1;
+  85   2              if(++ms>1000)
+  86   2              {
+  87   3                  ms = 0;
+  88   3                  f = (TH0*256+TL0);
+  89   3                  TR0 = 0;
+  90   3                  TH0 = 0;
+  91   3                  TL0 = 0;
+  92   3                  TR0 = 1;
+  93   3              }
+  94   2          }
+  95   1          if(mode == mod_time_set)
+  96   1          {
+  97   2              if(++s>1000)
+  98   2              {
+  99   3                  s = 0;
+ 100   3                  dis_flash = time.select;
+ 101   3              }
+ 102   2              else if(s == 500)
+ 103   2                  dis_flash = 0;
+ 104   2          }
+ 105   1          else if(mode == mod_set)
+ 106   1          {
+ 107   2              if(++s>1000)
+ 108   2              {
+ 109   3                  s = 0;
+ 110   3                  dis_flash = v.select;
+ 111   3              }
+ 112   2              else if(s == 500)
+ 113   2                  dis_flash = 0;
+ 114   2          }
+ 115   1          else
+ 116   1              dis_flash = 0;
+C51 COMPILER V9.54   MAIN                                                                  05/23/2018 12:14:55 PAGE 3   
+
+ 117   1          
+ 118   1          key_on();
+ 119   1      }
+ 120          
+ 121          
+ 122          void timer2_isr(void) interrupt 12
+ 123          {
+ 124   1          switch(mode)
+ 125   1          {
+ 126   2              case mod_time:
+ 127   2              case mod_time_set:
+ 128   2                  Display_Time(time.hour,time.min,time.sec,dis_flash);
+ 129   2              break;
+ 130   2              
+ 131   2              case mod_v:
+ 132   2                  v.mea = 5000*(float)dac_read(3)/255;
+ 133   2                  Display_mV(v.mea);
+ 134   2              break;
+ 135   2              
+ 136   2              case mod_f:
+ 137   2                  Display_F(f_dis);
+ 138   2              break;
+ 139   2              
+ 140   2              case mod_set:
+ 141   2                  Display_Set(v.max,v.min,dis_flash);
+ 142   2              break;
+ 143   2              
+ 144   2              case mod_check:
+ 145   2                  if(check_f)
+ 146   2                      Display_Time(r_buf[r_hour],r_buf[r_min],r_buf[r_sec],0);
+ 147   2                  else
+ 148   2                      Display_Type(r_buf[r_type]);
+ 149   2              break;
+ 150   2          }        
+ 151   1          Task_Write();    
+ 152   1      }
+ 153          
+ 154          
+ 155          /* 初始化 */
+ 156          void Init(void)
+ 157          {
+ 158   1          EA = 0;
+ 159   1          init_mempool(0x0000,0x03ff);//分配动态内存1k
+ 160   1          Task_Read();
+ 161   1          Board_Init();               //关掉板子上无关外设
+ 162   1          InitQueue(&eeprom);
+ 163   1      //    v.max = 2000;
+ 164   1      //    v.min = 1000;
+ 165   1          ds1302_init();
+ 166   1          timer0_init();      //定时器初始化
+ 167   1          timer1_init();
+ 168   1          timer2_init();
+ 169   1          EA = 1;
+ 170   1      }
+ 171          
+ 172          
+ 173          /* 关闭板子上无关外设 */
+ 174          void Board_Init(void)
+ 175          {
+ 176   1          XBYTE[0X8000] = 0XFF;
+ 177   1          XBYTE[0XA000] = 0X00;
+ 178   1          XBYTE[0XC000] = 0XFF;
+C51 COMPILER V9.54   MAIN                                                                  05/23/2018 12:14:55 PAGE 4   
+
+ 179   1          XBYTE[0XE000] = 0XFF;
+ 180   1      }
+ 181          
+ 182          
+ 183          void Task_Time(void)
+ 184          {
+ 185   1          uchar key_num;
+ 186   1          time.hour = ds1302_read(ds_r_hour);
+ 187   1          time.min = ds1302_read(ds_r_min);
+ 188   1          time.sec = ds1302_read(ds_r_sec);
+ 189   1          key_num = key();
+ 190   1          switch(key_num)
+ 191   1          {
+ 192   2              case 13:
+ 193   2                  time.select = 1;
+ 194   2                  mode = mod_time_set;
+ 195   2              break;
+ 196   2              
+ 197   2              case 5:
+ 198   2                  mode = mod_v;
+ 199   2              break;
+ 200   2              
+ 201   2              case 10:
+ 202   2                  check_f = 0;
+ 203   2                  mode = mod_check;
+ 204   2              break;
+ 205   2              
+ 206   2              case 9:
+ 207   2                  mode = mod_f;
+ 208   2              break;
+ 209   2          }
+ 210   1      }
+ 211          
+ 212          
+ 213          void Task_Time_Set(void)
+ 214          {
+ 215   1          uchar key_num;
+ 216   1          key_num = key();
+ 217   1          switch(key_num)
+ 218   1          {
+ 219   2              case 13:
+ 220   2              if(++time.select>3)
+ 221   2                  time.select = 1;
+ 222   2              break;
+ 223   2                  
+ 224   2              case 2:
+ 225   2                  Time_Add();
+ 226   2              break;
+ 227   2              
+ 228   2              case 6:
+ 229   2                  Time_Sub();
+ 230   2              break;
+ 231   2              
+ 232   2              case 1:
+ 233   2                  ds1302_write(ds_w_sec,time.sec);
+ 234   2                  ds1302_write(ds_w_min,time.min);
+ 235   2                  ds1302_write(ds_w_hour,time.hour);
+ 236   2                  mode = mod_time;
+ 237   2              break;
+ 238   2          }
+ 239   1      }
+ 240          
+C51 COMPILER V9.54   MAIN                                                                  05/23/2018 12:14:55 PAGE 5   
+
+ 241          
+ 242          void Time_Add(void)
+ 243          {
+ 244   1          if(time.select == 1)
+ 245   1          {
+ 246   2              if(time.hour<23)
+ 247   2                  time.hour++;
+ 248   2          }
+ 249   1          else if(time.select == 2)
+ 250   1          {
+ 251   2              if(time.min<59)
+ 252   2                  time.min++;
+ 253   2          }
+ 254   1          else if(time.select == 3)
+ 255   1          {
+ 256   2              if(time.sec<59)
+ 257   2                  time.sec++;
+ 258   2          }
+ 259   1      }
+ 260          
+ 261          
+ 262          void Time_Sub(void)
+ 263          {
+ 264   1          if(time.select == 1)
+ 265   1          {
+ 266   2              if(time.hour>0)
+ 267   2                  time.hour--;
+ 268   2          }
+ 269   1          else if(time.select == 2)
+ 270   1          {
+ 271   2              if(time.min>0)
+ 272   2                  time.min--;
+ 273   2          }
+ 274   1          else if(time.select == 3)
+ 275   1          {
+ 276   2              if(time.sec>0)
+ 277   2                  time.sec--;
+ 278   2          }
+ 279   1      }
+ 280          
+ 281          
+ 282          
+ 283          void Task_V(void)
+ 284          {
+ 285   1          uchar key_num;
+ 286   1          key_num = key();
+ 287   1          switch(key_num)
+ 288   1          {
+ 289   2              case 13:
+ 290   2                  v.select = 1;
+ 291   2                  mode = mod_set;
+ 292   2              break;
+ 293   2                  
+ 294   2              case 5:
+ 295   2                  mode = mod_v;
+ 296   2              break;
+ 297   2              
+ 298   2              case 10:
+ 299   2                  check_f = 0;
+ 300   2                  mode = mod_check;
+ 301   2              break;
+ 302   2              
+C51 COMPILER V9.54   MAIN                                                                  05/23/2018 12:14:55 PAGE 6   
+
+ 303   2              case 1:
+ 304   2                  mode = mod_time;
+ 305   2              break;
+ 306   2              
+ 307   2              case 9:
+ 308   2                  mode = mod_f;
+ 309   2              break;
+ 310   2          }
+ 311   1      }
+ 312          
+ 313          
+ 314          void Task_Set(void)
+ 315          {
+ 316   1          uchar key_num;
+ 317   1          key_num = key();
+ 318   1          switch(key_num)
+ 319   1          {
+ 320   2              case 13:
+ 321   2                  if(++v.select>2)
+ 322   2                      v.select = 1;
+ 323   2              break;
+ 324   2                  
+ 325   2              case 2:
+ 326   2                      if(v.select ==1)
+ 327   2                      {
+ 328   3                          if(v.max<5000)
+ 329   3                              v.max+=500;
+ 330   3                      }
+ 331   2                      else if(v.select ==2)
+ 332   2                      {
+ 333   3                          if(v.min<5000)
+ 334   3                              v.min+=500;
+ 335   3                      }
+ 336   2              break;
+ 337   2              
+ 338   2              case 6:
+ 339   2                      if(v.select ==1)
+ 340   2                      {
+ 341   3                          if(v.max>0)
+ 342   3                              v.max-=500;
+ 343   3                      }
+ 344   2                      else if(v.select ==2)
+ 345   2                      {
+ 346   3                          if(v.min>0)
+ 347   3                              v.min-=500;
+ 348   3                      }
+ 349   2              break;
+ 350   2                      
+ 351   2              case 5:
+ 352   2                  r_buf[r_max] = v.max/100;
+ 353   2                  EnQueue(&eeprom,4);
+ 354   2                  r_buf[r_min] = v.min/100;
+ 355   2                  EnQueue(&eeprom,5);
+ 356   2                  mode = mod_v;
+ 357   2              break;
+ 358   2          }
+ 359   1      }
+ 360          
+ 361          
+ 362          void Task_Check(void)
+ 363          {
+ 364   1          uchar key_num;
+C51 COMPILER V9.54   MAIN                                                                  05/23/2018 12:14:55 PAGE 7   
+
+ 365   1          key_num = key();
+ 366   1          switch(key_num)
+ 367   1          {
+ 368   2              case 13:
+ 369   2                  check_f = ~check_f;
+ 370   2              break;
+ 371   2              
+ 372   2              case 5:
+ 373   2                  mode = mod_v;
+ 374   2              break;
+ 375   2              
+ 376   2              case 9:
+ 377   2                  mode = mod_f;
+ 378   2              break;
+ 379   2          }
+ 380   1      }
+ 381          
+ 382          
+ 383          void Task_F(void)
+ 384          {
+ 385   1          uchar key_num;
+ 386   1          key_num = key();
+ 387   1          switch(key_num)
+ 388   1          {
+ 389   2              case 13:
+ 390   2                  f_f = ~f_f;
+ 391   2              break;
+ 392   2                  
+ 393   2              case 5:
+ 394   2                  mode = mod_v;
+ 395   2              break;
+ 396   2              
+ 397   2              case 10:
+ 398   2                  check_f = 0;
+ 399   2                  mode = mod_check;
+ 400   2              break;
+ 401   2              
+ 402   2              case 1:
+ 403   2                  mode = mod_time;
+ 404   2              break;
+ 405   2              
+ 406   2              case 9:
+ 407   2                  mode = mod_f;
+ 408   2              break;
+ 409   2          }
+ 410   1          if(f_f)
+ 411   1              f_dis = f;
+ 412   1          else
+ 413   1              f_dis = 1000000*1/(float)f;
+ 414   1      }
+ 415          
+ 416          
+ 417          void Task_Mark(void)
+ 418          {
+ 419   1         if(v.mea == v.max)
+ 420   1         {
+ 421   2             r_buf[r_type] = 1;
+ 422   2             EnQueue(&eeprom, 0);
+ 423   2             r_buf[r_hour] = time.hour;
+ 424   2             EnQueue(&eeprom, 1);
+ 425   2             r_buf[r_min] = time.min;
+ 426   2             EnQueue(&eeprom, 2);
+C51 COMPILER V9.54   MAIN                                                                  05/23/2018 12:14:55 PAGE 8   
+
+ 427   2             r_buf[r_sec] = time.sec;
+ 428   2             EnQueue(&eeprom, 3);
+ 429   2         }
+ 430   1         else if(v.mea == v.min)
+ 431   1         {
+ 432   2             r_buf[r_type] = 2;
+ 433   2             EnQueue(&eeprom, 0);
+ 434   2             r_buf[r_hour] = time.hour;
+ 435   2             EnQueue(&eeprom, 1);
+ 436   2             r_buf[r_min] = time.min;
+ 437   2             EnQueue(&eeprom, 2);
+ 438   2             r_buf[r_sec] = time.sec;
+ 439   2             EnQueue(&eeprom, 3);
+ 440   2         }
+ 441   1      }
+ 442          
+ 443          
+ 444          void Task_Write(void)
+ 445          {
+ 446   1          QElemType e;
+ 447   1          if(QueueLength(eeprom))
+ 448   1          {
+ 449   2              DeQueue(&eeprom, &e);
+ 450   2              Write_At24c02(e,r_buf[e]);
+ 451   2          }
+ 452   1      }
+ 453          
+ 454          
+ 455          void Task_Read(void)
+ 456          {
+ 457   1          at24c02_read_buffer(0,r_buf,6);
+ 458   1          v.max = r_buf[r_max]*100;
+ 459   1          v.min = r_buf[r_min]*100;
+ 460   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =   1282    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =     35       1
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =      2    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

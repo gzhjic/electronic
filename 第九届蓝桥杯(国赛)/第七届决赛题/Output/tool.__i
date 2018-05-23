@@ -1,0 +1,1 @@
+"..\App\tool.c" OPTIMIZE (8,SPEED) BROWSE INCDIR(..\Drivers;..\App) DEBUG OBJECTEXTEND PRINT(..\Listing\tool.lst) OBJECT(..\Output\tool.obj)

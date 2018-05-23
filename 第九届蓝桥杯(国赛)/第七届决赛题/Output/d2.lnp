@@ -1,0 +1,10 @@
+"..\Output\STARTUP.obj",
+"..\Output\display.obj",
+"..\Output\ds1302.obj",
+"..\Output\iic.obj",
+"..\Output\key.obj",
+"..\Output\tim.obj",
+"..\Output\main.obj",
+"..\Output\tool.obj" 
+TO "..\Output\d2" 
+PRINT("..\Listing\d2.m51") RAMSIZE(256) 

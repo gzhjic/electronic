@@ -1,0 +1,187 @@
+C51 COMPILER V9.54   DISPLAY                                                               05/22/2018 21:12:12 PAGE 1   
+
+
+C51 COMPILER V9.54, COMPILATION OF MODULE DISPLAY
+OBJECT MODULE PLACED IN ..\Output\display.obj
+COMPILER INVOKED BY: E:\Keil\Keil_v5\C51\BIN\C51.EXE ..\Drivers\display.c OPTIMIZE(8,SPEED) BROWSE INCDIR(..\Drivers;..\
+                    -App) DEBUG OBJECTEXTEND PRINT(..\Listing\display.lst) OBJECT(..\Output\display.obj)
+
+line level    source
+
+   1          #include "display.h"
+   2          
+   3          
+   4          const uchar smg_code[]={0xc0,0xf9,0xa4,0xb0,0x99,0x92,0x82,0xf8,0x80,0x90,0xff,0xbf,0xc6,0x8e};
+   5          
+   6          
+   7          void Display_Time(uchar hour,uchar min,uchar sec,uchar flash)
+   8          {
+   9   1              static uchar i;
+  10   1          uchar buf[8];
+  11   1          
+  12   1          if(flash == 1)
+  13   1          {
+  14   2              buf[0] = smg_code[SMG_OFF];
+  15   2              buf[1] = smg_code[SMG_OFF];
+  16   2          }
+  17   1          else
+  18   1          {
+  19   2              buf[0] = smg_code[hour/10];
+  20   2              buf[1] = smg_code[hour%10];
+  21   2          }
+  22   1          buf[2] = smg_code[SMG_G];
+  23   1          if(flash == 2)
+  24   1          {
+  25   2              buf[3] = smg_code[SMG_OFF];
+  26   2              buf[4] = smg_code[SMG_OFF];
+  27   2          }
+  28   1          else
+  29   1          {
+  30   2              buf[3] = smg_code[min/10];
+  31   2              buf[4] = smg_code[min%10];
+  32   2          }
+  33   1          buf[5] = smg_code[SMG_G];
+  34   1          if(flash ==3)
+  35   1          {
+  36   2              buf[6] = smg_code[SMG_OFF];
+  37   2              buf[7] = smg_code[SMG_OFF];
+  38   2          }
+  39   1          else
+  40   1          {
+  41   2              buf[6] = smg_code[sec/10];
+  42   2              buf[7] = smg_code[sec%10];
+  43   2          }
+  44   1          
+  45   1          XBYTE[0XE000] = 0xff;
+  46   1          XBYTE[0XC000] = 1<<i;
+  47   1          XBYTE[0XE000] = buf[i];
+  48   1          
+  49   1          if(++i>=8)
+  50   1              i = 0;
+  51   1      }
+  52          
+  53          
+  54          void Display_mV(uint mv)
+C51 COMPILER V9.54   DISPLAY                                                               05/22/2018 21:12:12 PAGE 2   
+
+  55          {
+  56   1          static uchar i;
+  57   1          uchar buf[8];
+  58   1          
+  59   1          buf[0] = smg_code[SMG_G];
+  60   1          buf[1] = smg_code[1];
+  61   1          buf[2] = smg_code[SMG_G];
+  62   1          buf[3] = smg_code[SMG_OFF];
+  63   1          buf[4] = smg_code[mv/1000];
+  64   1          buf[5] = smg_code[mv/100%10];
+  65   1          buf[6] = smg_code[mv/10%10];
+  66   1          buf[7] = smg_code[mv%10];
+  67   1          
+  68   1          XBYTE[0XE000] = 0xff;
+  69   1          XBYTE[0XC000] = 1<<i;
+  70   1          XBYTE[0XE000] = buf[i];
+  71   1          
+  72   1          if(++i>=8)
+  73   1              i = 0;
+  74   1      }
+  75          
+  76          
+  77          void Display_Set(uint top,uint button,uchar flash)
+  78          {
+  79   1          static uchar i;
+  80   1          uchar buf[8];
+  81   1          
+  82   1          if(flash ==1)
+  83   1          {
+  84   2              buf[0] = smg_code[SMG_OFF];
+  85   2              buf[1] = smg_code[SMG_OFF];
+  86   2              buf[2] = smg_code[SMG_OFF];
+  87   2              buf[3] = smg_code[SMG_OFF];
+  88   2          }
+  89   1          else
+  90   1          {
+  91   2              buf[0] = smg_code[top/1000];
+  92   2              buf[1] = smg_code[top/100%10];
+  93   2              buf[2] = smg_code[top/10%10];
+  94   2              buf[3] = smg_code[top%10];
+  95   2          }
+  96   1          if(flash ==2)
+  97   1          {
+  98   2              buf[4] = smg_code[SMG_OFF];
+  99   2              buf[5] = smg_code[SMG_OFF];
+ 100   2              buf[6] = smg_code[SMG_OFF];
+ 101   2              buf[7] = smg_code[SMG_OFF];
+ 102   2          }
+ 103   1          else
+ 104   1          {
+ 105   2              buf[4] = smg_code[button/1000];
+ 106   2              buf[5] = smg_code[button/100%10];
+ 107   2              buf[6] = smg_code[button/10%10];
+ 108   2              buf[7] = smg_code[button%10];
+ 109   2          }
+ 110   1          
+ 111   1          
+ 112   1          XBYTE[0XE000] = 0xff;
+ 113   1          XBYTE[0XC000] = 1<<i;
+ 114   1          XBYTE[0XE000] = buf[i];
+ 115   1          
+ 116   1          if(++i>=8)
+C51 COMPILER V9.54   DISPLAY                                                               05/22/2018 21:12:12 PAGE 3   
+
+ 117   1              i = 0;
+ 118   1      }
+ 119          
+ 120          
+ 121          void Display_F(uint f)
+ 122          {
+ 123   1          static uchar i;
+ 124   1          uchar buf[8];
+ 125   1          
+ 126   1          buf[0] = smg_code[SMG_G];
+ 127   1          buf[1] = smg_code[2];
+ 128   1          buf[2] = smg_code[SMG_G];
+ 129   1          buf[3] = smg_code[f/10000];
+ 130   1          buf[4] = smg_code[f/1000%10];
+ 131   1          buf[5] = smg_code[f/100%10];
+ 132   1          buf[6] = smg_code[f/10%10];
+ 133   1          buf[7] = smg_code[f%10];
+ 134   1          
+ 135   1          XBYTE[0XE000] = 0xff;
+ 136   1          XBYTE[0XC000] = 1<<i;
+ 137   1          XBYTE[0XE000] = buf[i];
+ 138   1          
+ 139   1          if(++i>=8)
+ 140   1              i = 0;
+ 141   1      }
+ 142          
+ 143          
+ 144          void Display_Type(uchar type)
+ 145          {
+ 146   1          static uchar i;
+ 147   1          uchar buf[2];
+ 148   1          
+ 149   1          buf[0] = smg_code[0];
+ 150   1          buf[1] = smg_code[type];
+ 151   1      
+ 152   1          
+ 153   1          XBYTE[0XE000] = 0xff;
+ 154   1          XBYTE[0XC000] = 1<<(6+i);
+ 155   1          XBYTE[0XE000] = buf[i];
+ 156   1          
+ 157   1          if(++i>=2)
+ 158   1              i = 0;
+ 159   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    792    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =     19      42
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
