@@ -6,48 +6,48 @@
 #include "tool.h"
 
 
-/* ºê¶¨Òå */
+/* å®å®šä¹‰ */
 #define r_type  0
 #define r_hour  1
 #define r_min   2
 #define r_sec   3
 #define r_max   4
 #define r_m     5
-/* ±äÁ¿ÉùÃ÷ */
+/* å˜é‡å£°æ˜ */
 enum{
-    mod_time,       //ÏÔÊ¾Ê±¼äÄ£Ê½
-    mod_time_set,   //ÉèÖÃÊ±¼äÄ£Ê½
-    mod_v,          //ÏÔÊ¾µçÑ¹Ä£Ê½
-    mod_f,          //ÏÔÊ¾ÆµÂÊÄ£Ê½
-    mod_set,        //ÉèÖÃÉÏÏÂÏŞÄ£Ê½
-    mod_check       //ÏÔÊ¾±¨¾¯Ä£Ê½
+    mod_time,       //æ˜¾ç¤ºæ—¶é—´æ¨¡å¼
+    mod_time_set,   //è®¾ç½®æ—¶é—´æ¨¡å¼
+    mod_v,          //æ˜¾ç¤ºç”µå‹æ¨¡å¼
+    mod_f,          //æ˜¾ç¤ºé¢‘ç‡æ¨¡å¼
+    mod_set,        //è®¾ç½®ä¸Šä¸‹é™æ¨¡å¼
+    mod_check       //æ˜¾ç¤ºæŠ¥è­¦æ¨¡å¼
 } mode;
 
 struct{
-    uchar hour;     //Ê±
-    uchar min;      //·Ö
-    uchar sec;      //Ãë
-    uchar select;   //Ñ¡Ôñ
-}time;              //Ê±¼ä
+    uchar hour;     //æ—¶
+    uchar min;      //åˆ†
+    uchar sec;      //ç§’
+    uchar select;   //é€‰æ‹©
+}time;              //æ—¶é—´
 
 struct{
-    uint mea;       //²âµÃµçÑ¹
-    uint max;       //×î´óµçÑ¹
-    uint min;       //×îĞ¡µçÑ¹
-    uchar select;   //Ñ¡Ôñ
-    uchar type;     //±¨¾¯ÀàĞÍ
-}v;                 //µçÑ¹
+    uint mea;       //æµ‹å¾—ç”µå‹
+    uint max;       //æœ€å¤§ç”µå‹
+    uint min;       //æœ€å°ç”µå‹
+    uchar select;   //é€‰æ‹©
+    uchar type;     //æŠ¥è­¦ç±»å‹
+}v;                 //ç”µå‹
 
-SqQueue eeprom;     //Ğ´eepromÈÎÎñ¶ÓÁĞ
+SqQueue eeprom;     //å†™eepromä»»åŠ¡é˜Ÿåˆ—
 
-bit check_f;        //±¨¾¯ÏÔÊ¾±êÖ¾
-bit f_f;            //ÆµÂÊ/ÖÜÆÚÑ¡Ôñ
-uchar dis_flash;    //ÉÁË¸±êÖ¾
-uchar r_buf[6];     //¶ÁeepromÊı¾İ»º³å
-uint f;             //ÆµÂÊ
-uint f_dis;         //ÆµÂÊ/ÖÜÆÚÏÔÊ¾
+bit check_f;        //æŠ¥è­¦æ˜¾ç¤ºæ ‡å¿—
+bit f_f;            //é¢‘ç‡/å‘¨æœŸé€‰æ‹©
+uchar dis_flash;    //é—ªçƒæ ‡å¿—
+uchar r_buf[6];     //è¯»eepromæ•°æ®ç¼“å†²
+uint f;             //é¢‘ç‡
+uint f_dis;         //é¢‘ç‡/å‘¨æœŸæ˜¾ç¤º
 
-/* º¯ÊıÉùÃ÷ */
+/* å‡½æ•°å£°æ˜ */
 void Init(void);
 void Board_Init(void);
 void Task_Time(void);
@@ -63,13 +63,13 @@ void Task_Write(void);
 void Task_Read(void);
 
 
-/* Êı¾İ´¦Àíº¯Êı */
+/* æ•°æ®å¤„ç†å‡½æ•° */
 void main(void)
 {
     Init();
     while(1)
     {
-        switch(mode)//¹¤×÷Ä£Ê½Ñ¡ÔñÈÎÎñ
+        switch(mode)//å·¥ä½œæ¨¡å¼é€‰æ‹©ä»»åŠ¡
         {
             case mod_time:Task_Time();break;
             case mod_time_set:Task_Time_Set();break;
@@ -78,20 +78,20 @@ void main(void)
             case mod_set:Task_Set();break;
             case mod_check:Task_Check();break;
         }
-        Task_Mark();//¼ì²âµçÑ¹ÈÎÎñ
+        Task_Mark();//æ£€æµ‹ç”µå‹ä»»åŠ¡
         
     }
 }
 
 
-/* ÆµÂÊ²âÁ¿/Ê±»ùº¯Êı */
+/* é¢‘ç‡æµ‹é‡/æ—¶åŸºå‡½æ•° */
 void timer1_isr(void) interrupt 3
 {
     static uint ms,s;
-    if(mode == mod_f)       //ÆµÂÊ²âÁ¿Ä£Ê½ÏÂ
+    if(mode == mod_f)       //é¢‘ç‡æµ‹é‡æ¨¡å¼ä¸‹
     {
         TR0 = 1;
-        if(++ms>1000)       //Ã¿Ãë²âÒ»´ÎÆµÂÊ
+        if(++ms>1000)       //æ¯ç§’æµ‹ä¸€æ¬¡é¢‘ç‡
         {
             ms = 0;
             f = (TH0*256+TL0);
@@ -103,7 +103,7 @@ void timer1_isr(void) interrupt 3
     }
     if(mode == mod_time_set)
     {
-        if(++s>1000)        //ÊıÂë¹ÜÉÁË¸¼ÇÊ±
+        if(++s>1000)        //æ•°ç ç®¡é—ªçƒè®°æ—¶
         {
             s = 0;
             dis_flash = time.select;
@@ -124,11 +124,11 @@ void timer1_isr(void) interrupt 3
     else
         dis_flash = 0;
     
-    key_on();               //°´¼üÂË²¨
+    key_on();               //æŒ‰é”®æ»¤æ³¢
 }
 
 
-/* ÏÔÊ¾/eepromÈÎÎñ´¦Àíº¯Êı */
+/* æ˜¾ç¤º/eepromä»»åŠ¡å¤„ç†å‡½æ•° */
 void timer2_isr(void) interrupt 12
 {
     switch(mode)
@@ -136,51 +136,51 @@ void timer2_isr(void) interrupt 12
         case mod_time:
         case mod_time_set:
             Display_Time(time.hour,time.min,time.sec,dis_flash);
-        break;//ÏÔÊ¾Ê±¼ä
+        break;//æ˜¾ç¤ºæ—¶é—´
         
         case mod_v:
             v.mea = 5000*(float)dac_read(3)/255;        
             Display_mV(v.mea);
-        break;//ÏÔÊ¾¶Á³öµçÑ¹
+        break;//æ˜¾ç¤ºè¯»å‡ºç”µå‹
         
         case mod_f:
             Display_F(f_dis);
-        break;//ÏÔÊ¾ÆµÂÊ
+        break;//æ˜¾ç¤ºé¢‘ç‡
         
         case mod_set:
             Display_Set(v.max,v.min,dis_flash);
-        break;//ÉèÖÃµçÑ¹
+        break;//è®¾ç½®ç”µå‹
         
         case mod_check:
             if(check_f)
                 Display_Time(r_buf[r_hour],r_buf[r_min],r_buf[r_sec],0);
             else
                 Display_Type(r_buf[r_type]);
-        break;//ÏÔÊ¾±¨¾¯
+        break;//æ˜¾ç¤ºæŠ¥è­¦
     }        
-    Task_Write();//eepromĞ´ÈÎÎñ
+    Task_Write();//eepromå†™ä»»åŠ¡
 }
 
 
-/* ³õÊ¼»¯ */
+/* åˆå§‹åŒ– */
 void Init(void)
 {
     EA = 0;
-    init_mempool(0x0000,0x03ff);//·ÖÅä¶¯Ì¬ÄÚ´æ1k
-    Task_Read();                //¶Á³öeepromµÄÊı¾İ
-    Board_Init();               //¹Øµô°å×ÓÉÏÎŞ¹ØÍâÉè
-    InitQueue(&eeprom);         //eepromÈÎÎñ¶ÓÁĞ³õÊ¼»¯
-//    v.max = 2000;             //Ä¬ÈÏÖµ
+    init_mempool(0x0000,0x03ff);//åˆ†é…åŠ¨æ€å†…å­˜1k
+    Task_Read();                //è¯»å‡ºeepromçš„æ•°æ®
+    Board_Init();               //å…³æ‰æ¿å­ä¸Šæ— å…³å¤–è®¾
+    InitQueue(&eeprom);         //eepromä»»åŠ¡é˜Ÿåˆ—åˆå§‹åŒ–
+//    v.max = 2000;             //é»˜è®¤å€¼
 //    v.min = 1000;
-    ds1302_init();              //Ê±ÖÓĞ¾Æ¬³õÊ¼»¯
-    timer0_init();              //¶¨Ê±Æ÷³õÊ¼»¯
+    ds1302_init();              //æ—¶é’ŸèŠ¯ç‰‡åˆå§‹åŒ–
+    timer0_init();              //å®šæ—¶å™¨åˆå§‹åŒ–
     timer1_init();
     timer2_init();
-    EA = 1;                     //¿ªÊ¼
+    EA = 1;                     //å¼€å§‹
 }
 
 
-/* ¹Ø±Õ°å×ÓÉÏÎŞ¹ØÍâÉè */
+/* å…³é—­æ¿å­ä¸Šæ— å…³å¤–è®¾ */
 void Board_Init(void)
 {
     XBYTE[0X8000] = 0XFF;
@@ -190,20 +190,20 @@ void Board_Init(void)
 }
 
 
-/* ÏÔÊ¾Ê±¼äÈÎÎñ */
+/* æ˜¾ç¤ºæ—¶é—´ä»»åŠ¡ */
 void Task_Time(void)
 {
     uchar key_num;
-    time.hour = ds1302_read(ds_r_hour);//¶Á³öÊ±¼ä
+    time.hour = ds1302_read(ds_r_hour);//è¯»å‡ºæ—¶é—´
     time.min = ds1302_read(ds_r_min);
     time.sec = ds1302_read(ds_r_sec);
-    key_num = key();                    //»ñÈ¡¼üÖµ
+    key_num = key();                    //è·å–é”®å€¼
     switch(key_num)
     {
         case 13:
             time.select = 1;
             mode = mod_time_set;
-        break;                          //ÇĞ»»Ä£Ê½
+        break;                          //åˆ‡æ¢æ¨¡å¼
         
         case 5:
             mode = mod_v;
@@ -221,27 +221,27 @@ void Task_Time(void)
 }
 
 
-/* ÉèÖÃÊ±¼äÈÎÎñ */
+/* è®¾ç½®æ—¶é—´ä»»åŠ¡ */
 void Task_Time_Set(void)
 {
     uchar key_num;
-    key_num = key();                //»ñÈ¡¼üÖµ
+    key_num = key();                //è·å–é”®å€¼
     switch(key_num)
     {
         case 13:
-        if(++time.select>3)         //Ñ¡ÔñÊ±·ÖÃë
+        if(++time.select>3)         //é€‰æ‹©æ—¶åˆ†ç§’
             time.select = 1;
         break;
             
         case 2:
-            Time_Add();             //Ê±¼ä¼Ó
+            Time_Add();             //æ—¶é—´åŠ 
         break;
         
         case 6:
-            Time_Sub();             //Ê±¼ä¼õ
+            Time_Sub();             //æ—¶é—´å‡
         break;
         
-        case 1:                     //Ğ´Ê±¼ä
+        case 1:                     //å†™æ—¶é—´
             ds1302_write(ds_w_sec,time.sec);
             ds1302_write(ds_w_min,time.min);
             ds1302_write(ds_w_hour,time.hour);
@@ -251,7 +251,7 @@ void Task_Time_Set(void)
 }
 
 
-/* Ê±¼ä¼Ó */
+/* æ—¶é—´åŠ  */
 void Time_Add(void)
 {
     if(time.select == 1)
@@ -272,7 +272,7 @@ void Time_Add(void)
 }
 
 
-/* Ê±¼ä¼õ */
+/* æ—¶é—´å‡ */
 void Time_Sub(void)
 {
     if(time.select == 1)
@@ -293,12 +293,12 @@ void Time_Sub(void)
 }
 
 
-/* ÏÔÊ¾µçÑ¹ÈÎÎñ */
+/* æ˜¾ç¤ºç”µå‹ä»»åŠ¡ */
 void Task_V(void)
 {
     uchar key_num;
     key_num = key();
-    switch(key_num)//ÇĞ»»ÈÎÎñ
+    switch(key_num)//åˆ‡æ¢ä»»åŠ¡
     {
         case 13:
             v.select = 1;
@@ -334,7 +334,7 @@ void Task_Set(void)
         case 13:
             if(++v.select>2)
                 v.select = 1;
-        break;//Ñ¡ÔñÒªÉèÖÃµÄµçÑ¹
+        break;//é€‰æ‹©è¦è®¾ç½®çš„ç”µå‹
             
         case 2:
                 if(v.select ==1)
@@ -347,7 +347,7 @@ void Task_Set(void)
                     if(v.min<5000)
                         v.min+=500;
                 }
-        break;//µçÑ¹¼Ó
+        break;//ç”µå‹åŠ 
         
         case 6:
                 if(v.select ==1)
@@ -360,7 +360,7 @@ void Task_Set(void)
                     if(v.min>0)
                         v.min-=500;
                 }
-        break;//µçÑ¹¼õ
+        break;//ç”µå‹å‡
                 
         case 5:
             r_buf[r_max] = v.max/100;
@@ -368,12 +368,12 @@ void Task_Set(void)
             r_buf[r_min] = v.min/100;
             EnQueue(&eeprom,5);
             mode = mod_v;
-        break;//´´½¨2¸öĞ´eepromÈÎÎñ
+        break;//åˆ›å»º2ä¸ªå†™eepromä»»åŠ¡
     }
 }
 
 
-/* ±¨¾¯ÏÔÊ¾ÈÎÎñ */
+/* æŠ¥è­¦æ˜¾ç¤ºä»»åŠ¡ */
 void Task_Check(void)
 {
     uchar key_num;
@@ -382,7 +382,7 @@ void Task_Check(void)
     {
         case 13:
             check_f = ~check_f;
-        break;//ÇĞ»»ÏÔÊ¾
+        break;//åˆ‡æ¢æ˜¾ç¤º
         
         case 5:
             mode = mod_v;
@@ -395,12 +395,12 @@ void Task_Check(void)
 }
 
 
-/* ÆµÂÊÏÔÊ¾ÈÎÎñ */
+/* é¢‘ç‡æ˜¾ç¤ºä»»åŠ¡ */
 void Task_F(void)
 {
     uchar key_num;
     key_num = key();
-    switch(key_num)//ÇĞ»»ÈÎÎñ
+    switch(key_num)//åˆ‡æ¢ä»»åŠ¡
     {
         case 13:
             f_f = ~f_f;
@@ -424,18 +424,18 @@ void Task_F(void)
         break;
     }
     if(f_f)
-        f_dis = f;                  //ÏÔÊ¾ÆµÂÊ
+        f_dis = f;                  //æ˜¾ç¤ºé¢‘ç‡
     else
-        f_dis = 1000000*1/(float)f; //ÏÔÊ¾ÖÜÆÚ
+        f_dis = 1000000*1/(float)f; //æ˜¾ç¤ºå‘¨æœŸ
 }
 
 
-/* µçÑ¹±¨¾¯¼ì²âÈÎÎñ */
+/* ç”µå‹æŠ¥è­¦æ£€æµ‹ä»»åŠ¡ */
 void Task_Mark(void)
 {
-   if(v.mea == v.max)               //³¬³öÉÏÏŞ
+   if(v.mea == v.max)               //è¶…å‡ºä¸Šé™
    {
-       r_buf[r_type] = 1;           //ÀàĞÍÎª1
+       r_buf[r_type] = 1;           //ç±»å‹ä¸º1
        EnQueue(&eeprom, 0);
        r_buf[r_hour] = time.hour;
        EnQueue(&eeprom, 1);
@@ -443,10 +443,10 @@ void Task_Mark(void)
        EnQueue(&eeprom, 2);
        r_buf[r_sec] = time.sec;
        EnQueue(&eeprom, 3);
-   }                                //´´½¨3¸öeepromĞ´ÈÎÎñ
-   else if(v.mea == v.min)          //³¬³öÏÂÏŞ
+   }                                //åˆ›å»º3ä¸ªeepromå†™ä»»åŠ¡
+   else if(v.mea == v.min)          //è¶…å‡ºä¸‹é™
    {
-       r_buf[r_type] = 2;           //ÀàĞÍÎª1
+       r_buf[r_type] = 2;           //ç±»å‹ä¸º1
        EnQueue(&eeprom, 0);
        r_buf[r_hour] = time.hour;
        EnQueue(&eeprom, 1);
@@ -454,26 +454,26 @@ void Task_Mark(void)
        EnQueue(&eeprom, 2);
        r_buf[r_sec] = time.sec;
        EnQueue(&eeprom, 3);
-   }                                //´´½¨3¸öeepromĞ´ÈÎÎñ
+   }                                //åˆ›å»º3ä¸ªeepromå†™ä»»åŠ¡
 }
 
 
-/* Ö´ĞĞeepromĞ´ÈÎÎñµÄº¯Êı */
+/* æ‰§è¡Œeepromå†™ä»»åŠ¡çš„å‡½æ•° */
 void Task_Write(void)
 {
     QElemType e;
-    if(QueueLength(eeprom))         //¶ÓÁĞ³¤¶È´óÓÚÒ»
+    if(QueueLength(eeprom))         //é˜Ÿåˆ—é•¿åº¦å¤§äºä¸€
     {
-        DeQueue(&eeprom, &e);       //³ö¶Ó
+        DeQueue(&eeprom, &e);       //å‡ºé˜Ÿ
         Write_At24c02(e,r_buf[e]);
     }
 }
 
 
-/* ¿ª»ú¶Á³öeepromÊı¾İ */
+/* å¼€æœºè¯»å‡ºeepromæ•°æ® */
 void Task_Read(void)
 {
-    at24c02_read_buffer(0,r_buf,6); //¶ÁeepromÊı¾İ
-    v.max = r_buf[r_max]*100;       //ÀàĞÍ×ª»»
-    v.min = r_buf[r_min]*100;
+    at24c02_read_buffer(0,r_buf,6); //è¯»eepromæ•°æ®
+    v.max = r_buf[r_max]*100;       //ç±»å‹è½¬æ¢
+    v.min = r_buf[r_m]*100;
 }
